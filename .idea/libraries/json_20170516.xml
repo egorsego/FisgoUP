@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="json-20170516">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/json-20170516.jar!/" />
+      <root url="jar://$PROJECT_DIR$/sqlite-jdbc-3.20.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ganymed-ssh2-build210.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
