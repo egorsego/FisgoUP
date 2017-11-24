@@ -8,6 +8,9 @@
  */
 
 package com.dreamkas;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.sql.*;
@@ -108,10 +111,7 @@ public class Database {
             }
 
             for(int i = 0; i < fields.size(); i++) {
-                Charset cset = Charset.forName("UTF8");
-                ByteBuffer buf = cset.encode(rs.getString(fields.get(i).get(0)));
-                byte[] utf8bytes = buf.array();
-                String value = new String(utf8bytes);
+                String value = new String(rs.getBytes(fields.get(i).get(0)), Charset.forName("cp866"));
                 fields.get(i).add(value);
             }
 
@@ -139,20 +139,26 @@ public class Database {
 
             for(int i = 1; i < table.size(); i++){
                 String query = "";
-                query = "UPDATE CONFIG SET " + table.get(i).get(0) + "=? WHERE ID=1";
-                PreparedStatement pstmt = c.prepareStatement(query);
                 if(table.get(i).get(2).equals("12")){
+                    /*pstmt.setString(1,
+                            new String(table.get(i).get(1).getBytes(Charset.forName("cp866"))));*/
                     /*query = "UPDATE CONFIG SET " + table.get(i).get(0) + "='"
-                            + table.get(i).get(1) + "' WHERE ID=1;";*/
-                    pstmt.setString(1, table.get(i).get(1));
+                            + new String(table.get(i).get(1).getBytes(Charset.forName("cp866"))) + "' WHERE ID=1";*/
+
+                    query = "UPDATE CONFIG SET " + table.get(i).get(0) + "='"
+                            + table.get(i).get(1) + "' WHERE ID=1";
                 } else if(table.get(i).get(2).equals("4")) {
+                    //pstmt.setInt(1, Integer.valueOf(table.get(i).get(1)));
                     /*query = "UPDATE CONFIG SET " + table.get(i).get(0) + "="
-                            + table.get(i).get(1) + " WHERE ID=1;";*/
-                    pstmt.setInt(1, Integer.valueOf(table.get(i).get(1)));
+                            + new String(table.get(i).get(1).getBytes(Charset.forName("cp866"))) + " WHERE ID=1";*/
+                    query = "UPDATE CONFIG SET " + table.get(i).get(0) + "="
+                            + table.get(i).get(1) + " WHERE ID=1";
                 } else {
                     query = "";
                 }
 
+                query = new String(query.getBytes(Charset.forName("cp866")));
+                PreparedStatement pstmt = c.prepareStatement(query);
                 if(query.equals("")) {
                     System.out.println("Error in creating query!");
                     continue;

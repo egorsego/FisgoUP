@@ -5,6 +5,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.Vector;
@@ -117,6 +122,8 @@ public class MainGui extends JFrame {
     //слушатель кнопки загрузки конфига с кассы
     public class DownloadConfigListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+//            Database db = new Database();
+//            db.getConfigTable();
             LogField.setText("");
             System.out.println(ipTextFieldUpdConfig.getText());
             m_fe.downloadConfig(ipTextFieldUpdConfig.getText());
@@ -130,8 +137,28 @@ public class MainGui extends JFrame {
     //слушатель кнопки генерации uuid
     public class GenUuidListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            byte[] chars = new byte[128];
-            String tmp = new String(chars);
+            File tmpScriptFileRead = new File("testCp866.txt");
+            try {
+                //Объект для чтения файла в буфер
+                BufferedReader in = new BufferedReader(new FileReader(tmpScriptFileRead));
+                String s;
+                while ((s = in.readLine()) != null) {
+                    /*Charset cset = Charset.forName("UTF8");
+                    ByteBuffer buf = cset.encode(s);
+                    byte[] utf8bytes = buf.array();
+                    String value = "";//new String(utf8bytes, "IBM866");
+                    value = new String(s.getBytes("UTF-8"), "IBM866");
+                    s = "";*/
+
+                    byte[] cpBytes = s.getBytes("UTF8");
+                    String val = new String(cpBytes, "cp866");
+                    val = "";
+                }
+                in.close();
+            } catch (Exception a) {
+                System.out.println(a.toString());
+            }
+
             String uuid = UUID.randomUUID().toString();
             if (buttonGenUuid.getText().equals("Сгенерировать UUID")) {
                 //buttonGenUuid.setText("Сохранить UUID");
@@ -189,10 +216,8 @@ public class MainGui extends JFrame {
             for (int i = 0; i < config.size(); i++) {
                 Vector<String> row = new Vector<>();
                 row.add(config.get(i).get(0));
-                String changedEncode = new String(config.get(i).get(2)
-                        .getBytes("latin1"), "cp866");
+                String changedEncode = config.get(i).get(2);
                 row.add(changedEncode);
-                //row.add(config.get(i).get(2));
                 configFieldTypes.add(config.get(i).get(1));
                 tableModel.addRow(row);
             }
