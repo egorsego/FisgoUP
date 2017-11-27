@@ -114,9 +114,16 @@ public class BackEnd extends Thread {
                         throw new Exception("Failed to copy updated config!");
                     }
 
-                    String[] confFileName = {"configDb.db"};
+                    String[] confFileName = {"updateConfigDb.sh"};
 
                     if(m_ssh.executeScpPut("/FisGo/", confFileName) < 0) {
+                        throw new Exception("Failed to copy updated config!");
+                    }
+
+                    if(m_ssh.executeSshCommand("dos2unix -n /FisGo/updateConfigDb.sh /FisGo/updateConfigDb2.sh; \"" +
+                            "cp /FisGo/updateConfigDb2.sh /FisGo/updateConfigDb.sh; \"" +
+                            "rm /FisGo/updateConfigDb2.sh; \"" +
+                            "chmod 755 /FisGo/updateConfigDb.sh") < 0) {
                         throw new Exception("Failed to copy updated config!");
                     }
 

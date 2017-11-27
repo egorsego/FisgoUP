@@ -8,9 +8,9 @@
  */
 
 package com.dreamkas;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import org.sqlite.SQLiteConfig;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.sql.*;
@@ -130,12 +130,25 @@ public class Database {
      */
     public void setConfigTable(Vector<Vector<String>> table) {
         try {
+            /*Properties connInfo = new Properties();
+            connInfo.put("user", "");
+            connInfo.put("password", "");
+            connInfo.put("charSet", "cp866");
+
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:configDb.db");
+            c = DriverManager.getConnection("jdbc:sqlite:configDb.db", connInfo);
             c.setAutoCommit(true);
             System.out.println("Opened database successfully");
 
-            Statement stmt    = null;
+            Statement stmt    = null;*/
+
+            PrintWriter pw = new PrintWriter("updateConfigDb.sh", "cp866");
+
+
+            pw.println("#!/bin/sh");
+            pw.append("\n");
+            pw.println("sqlite3 <<EOF");
+            pw.println(".open configDb.db");
 
             for(int i = 1; i < table.size(); i++){
                 String query = "";
@@ -145,38 +158,61 @@ public class Database {
                     /*query = "UPDATE CONFIG SET " + table.get(i).get(0) + "='"
                             + new String(table.get(i).get(1).getBytes(Charset.forName("cp866"))) + "' WHERE ID=1";*/
 
+                    /*Charset cset = Charset.forName("CP866");
+                    ByteBuffer buf = cset.encode(table.get(i).get(1));
+                    byte[] charsCp866 = buf.array();
+                    String value = new String(charsCp866);*/
+
+                    //String value = new String(table.get(i).get(1).getBytes("cp866"));
+                    String value = new String(table.get(i).get(1));
+
                     query = "UPDATE CONFIG SET " + table.get(i).get(0) + "='"
-                            + table.get(i).get(1) + "' WHERE ID=1";
+                            + value + "' WHERE ID=1;";
                 } else if(table.get(i).get(2).equals("4")) {
                     //pstmt.setInt(1, Integer.valueOf(table.get(i).get(1)));
                     /*query = "UPDATE CONFIG SET " + table.get(i).get(0) + "="
                             + new String(table.get(i).get(1).getBytes(Charset.forName("cp866"))) + " WHERE ID=1";*/
+
+                    /*Charset cset = Charset.forName("CP866");
+                    ByteBuffer buf = cset.encode(table.get(i).get(1));
+                    byte[] charsCp866 = buf.array();
+                    String value = new String(charsCp866);*/
+
+                    //String value = new String(table.get(i).get(1).getBytes("cp866"));
+                    String value = new String(table.get(i).get(1));
+
                     query = "UPDATE CONFIG SET " + table.get(i).get(0) + "="
-                            + table.get(i).get(1) + " WHERE ID=1";
+                            + value + " WHERE ID=1;";
                 } else {
                     query = "";
                 }
 
-                query = new String(query.getBytes(Charset.forName("cp866")));
-                PreparedStatement pstmt = c.prepareStatement(query);
                 if(query.equals("")) {
                     System.out.println("Error in creating query!");
                     continue;
                 }
 
-                /*PreparedStatement pstmt = con.prepareStatement(qry);
-                pstmt.setString(1, value);
-                pstmt.setInt(2, primaryId);
-                pstmt.executeUpdate();*/
 
-                /*stmt              = c.createStatement();
-                stmt.executeUpdate( query );
-                stmt.close();*/
+                pw.println(query);
+                //pw.append("\n");
+
+
+                /*PreparedStatement pstmt = c.prepareStatement(query);
+                if(query.equals("")) {
+                    System.out.println("Error in creating query!");
+                    continue;
+                }
 
                 pstmt.executeUpdate();
+                pstmt.close();*/
             }
 
-            c.close();
+            pw.println(".close");
+            pw.println("EOF");
+            pw.append("\n");
+
+            pw.close();
+            //c.close();
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
