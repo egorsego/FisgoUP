@@ -194,25 +194,12 @@ public class Database {
 
 
                 pw.println(query);
-                //pw.append("\n");
-
-
-                /*PreparedStatement pstmt = c.prepareStatement(query);
-                if(query.equals("")) {
-                    System.out.println("Error in creating query!");
-                    continue;
-                }
-
-                pstmt.executeUpdate();
-                pstmt.close();*/
             }
 
-            pw.println(".close");
             pw.println("EOF");
             pw.append("\n");
 
             pw.close();
-            //c.close();
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }

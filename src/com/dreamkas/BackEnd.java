@@ -114,20 +114,30 @@ public class BackEnd extends Thread {
                         throw new Exception("Failed to copy updated config!");
                     }
 
+                    if(m_ssh.executeSshCommand("cd /FisGo/; rm updateConfigDb.sh") < 0) {
+                        throw new Exception("Failed to copy updated config!");
+                    }
+
                     String[] confFileName = {"updateConfigDb.sh"};
 
                     if(m_ssh.executeScpPut("/FisGo/", confFileName) < 0) {
                         throw new Exception("Failed to copy updated config!");
                     }
 
-                    if(m_ssh.executeSshCommand("dos2unix -n /FisGo/updateConfigDb.sh /FisGo/updateConfigDb2.sh; \"" +
-                            "cp /FisGo/updateConfigDb2.sh /FisGo/updateConfigDb.sh; \"" +
-                            "rm /FisGo/updateConfigDb2.sh; \"" +
-                            "chmod 755 /FisGo/updateConfigDb.sh") < 0) {
-                        throw new Exception("Failed to copy updated config!");
+                    if(m_ssh.executeSshCommand("dos2unix -u /FisGo/updateConfigDb.sh /FisGo/updateConfigDb.sh;") < 0) {
+                        throw new Exception("Failed dos2unix!");
+                    }
+
+
+                    if(m_ssh.executeSshCommand("chmod 755 /FisGo/updateConfigDb.sh") < 0) {
+                        throw new Exception("Failed chmod 755!");
                     }
 
                     if(m_ssh.executeSshCommand("sync") < 0) {
+                        throw new Exception("Failed to copy updated config!");
+                    }
+
+                    if(m_ssh.executeSshCommand("cd /FisGo/; ./updateConfigDb.sh") < 0) {
                         throw new Exception("Failed to copy updated config!");
                     }
 
