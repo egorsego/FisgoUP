@@ -9,7 +9,9 @@
     <bookmark url="file://$PROJECT_DIR$/src/com/dreamkas/Database.java" line="59" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="17ce7a3f-8dc3-4dca-a570-dfe64072bc80" name="Default" comment="Creating update database script">
+    <list default="true" id="17ce7a3f-8dc3-4dca-a570-dfe64072bc80" name="Default" comment="added .gitignore file">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/configDb.db" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/out/test/FiscatInstallator/com/intellij/uiDesigner/core/AbstractLayout.class" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/out/test/FiscatInstallator/com/intellij/uiDesigner/core/DimensionInfo.class" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/out/test/FiscatInstallator/com/intellij/uiDesigner/core/GridConstraints.class" afterPath="" />
@@ -22,11 +24,9 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/out/test/FiscatInstallator/com/intellij/uiDesigner/core/Util.class" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/out/test/FiscatInstallator/com/intellij/uiDesigner/core/VerticalInfo.class" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/testCp866.txt" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/configDb.db" afterPath="$PROJECT_DIR$/configDb.db" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FiscatInstallator/com/dreamkas/BackEnd.class" afterPath="$PROJECT_DIR$/out/production/FiscatInstallator/com/dreamkas/BackEnd.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/FiscatInstallator/com/dreamkas/Database.class" afterPath="$PROJECT_DIR$/out/production/FiscatInstallator/com/dreamkas/Database.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/dreamkas/BackEnd.java" afterPath="$PROJECT_DIR$/src/com/dreamkas/BackEnd.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/dreamkas/Database.java" afterPath="$PROJECT_DIR$/src/com/dreamkas/Database.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -42,7 +42,7 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/dreamkas/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
+            <state relative-caret-position="221">
               <caret line="14" column="43" lean-forward="false" selection-start-line="14" selection-start-column="43" selection-end-line="14" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -54,8 +54,8 @@
       <file leaf-file-name="Database.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/dreamkas/Database.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="870">
-              <caret line="200" column="0" lean-forward="false" selection-start-line="200" selection-start-column="0" selection-end-line="200" selection-end-column="0" />
+            <state relative-caret-position="2193">
+              <caret line="144" column="63" lean-forward="false" selection-start-line="144" selection-start-column="46" selection-end-line="144" selection-end-column="63" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -66,7 +66,7 @@
       <file leaf-file-name="OutputStreamWriter.java" pinned="false" current-in-tab="false">
         <entry file="jar://C:/Program Files/Java/jdk1.8.0_121/src.zip!/java/io/OutputStreamWriter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
+            <state relative-caret-position="1156">
               <caret line="93" column="11" lean-forward="false" selection-start-line="93" selection-start-column="11" selection-end-line="93" selection-end-column="11" />
               <folding />
             </state>
@@ -76,21 +76,31 @@
       <file leaf-file-name="ResultSet.java" pinned="false" current-in-tab="false">
         <entry file="jar://C:/Program Files/Java/jdk1.8.0_121/src.zip!/java/sql/ResultSet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="406">
+            <state relative-caret-position="8466">
               <caret line="524" column="11" lean-forward="false" selection-start-line="524" selection-start-column="11" selection-end-line="524" selection-end-column="11" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BackEnd.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BackEnd.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/dreamkas/BackEnd.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="116" column="63" lean-forward="false" selection-start-line="116" selection-start-column="63" selection-end-line="116" selection-end-column="63" />
+            <state relative-caret-position="1955">
+              <caret line="124" column="21" lean-forward="false" selection-start-line="124" selection-start-column="21" selection-end-line="124" selection-end-column="21" />
               <folding>
                 <element signature="method#run#0;class#BackEnd#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -105,12 +115,10 @@
       <file leaf-file-name="MainGui.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/dreamkas/MainGui.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="365">
+            <state relative-caret-position="2873">
               <caret line="183" column="48" lean-forward="false" selection-start-line="183" selection-start-column="48" selection-end-line="183" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="initializer##0;class#MainGui#0" expanded="true" />
-                <element signature="initializer##0;class#MainGui#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -140,16 +148,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Feedback.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/dreamkas/Feedback.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -164,6 +162,7 @@
       <find>System.out</find>
       <find>ExecuteShellCommand</find>
       <find>feed</find>
+      <find>updateC</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -197,8 +196,9 @@
         <option value="$PROJECT_DIR$/src/com/dreamkas/FrontEnd.java" />
         <option value="$PROJECT_DIR$/src/com/dreamkas/Main.java" />
         <option value="$PROJECT_DIR$/src/com/dreamkas/MainGui.java" />
-        <option value="$PROJECT_DIR$/src/com/dreamkas/Database.java" />
         <option value="$PROJECT_DIR$/src/com/dreamkas/BackEnd.java" />
+        <option value="$PROJECT_DIR$/src/com/dreamkas/Database.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -223,7 +223,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -244,9 +247,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -332,7 +332,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511799246158</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Можно отдавать хелпам">
+      <created>1511801976046</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1511801976046</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -340,14 +347,13 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22799575" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22799575" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -356,14 +362,15 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -371,7 +378,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Creating update database script" />
-    <option name="LAST_COMMIT_MESSAGE" value="Creating update database script" />
+    <MESSAGE value="Можно отдавать хелпам" />
+    <option name="LAST_COMMIT_MESSAGE" value="Можно отдавать хелпам" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -394,19 +402,12 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/dreamkas/MainGui.form">
-      <provider selected="true" editor-type-id="ui-designer">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/dreamkas/MainGui.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2023">
           <caret line="127" column="0" lean-forward="false" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -425,9 +426,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="19" column="25" lean-forward="false" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#721#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -435,12 +433,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="30" column="34" lean-forward="false" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#744#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#708#709#0" expanded="false" />
-            <element signature="e#741#742#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -490,7 +482,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="11594">
           <caret line="682" column="11" lean-forward="false" selection-start-line="682" selection-start-column="11" selection-end-line="682" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -500,8 +491,6 @@
           <caret line="117" column="45" lean-forward="true" selection-start-line="117" selection-start-column="45" selection-end-line="117" selection-end-column="45" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -557,8 +546,6 @@
           <caret line="81" column="44" lean-forward="false" selection-start-line="81" selection-start-column="44" selection-end-line="81" selection-end-column="44" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -631,8 +618,6 @@
           <caret line="81" column="44" lean-forward="false" selection-start-line="81" selection-start-column="44" selection-end-line="81" selection-end-column="44" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -695,7 +680,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="682" column="11" lean-forward="false" selection-start-line="682" selection-start-column="11" selection-end-line="682" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -717,12 +701,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="30" column="34" lean-forward="false" selection-start-line="30" selection-start-column="34" selection-end-line="30" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#744#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#708#709#0" expanded="false" />
-            <element signature="e#741#742#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -730,9 +708,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="19" column="25" lean-forward="false" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#721#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -740,7 +715,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -771,7 +745,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/dreamkas/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
+        <state relative-caret-position="221">
           <caret line="14" column="43" lean-forward="false" selection-start-line="14" selection-start-column="43" selection-end-line="14" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -781,7 +755,7 @@
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_121/src.zip!/java/sql/ResultSet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
+        <state relative-caret-position="8466">
           <caret line="524" column="11" lean-forward="false" selection-start-line="524" selection-start-column="11" selection-end-line="524" selection-end-column="11" />
           <folding />
         </state>
@@ -791,13 +765,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-550">
           <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_121/src.zip!/java/io/OutputStreamWriter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
+        <state relative-caret-position="1156">
           <caret line="93" column="11" lean-forward="false" selection-start-line="93" selection-start-column="11" selection-end-line="93" selection-end-column="11" />
           <folding />
         </state>
@@ -805,20 +778,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/dreamkas/MainGui.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
+        <state relative-caret-position="2873">
           <caret line="183" column="48" lean-forward="false" selection-start-line="183" selection-start-column="48" selection-end-line="183" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
-            <element signature="initializer##0;class#MainGui#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/dreamkas/Database.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="870">
-          <caret line="200" column="0" lean-forward="false" selection-start-line="200" selection-start-column="0" selection-end-line="200" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -827,11 +788,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/dreamkas/BackEnd.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="116" column="63" lean-forward="false" selection-start-line="116" selection-start-column="63" selection-end-line="116" selection-end-column="63" />
+        <state relative-caret-position="1955">
+          <caret line="124" column="21" lean-forward="false" selection-start-line="124" selection-start-column="21" selection-end-line="124" selection-end-column="21" />
           <folding>
             <element signature="method#run#0;class#BackEnd#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/dreamkas/Database.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2193">
+          <caret line="144" column="63" lean-forward="false" selection-start-line="144" selection-start-column="46" selection-end-line="144" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

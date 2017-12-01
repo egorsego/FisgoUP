@@ -1,0 +1,5 @@
+#gitignore file
+#ignoring  all files in /out directory
+/out/*
+configDb.db
+updateConfigDb.sh

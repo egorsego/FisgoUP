@@ -153,34 +153,11 @@ public class Database {
             for(int i = 1; i < table.size(); i++){
                 String query = "";
                 if(table.get(i).get(2).equals("12")){
-                    /*pstmt.setString(1,
-                            new String(table.get(i).get(1).getBytes(Charset.forName("cp866"))));*/
-                    /*query = "UPDATE CONFIG SET " + table.get(i).get(0) + "='"
-                            + new String(table.get(i).get(1).getBytes(Charset.forName("cp866"))) + "' WHERE ID=1";*/
-
-                    /*Charset cset = Charset.forName("CP866");
-                    ByteBuffer buf = cset.encode(table.get(i).get(1));
-                    byte[] charsCp866 = buf.array();
-                    String value = new String(charsCp866);*/
-
-                    //String value = new String(table.get(i).get(1).getBytes("cp866"));
                     String value = new String(table.get(i).get(1));
-
                     query = "UPDATE CONFIG SET " + table.get(i).get(0) + "='"
                             + value + "' WHERE ID=1;";
                 } else if(table.get(i).get(2).equals("4")) {
-                    //pstmt.setInt(1, Integer.valueOf(table.get(i).get(1)));
-                    /*query = "UPDATE CONFIG SET " + table.get(i).get(0) + "="
-                            + new String(table.get(i).get(1).getBytes(Charset.forName("cp866"))) + " WHERE ID=1";*/
-
-                    /*Charset cset = Charset.forName("CP866");
-                    ByteBuffer buf = cset.encode(table.get(i).get(1));
-                    byte[] charsCp866 = buf.array();
-                    String value = new String(charsCp866);*/
-
-                    //String value = new String(table.get(i).get(1).getBytes("cp866"));
                     String value = new String(table.get(i).get(1));
-
                     query = "UPDATE CONFIG SET " + table.get(i).get(0) + "="
                             + value + " WHERE ID=1;";
                 } else {
