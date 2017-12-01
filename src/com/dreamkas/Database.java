@@ -130,20 +130,7 @@ public class Database {
      */
     public void setConfigTable(Vector<Vector<String>> table) {
         try {
-            /*Properties connInfo = new Properties();
-            connInfo.put("user", "");
-            connInfo.put("password", "");
-            connInfo.put("charSet", "cp866");
-
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:configDb.db", connInfo);
-            c.setAutoCommit(true);
-            System.out.println("Opened database successfully");
-
-            Statement stmt    = null;*/
-
             PrintWriter pw = new PrintWriter("updateConfigDb.sh", "cp866");
-
 
             pw.println("#!/bin/sh");
             pw.append("\n");
@@ -168,7 +155,6 @@ public class Database {
                     System.out.println("Error in creating query!");
                     continue;
                 }
-
 
                 pw.println(query);
             }
