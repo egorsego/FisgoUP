@@ -166,7 +166,7 @@ public class MainGui extends JFrame {
     //нарисовать таблицу конфига
     public void drawConfigTable(ArrayList<ArrayList<String>> config) {
         configFieldTypes = new Vector<>();
-        configTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        configTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         //заполнить массивы полей и значений
         Vector<String> columns = new Vector<>();
