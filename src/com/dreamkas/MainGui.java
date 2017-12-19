@@ -28,6 +28,9 @@ public class MainGui extends JFrame {
     private JFormattedTextField formattedTextField1;
     private JPanel ConfigPanel;
     private JLabel laStatus;
+    private JPanel ClonePanel;
+    private JButton buttonGetClone;
+    private JTextField cloneDrawerIp;
     private JFrame additionalFrame;
     private String currentOperation;
 
@@ -86,6 +89,19 @@ public class MainGui extends JFrame {
         laStatus = new JLabel();
         laStatus.setText("Простаивает");
         ConfigPanel.add(laStatus, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        ClonePanel = new JPanel();
+        ClonePanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
+        UpdaterPane.addTab("Клон", ClonePanel);
+        buttonGetClone = new JButton();
+        buttonGetClone.setText("Клонировать кассу");
+        ClonePanel.add(buttonGetClone, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
+        ClonePanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        label2.setText("IP адрес ККТ");
+        ClonePanel.add(label2, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, 1, 1, null, new Dimension(68, 29), null, 0, false));
+        cloneDrawerIp = new JTextField();
+        ClonePanel.add(cloneDrawerIp, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         LogField = new JTextArea();
         MainPanel.add(LogField, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
     }
@@ -160,6 +176,20 @@ public class MainGui extends JFrame {
             laStatus.setText("В процессе...");
             updateDrawer.setEnabled(false);
             currentOperation = "Saving config";
+        }
+    }
+
+    //обработчик нажатия кнопки клонирования кассы
+    public class CloneDrawerListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            LogField.setText("");
+            System.out.println(cloneDrawerIp.getText());
+            m_fe.cloneDrawer(cloneDrawerIp.getText());
+
+            laStatus.setText("В процессе...");
+            updateDrawer.setEnabled(false);
+            saveDataBase.setEnabled(false);
+            getConfigButton.setEnabled(false);
         }
     }
 
@@ -264,6 +294,9 @@ public class MainGui extends JFrame {
 
         GenUuidListener buttonGenUuidListener = new GenUuidListener();
         buttonGenUuid.addActionListener(buttonGenUuidListener);
+
+        CloneDrawerListener buttonCloneDrawerListener = new CloneDrawerListener();
+        buttonGetClone.addActionListener(buttonCloneDrawerListener);
 
         /*try {
             MaskFormatter mf = new MaskFormatter("###.###.###.###");

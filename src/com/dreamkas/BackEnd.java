@@ -9,12 +9,32 @@
 
 package com.dreamkas;
 
+import java.io.File;
+
 public class BackEnd extends Thread {
     private TaskBuffer m_tb;
     private Ssh        m_ssh;
     private Network    m_net;
     private Database   m_db;
     private final static int THREAD_TIMEOUT_MS = 1000;
+
+    //рекурсивная удалялка файлов
+    public static void recursiveDelete(File file) {
+        // до конца рекурсивного цикла
+        if (!file.exists())
+            return;
+
+        //если это папка, то идем внутрь этой папки и вызываем рекурсивное удаление всего, что там есть
+        if (file.isDirectory()) {
+            for (File f : file.listFiles()) {
+                // рекурсивный вызов
+                recursiveDelete(f);
+            }
+        }
+        // вызываем метод delete() для удаления файлов и пустых(!) папок
+        file.delete();
+        System.out.println("Удаленный файл или папка: " + file.getAbsolutePath());
+    }
 
     //Исключение, которое бросаем когда обновление недоступно
     private class UpdateNotAvailableException extends Exception {
@@ -141,6 +161,30 @@ public class BackEnd extends Thread {
                         throw new Exception("Failed to copy updated config!");
                     }
 
+                    break;
+
+                case "CloneDrawer":
+                    File fisGoArchive = new File("./FisGo.tar");
+
+                    //удаляю файл если есть
+                    recursiveDelete(fisGoArchive);
+
+                    //скачать базу с кассы и вынуть из нее текущую версию fiscat
+                    ip = ((CloneDrawer) task).getDrawerIp();
+                    m_ssh.setIp(ip);
+                    m_tb.addTaskForFrontEnd(new Feedback("Cloning device..."));
+
+                    if(m_ssh.executeSshCommand("cd /; rm FisGo.tar") < 0) {
+                        throw new Exception("Failed to compress clone!");
+                    }
+
+                    if(m_ssh.executeSshCommand("cd /; tar -cvf FisGo.tar /FisGo/") < 0) {
+                        throw new Exception("Failed to compress clone!");
+                    }
+
+                    if (m_ssh.executeScpGet("./", "/FisGo.tar") < 0) {
+                        throw new Exception("Failed to get drawer clone!");
+                    }
                     break;
 
                 default:

@@ -34,6 +34,10 @@ public class FrontEnd extends Thread {
         m_tb.addTaskForBackEnd(new UploadConfig(ip, queryTab));
     }
 
+    public void cloneDrawer(String ip) {
+        m_tb.addTaskForBackEnd(new CloneDrawer(ip));
+    }
+
     //распарсить таску от бэк энда
     private int parseTaskFromBe(Task task){
         System.out.println("FRONT_END: Parse msg from Back end");
