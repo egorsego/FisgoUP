@@ -151,6 +151,7 @@ public class ConfigCreator extends JFrame {
     private Map<String, String> config;
     private int countFn;
     private DefaultListModel modelListTableFn;
+    private final String HEAD_PLANT_NUM_DREAMKAS_F = "0496";
 
     Map<TaxSystem, JCheckBox> mapTaxAndCheckBox;
     Map<KktSigns, JCheckBox> mapSignsAndCheckBox;
@@ -527,6 +528,8 @@ public class ConfigCreator extends JFrame {
 
     private void tuneKktPlantNum(String value) {
         textFieldKktPluntNum.setText(value);
+        validateNumber(textFieldKktPluntNum, messageValidateKktPluntNum, 10);
+        validatePlantNum(textFieldKktPluntNum, messageValidateKktPluntNum);
     }
 
     private void tuneKktRegNum(String value) {
@@ -663,6 +666,35 @@ public class ConfigCreator extends JFrame {
                 }
                 if (validatedTextField.getText().length() != limitChars - 1) {
                     messageLabel.setText("Количество символов должно быть - " + limitChars);
+                }
+            }
+        });
+    }
+
+    /**
+     * Проверка заводского номера
+     *
+     * @param validatedTextField - форма ввода ЗН ККТ
+     * @param messageLabel       - label отображения ошибки
+     */
+    private void validatePlantNum(JTextField validatedTextField, JLabel messageLabel) {
+        validatedTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                String[] arr = validatedTextField.getText().split("");
+                StringBuilder headerPlantNum = new StringBuilder();
+
+                int minLength = HEAD_PLANT_NUM_DREAMKAS_F.length();
+
+                if (arr.length >= minLength) {
+                    for (int i = 0; i < minLength; i++) {
+                        headerPlantNum.append(arr[i]);
+                    }
+
+                    if (!headerPlantNum.toString().equals(HEAD_PLANT_NUM_DREAMKAS_F)) {
+                        messageLabel.setForeground(Color.RED);
+                        messageLabel.setText("Номер должен начинаться с " + HEAD_PLANT_NUM_DREAMKAS_F);
+                    }
                 }
             }
         });
