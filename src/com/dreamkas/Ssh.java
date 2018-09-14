@@ -8,33 +8,34 @@
  */
 
 package com.dreamkas;
+
 import java.io.*;
 import java.io.IOException;
+
 import ch.ethz.ssh2.*;
 
 public class Ssh {
     private String m_ip;
 
     //конструктор по-умолчанию
-    public Ssh(){
+    public Ssh() {
 
     }
 
     //Утановить ip адрес кассы
-    public void setIp(String ip){
+    public void setIp(String ip) {
         m_ip = ip;
     }
 
     //Выполнить команду bash по ssh
-    public int executeSshCommand(String command){
+    public int executeSshCommand(String command) {
         System.out.println("Executing ssh command...");
         Connection conn = null;
-        Session    sess = null;
+        Session sess = null;
         try {
             conn = new Connection(m_ip);
             conn.connect();
-            boolean isAuth = conn.authenticateWithPassword("root",
-                    "root");
+            boolean isAuth = conn.authenticateWithPassword("root", "root");
             if (isAuth == false) {
                 throw new IOException("Authentication failed.");
             }
@@ -54,11 +55,11 @@ public class Ssh {
             conn.close();
         } catch (IOException ex) {
             System.out.println(ex.toString());
-            if(conn != null) {
+            if (conn != null) {
                 conn.close();
             }
 
-            if(sess != null) {
+            if (sess != null) {
                 sess.close();
             }
             return -1;
@@ -67,9 +68,9 @@ public class Ssh {
     }
 
     //Выполнить scp put
-    public int executeScpPut(String path, String filename){
+    public int executeScpPut(String path, String filename) {
         Connection conn = null;
-        SCPClient  scpc = null;
+        SCPClient scpc = null;
         try {
             conn = new Connection(m_ip);
             conn.connect();
@@ -84,7 +85,7 @@ public class Ssh {
             conn.close();
         } catch (IOException ex) {
             System.out.println(ex.toString());
-            if(conn != null) {
+            if (conn != null) {
                 conn.close();
                 return -1;
             }
@@ -93,9 +94,9 @@ public class Ssh {
     }
 
     //Выполнить scp put
-    public int executeScpPut(String path, String[] filenames){
+    public int executeScpPut(String path, String[] filenames) {
         Connection conn = null;
-        SCPClient  scpc = null;
+        SCPClient scpc = null;
         try {
             conn = new Connection(m_ip);
             conn.connect();
@@ -110,7 +111,7 @@ public class Ssh {
             conn.close();
         } catch (IOException ex) {
             System.out.println(ex.toString());
-            if(conn != null) {
+            if (conn != null) {
                 conn.close();
                 return -1;
             }
@@ -119,9 +120,9 @@ public class Ssh {
     }
 
     //Выполнить scp get
-    public int executeScpGet(String localPath, String remotePath){
+    public int executeScpGet(String localPath, String remotePath) {
         Connection conn = null;
-        SCPClient  scpc = null;
+        SCPClient scpc = null;
         try {
             conn = new Connection(m_ip);
             conn.connect();
@@ -136,7 +137,7 @@ public class Ssh {
             conn.close();
         } catch (IOException ex) {
             System.out.println(ex.toString());
-            if(conn != null) {
+            if (conn != null) {
                 conn.close();
                 return -1;
             }
