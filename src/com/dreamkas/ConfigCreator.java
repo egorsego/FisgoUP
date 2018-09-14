@@ -681,20 +681,18 @@ public class ConfigCreator extends JFrame {
         validatedTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent keyEvent) {
-                String[] arr = validatedTextField.getText().split("");
-                StringBuilder headerPlantNum = new StringBuilder();
 
-                int minLength = HEAD_PLANT_NUM_DREAMKAS_F.length();
+                String headPlantNum = "";
 
-                if (arr.length >= minLength) {
-                    for (int i = 0; i < minLength; i++) {
-                        headerPlantNum.append(arr[i]);
-                    }
+                try {
+                    headPlantNum = validatedTextField.getText().substring(0, 4);
+                } catch (StringIndexOutOfBoundsException ignored) {
+                    
+                }
 
-                    if (!headerPlantNum.toString().equals(HEAD_PLANT_NUM_DREAMKAS_F)) {
-                        messageLabel.setForeground(Color.RED);
-                        messageLabel.setText("Номер должен начинаться с " + HEAD_PLANT_NUM_DREAMKAS_F);
-                    }
+                if (!headPlantNum.equals(HEAD_PLANT_NUM_DREAMKAS_F)) {
+                    messageLabel.setForeground(Color.RED);
+                    messageLabel.setText("Номер должен начинаться с " + HEAD_PLANT_NUM_DREAMKAS_F);
                 }
             }
         });
