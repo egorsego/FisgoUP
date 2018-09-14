@@ -650,11 +650,11 @@ public class ConfigCreator extends JFrame {
     private void validateNumber(JTextField validatedTextField, JLabel messageLabel, int limitChars) {
         validatedTextField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
                 try {
                     String[] arr = validatedTextField.getText().split("");
                     for (String str : arr) {
-                        int i = Integer.parseInt(str);
+                        Integer.parseInt(str);
                         messageLabel.setText("");
                     }
                 } catch (NumberFormatException ex) {
@@ -664,7 +664,7 @@ public class ConfigCreator extends JFrame {
                 if (limitChars == 0) {
 
                 }
-                if (validatedTextField.getText().length() != limitChars - 1) {
+                if (validatedTextField.getText().length() != limitChars) {
                     messageLabel.setText("Количество символов должно быть - " + limitChars);
                 }
             }
@@ -680,7 +680,7 @@ public class ConfigCreator extends JFrame {
     private void validatePlantNum(JTextField validatedTextField, JLabel messageLabel) {
         validatedTextField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent keyEvent) {
+            public void keyReleased(KeyEvent keyEvent) {
                 String[] arr = validatedTextField.getText().split("");
                 StringBuilder headerPlantNum = new StringBuilder();
 
