@@ -3,3 +3,4 @@
 /out/*
 configDb.db
 updateConfigDb.sh
+.idea/*
