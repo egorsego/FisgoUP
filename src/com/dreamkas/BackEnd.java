@@ -70,7 +70,7 @@ public class BackEnd extends Thread {
 
                     //скачать обновление
                     m_tb.addTaskForFrontEnd(new Feedback("Downloading update..."));
-                    int res = m_net.getUpdate(url);
+                    int res = m_net.getUpdate(url, "fisGoUpdate.tar");
                     if (res < 0) {
                         throw new Exception("Failed to download update artifact!");
                     } else if(res > 0){
@@ -105,7 +105,7 @@ public class BackEnd extends Thread {
 
                     //скачать обновление
                     m_tb.addTaskForFrontEnd(new Feedback("Downloading update..."));
-                    int UpdFactory = m_net.getUpdate(urlUpdFactory);
+                    int UpdFactory = m_net.getUpdate(urlUpdFactory, "fisGoUpdate.tar");
                     if (UpdFactory < 0) {
                         throw new Exception("Failed to download update artifact!");
                     } else if(UpdFactory > 0){
