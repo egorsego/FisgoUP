@@ -279,7 +279,6 @@ public class ConfigCreator extends JFrame {
                 comboBoxStage.removeItem("Выберите режим...");
             }
         });
-//        saveButtonSetEnablel();
     }
 
     private void tuneAgents(String agentMask, String currentAgent) {
@@ -633,7 +632,6 @@ public class ConfigCreator extends JFrame {
                 labelMessageTableFn.setText("<html>Количество номеров <br>в табл. не соответствует<br>" +
                         "значению поля <br>\"Количество зарегистр-ых ФН\".</html>");
             }
-            //saveButtonSetEnablel();
         });
     }
 
@@ -732,7 +730,6 @@ public class ConfigCreator extends JFrame {
     }
 
     private void saveButtonInit() {
-//        saveButtonSetEnablel();
         saveButton.addActionListener(e -> {
             saveConfig();
         });
