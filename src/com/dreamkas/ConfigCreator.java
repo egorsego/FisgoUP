@@ -740,7 +740,7 @@ public class ConfigCreator extends JFrame {
 
     private void saveButtonInitEx() {
         while (true) {
-            saveButtonSetEnablel();
+            saveButtonSetEnable();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -749,7 +749,7 @@ public class ConfigCreator extends JFrame {
         }
     }
 
-    private void saveButtonSetEnablel() {
+    private void saveButtonSetEnable() {
         boolean saveButtonEnable =
                 labelMessageTableFn.getText().isEmpty()
                         && labelArticleValidate.getText().isEmpty()
