@@ -17,6 +17,7 @@ public class BackEnd extends Thread {
     private Network    m_net;
     private Database   m_db;
     private final static int THREAD_TIMEOUT_MS = 1000;
+    private final static String FISGO_UPDATE_TAR = "FisGoUpdate.tar";
 
     //рекурсивная удалялка файлов
     public static void recursiveDelete(File file) {
@@ -70,7 +71,7 @@ public class BackEnd extends Thread {
 
                     //скачать обновление
                     m_tb.addTaskForFrontEnd(new Feedback("Downloading update..."));
-                    int res = m_net.getUpdate(url);
+                    int res = m_net.getUpdate(url, FISGO_UPDATE_TAR);
                     if (res < 0) {
                         throw new Exception("Failed to download update artifact!");
                     } else if(res > 0){
@@ -83,7 +84,7 @@ public class BackEnd extends Thread {
                         throw new Exception("Failed to create /download directory!");
                     }
 
-                    String[] fileNames = {"fisGoUpdate.tar", "cs"};
+                    String[] fileNames = {FISGO_UPDATE_TAR, "cs"};
 
                     if(m_ssh.executeScpPut("/download/", fileNames) < 0) {
                         throw new Exception("Failed to copy update artifact!");
@@ -105,7 +106,7 @@ public class BackEnd extends Thread {
 
                     //скачать обновление
                     m_tb.addTaskForFrontEnd(new Feedback("Downloading update..."));
-                    int UpdFactory = m_net.getUpdate(urlUpdFactory);
+                    int UpdFactory = m_net.getUpdate(urlUpdFactory, FISGO_UPDATE_TAR);
                     if (UpdFactory < 0) {
                         throw new Exception("Failed to download update artifact!");
                     } else if(UpdFactory > 0){
