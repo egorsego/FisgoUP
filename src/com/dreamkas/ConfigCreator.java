@@ -5,14 +5,14 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.dreamkas.enums.Agents.*;
 import static com.dreamkas.enums.Stage.CHECKBOOK_MODE;
@@ -147,10 +147,12 @@ public class ConfigCreator extends JFrame {
     private JButton закрытьButton;
     private JButton сохранитьButton;
     private JCheckBox checkBoxAddSign16;
+    private JLabel messageValidateUUID;
 
     private Map<String, String> config;
     private int countFn;
     private DefaultListModel modelListTableFn;
+    private final String HEAD_PLANT_NUM_DREAMKAS_F = "0496";
 
     Map<TaxSystem, JCheckBox> mapTaxAndCheckBox;
     Map<KktSigns, JCheckBox> mapSignsAndCheckBox;
@@ -186,6 +188,8 @@ public class ConfigCreator extends JFrame {
         tuneArticle(config.get("ARTICLE"));
         tuneFsNumberCount(config.get("FS_NUMBER_COUNT"));
 
+        tuneUUID(config.get("UUID"));
+
         String test = "{\"FS NUMBER #1\":\"8710000100669525\",\"FS NUMBER #2\":\"8710000100669526\"}";
         tuneListFsNumberTable(test);
 
@@ -204,6 +208,37 @@ public class ConfigCreator extends JFrame {
         tuneAddSign(config.get("ADD_KKT_SIGNS"));
         tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
 
+    }
+
+    public static boolean checkUUID(String value, String prefix) {
+        Pattern pattern = Pattern.compile("^[a-f 0-9]{8}\\-[a-f 0-9]{4}\\-[a-f 0-9]{4}\\-[a-f 0-9]{4}\\-" + prefix + "[a-f 0-9]{8}$");
+        Matcher matcher = pattern.matcher(value);
+        return matcher.matches();
+    }
+    
+    private void tuneUUID(String uuid) {
+        textFieldUUID.setText(uuid);
+        checkUUID(textFieldUUID, messageValidateUUID);
+        validateUUID(textFieldUUID, messageValidateUUID);
+    }
+
+    private void validateUUID(JTextField textField, JLabel label) {
+        textFieldUUID.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {
+                checkUUID(textField, label);
+            }
+        });
+    }
+
+    private void checkUUID(JTextField textField, JLabel label) {
+        /* FIXME later for Kassa-F */
+        if (!checkUUID(textField.getText(), HEAD_PLANT_NUM_DREAMKAS_F)) {
+            label.setForeground(Color.RED);
+            label.setText("Неверный формат UUID!");
+        } else {
+            label.setText("");
+        }
     }
 
     private void tuneAddSign(String addKktSigns) {
@@ -1124,6 +1159,11 @@ public class ConfigCreator extends JFrame {
         mainPanel.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(10, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JSeparator separator1 = new JSeparator();
         mainPanel.add(separator1, new com.intellij.uiDesigner.core.GridConstraints(36, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        messageValidateUUID = new JLabel();
+        messageValidateUUID.setBackground(new Color(-14606047));
+        messageValidateUUID.setForeground(new Color(-14606047));
+        messageValidateUUID.setText("");
+        mainPanel.add(messageValidateUUID, new com.intellij.uiDesigner.core.GridConstraints(4, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
