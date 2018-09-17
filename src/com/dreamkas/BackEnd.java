@@ -119,7 +119,16 @@ public class BackEnd extends Thread {
                     //скачать базу с кассы и вынуть из нее текущую версию fiscat
                     ip = ((DownloadConfig) task).getDrawerIp();
                     m_ssh.setIp(ip);
+                    if(!m_ssh.checkConnection()){
+                        throw new Exception("Failed connection");
+                    }
+
+                    //проверка на то, что это ДК-Ф
+                    if(!m_ssh.isDreamkasF()){
+                        throw new Exception("It's no Dreamkas-F!");
+                    }
                     m_tb.addTaskForFrontEnd(new Feedback("Getting device config..."));
+
                     if (m_ssh.executeScpGet("./", "/FisGo/configDb.db") < 0) {
                         throw new Exception("Failed to get config base!");
                     }
@@ -199,7 +208,6 @@ public class BackEnd extends Thread {
         }
         catch(Exception e){
             System.out.println(e.toString());
-            m_tb.addTaskForFrontEnd(new Feedback(e.toString()));
             return -1;
         }
         return 0;
@@ -236,6 +244,8 @@ public class BackEnd extends Thread {
                     Task task = m_tb.getTaskForBackEnd();
                     if(parseTaskFromFe(task) == 0){
                         m_tb.addTaskForFrontEnd(new Feedback("Request success!"));
+                    } else {
+                        m_tb.addTaskForFrontEnd(new Feedback("Failed"));
                     }
                 }
                 Thread.sleep(THREAD_TIMEOUT_MS);
