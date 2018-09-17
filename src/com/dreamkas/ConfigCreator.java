@@ -211,11 +211,11 @@ public class ConfigCreator extends JFrame {
     }
 
     public static boolean checkUUID(String value, String prefix) {
-        Pattern pattern = Pattern.compile("^[a-f 0-9]{8}\\-[a-f 0-9]{4}\\-[a-f 0-9]{4}\\-[a-f 0-9]{4}\\-" + prefix + "[a-f 0-9]{8}$");
+        Pattern pattern = Pattern.compile("^[A-Fa-f0-9]{8}\\-[A-Fa-f0-9]{4}\\-4[A-Fa-f0-9]{3}\\-[A-Fa-f0-9]{4}\\-" + prefix + "[A-Fa-f0-9]{8}$");
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
     }
-    
+
     private void tuneUUID(String uuid) {
         textFieldUUID.setText(uuid);
         checkUUID(textFieldUUID, messageValidateUUID);
