@@ -5,17 +5,22 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+
+import java.awt.event.*;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLOutput;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.dreamkas.enums.Agents.*;
 import static com.dreamkas.enums.Stage.CHECKBOOK_MODE;
@@ -149,7 +154,9 @@ public class ConfigCreator extends JFrame {
     private JButton закрытьButton;
     private JButton saveButton;
     private JCheckBox checkBoxAddSign16;
+    private JLabel messageValidateUUID;
     private boolean saveConfigEnable;
+
 
     private Map<String, String> config;
     private int countFn;
@@ -238,6 +245,8 @@ public class ConfigCreator extends JFrame {
         tuneArticle(config.get("ARTICLE"));
         tuneFsNumberCount(config.get("FS_NUMBER_COUNT"));
 
+        tuneUUID(config.get("UUID"));
+
         String test = "{\"FS NUMBER #1\":\"8710000100669525\",\"FS NUMBER #2\":\"8710000100669526\"}";
         tuneListFsNumberTable(test);
 
@@ -256,6 +265,37 @@ public class ConfigCreator extends JFrame {
         tuneAddSign("10"); // tuneAddSign(config.get("ADD_KKT_SIGNS"));
         tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
         saveButtonInit();
+    }
+
+    private boolean verifyUUID(String value, String prefix) {
+        Pattern pattern = Pattern.compile("^[A-Fa-f0-9]{8}\\-[A-Fa-f0-9]{4}\\-4[A-Fa-f0-9]{3}\\-[A-Fa-f0-9]{4}\\-" + prefix + "[A-Fa-f0-9]{8}$");
+        Matcher matcher = pattern.matcher(value);
+        return matcher.matches();
+    }
+
+    private void tuneUUID(String uuid) {
+        textFieldUUID.setText(uuid);
+        checkUUID(textFieldUUID, messageValidateUUID);
+        validateUUID(textFieldUUID, messageValidateUUID);
+    }
+
+    private void validateUUID(JTextField textField, JLabel label) {
+        textFieldUUID.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {
+                checkUUID(textField, label);
+            }
+        });
+    }
+
+    private void checkUUID(JTextField textField, JLabel label) {
+        /* FIXME later for Kassa-F */
+        if (!verifyUUID(textField.getText(), HEAD_PLANT_NUM_DREAMKAS_F)) {
+            label.setForeground(Color.RED);
+            label.setText("Неверный формат UUID!");
+        } else {
+            label.setText("");
+        }
     }
 
     private void actionChangeAddKktSigns() {
@@ -968,8 +1008,6 @@ public class ConfigCreator extends JFrame {
         textFieldUUID = new JTextField();
         mainPanel.add(textFieldUUID, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         labelArticleValidate = new JLabel();
-        labelArticleValidate.setBackground(new Color(-14606047));
-        labelArticleValidate.setForeground(new Color(-14606047));
         labelArticleValidate.setText("");
         mainPanel.add(labelArticleValidate, new com.intellij.uiDesigner.core.GridConstraints(3, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelFsNumberCount = new JLabel();
@@ -1326,6 +1364,9 @@ public class ConfigCreator extends JFrame {
         mainPanel.add(spacer3, new com.intellij.uiDesigner.core.GridConstraints(10, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JSeparator separator1 = new JSeparator();
         mainPanel.add(separator1, new com.intellij.uiDesigner.core.GridConstraints(36, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        messageValidateUUID = new JLabel();
+        messageValidateUUID.setText("");
+        mainPanel.add(messageValidateUUID, new com.intellij.uiDesigner.core.GridConstraints(4, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
