@@ -5,6 +5,8 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLOutput;
@@ -96,7 +98,6 @@ public class ConfigCreator extends JFrame {
     private JCheckBox checkBoxAddSign2;
     private JCheckBox checkBoxAddSign8;
     private JCheckBox checkBoxAddSign4;
-    private JComboBox comboBoxAddSignBSOandCheque;
     private JCheckBox checkBoxAddSign32;
     private JComboBox comboBoxStage;
     private JLabel labelFsNumberCount;
@@ -156,12 +157,10 @@ public class ConfigCreator extends JFrame {
     private final String HEAD_PLANT_NUM_DREAMKAS_F = "0496";
 
     Map<TaxSystem, JCheckBox> mapTaxAndCheckBox;
-    Map<KktSigns, JCheckBox> mapSignsAndCheckBox;
     Map<Agents, JCheckBox> mapAgentsAndCheckBox;
 
     ConfigCreator(Map<String, String> config) {
         mapTaxAndCheckBox = new HashMap<>();
-        mapSignsAndCheckBox = new HashMap<>();
         mapAgentsAndCheckBox = new HashMap<>();
         this.config = config;
         $$$setupUI$$$();
@@ -173,6 +172,56 @@ public class ConfigCreator extends JFrame {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         setContentPane(scroll);
+
+        addListenerCheckBoxes();
+    }
+
+    private void addListenerCheckBoxes() {
+        checkBoxSign0.addItemListener(itemEvent -> actionChangeKktSigns());
+        checkBoxAddSign0.addItemListener(itemEvent -> actionChangeAddKktSigns());
+        checkBoxAddSign2.addItemListener(itemEvent -> {
+            checkBoxAddSign1.setSelected(false);
+
+            if (checkBoxAddSign2.isSelected()) {
+                checkBoxAddSign1.setEnabled(false);
+            } else {
+                checkBoxAddSign1.setEnabled(true);
+            }
+        });
+        checkBoxAgents0.addItemListener(itemEvent -> {
+
+            checkBoxAgents1.setSelected(false);
+            checkBoxAgents2.setSelected(false);
+            checkBoxAgents4.setSelected(false);
+            checkBoxAgents8.setSelected(false);
+            checkBoxAgents16.setSelected(false);
+            checkBoxAgents32.setSelected(false);
+            checkBoxAgents64.setSelected(false);
+
+            if (checkBoxAgents0.isSelected()) {
+                checkBoxAgents1.setEnabled(false);
+                checkBoxAgents2.setEnabled(false);
+                checkBoxAgents4.setEnabled(false);
+                checkBoxAgents8.setEnabled(false);
+                checkBoxAgents16.setEnabled(false);
+                checkBoxAgents32.setEnabled(false);
+                checkBoxAgents64.setEnabled(false);
+
+                comboBoxCurentAgent.removeAllItems();
+                comboBoxCurentAgent.setEnabled(false);
+            } else {
+                checkBoxAgents1.setEnabled(true);
+                checkBoxAgents2.setEnabled(true);
+                checkBoxAgents4.setEnabled(true);
+                checkBoxAgents8.setEnabled(true);
+                checkBoxAgents16.setEnabled(true);
+                checkBoxAgents32.setEnabled(true);
+                checkBoxAgents64.setEnabled(true);
+
+                comboBoxCurentAgent.removeAllItems();
+                comboBoxCurentAgent.setEnabled(true);
+            }
+        });
     }
 
     private void createUIComponents() {
@@ -204,9 +253,36 @@ public class ConfigCreator extends JFrame {
         tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
         tuneKktSigns("10");//(config.get("KKT_SIGNS"));
         tuneStage("133");
-        tuneAddSign(config.get("ADD_KKT_SIGNS"));
+        tuneAddSign("10"); // tuneAddSign(config.get("ADD_KKT_SIGNS"));
         tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
         saveButtonInit();
+    }
+
+    private void actionChangeAddKktSigns() {
+
+        checkBoxAddSign4.setSelected(false);
+        checkBoxAddSign2.setSelected(false);
+        checkBoxAddSign1.setSelected(false);
+        checkBoxAddSign16.setSelected(false);
+        checkBoxAddSign8.setSelected(false);
+        checkBoxAddSign32.setSelected(false);
+
+        if (checkBoxAddSign0.isSelected()) {
+
+            checkBoxAddSign4.setEnabled(false);
+            checkBoxAddSign2.setEnabled(false);
+            checkBoxAddSign1.setEnabled(false);
+            checkBoxAddSign16.setEnabled(false);
+            checkBoxAddSign8.setEnabled(false);
+            checkBoxAddSign32.setEnabled(false);
+        } else {
+            checkBoxAddSign4.setEnabled(true);
+            checkBoxAddSign2.setEnabled(true);
+            checkBoxAddSign16.setEnabled(true);
+            checkBoxAddSign8.setEnabled(true);
+            checkBoxAddSign32.setEnabled(true);
+            checkBoxAddSign1.setEnabled(true);
+        }
     }
 
     private void tuneAddSign(String addKktSigns) {
@@ -217,27 +293,51 @@ public class ConfigCreator extends JFrame {
         ArrayList<AddKktSigns> arrayAgents = AddKktSigns.parseAddKktSignsSum(Integer.parseInt(addKktSigns));
         for (AddKktSigns sign : arrayAgents) {
             switch (sign) {
-                case NO_SIGNS:
+                case NO_ADD_SIGNS: {
                     checkBoxAddSign0.setSelected(true);
+
+                    checkBoxAddSign4.setSelected(false);
+                    checkBoxAddSign2.setSelected(false);
+                    checkBoxAddSign1.setSelected(false);
+                    checkBoxAddSign16.setSelected(false);
+                    checkBoxAddSign8.setSelected(false);
+                    checkBoxAddSign32.setSelected(false);
+
+                    checkBoxAddSign4.setEnabled(false);
+                    checkBoxAddSign2.setEnabled(false);
+                    checkBoxAddSign1.setEnabled(false);
+                    checkBoxAddSign16.setEnabled(false);
+                    checkBoxAddSign8.setEnabled(false);
+                    checkBoxAddSign32.setEnabled(false);
                     break;
-                case AUTOMATIC:
+                }
+                case AUTOMATIC: {
                     checkBoxAddSign4.setSelected(true);
                     break;
-                case AUTONOMOUS:
+                }
+                case AUTONOMOUS: {
+                    checkBoxAddSign1.setSelected(false);
+                    checkBoxAddSign1.setEnabled(false);
+
                     checkBoxAddSign2.setSelected(true);
                     break;
-                case ENCRYPTION:
+                }
+                case ENCRYPTION: {
                     checkBoxAddSign1.setSelected(true);
                     break;
-                case BSO_OR_CHEQUE:
+                }
+                case BSO_OR_CHEQUE: {
                     checkBoxAddSign16.setSelected(true);
                     break;
-                case USE_IN_SERVICE:
+                }
+                case USE_IN_SERVICE: {
                     checkBoxAddSign8.setSelected(true);
                     break;
-                case USE_IN_INTERNET:
+                }
+                case USE_IN_INTERNET: {
                     checkBoxAddSign32.setSelected(true);
                     break;
+                }
             }
         }
     }
@@ -300,12 +400,12 @@ public class ConfigCreator extends JFrame {
         ArrayList<Agents> arrayAgents = Agents.parseAgentsSum(Integer.parseInt(agentMask));
         for (Agents agent : arrayAgents) {
             switch (agent) {
-                case AGENT:
-                    checkBoxAgents64.setSelected(true);
-                    comboBoxCurentAgent.addItem(agent.getName());
-                    break;
                 case NO_AGENTS:
                     checkBoxAgents0.setSelected(true);
+                    comboBoxCurentAgent.removeAllItems();
+                    break;
+                case AGENT:
+                    checkBoxAgents64.setSelected(true);
                     comboBoxCurentAgent.addItem(agent.getName());
                     break;
                 case BANK_PAYMENT_AGENT:
@@ -333,9 +433,10 @@ public class ConfigCreator extends JFrame {
                     comboBoxCurentAgent.addItem(agent.getName());
                     break;
             }
+
             Agents currentAgents = Agents.parseAgents(currentAgent);
             if (arrayAgents.contains(currentAgents)) {
-                comboBoxCurentTax.setSelectedItem(currentAgents.getName());
+                comboBoxCurentAgent.setSelectedItem(currentAgents.getName());
             }
         }
     }
@@ -352,40 +453,66 @@ public class ConfigCreator extends JFrame {
         return mapAgentsAndCheckBox;
     }
 
+    private void actionChangeKktSigns() {
+
+        checkBoxSign4.setSelected(false);
+        checkBoxSign2.setSelected(false);
+        checkBoxSign1.setSelected(false);
+        checkBoxSign8.setSelected(false);
+
+        if (checkBoxSign0.isSelected()) {
+            checkBoxSign4.setEnabled(false);
+            checkBoxSign2.setEnabled(false);
+            checkBoxSign1.setEnabled(false);
+            checkBoxSign8.setEnabled(false);
+        } else {
+            checkBoxSign4.setEnabled(true);
+            checkBoxSign2.setEnabled(true);
+            checkBoxSign1.setEnabled(true);
+            checkBoxSign8.setEnabled(true);
+        }
+    }
+
     private void tuneKktSigns(String kktSigns) {
-        getMapSignsAndCheckBox();
         fillWithCurrentConfigSignValues(kktSigns);
     }
 
     private void fillWithCurrentConfigSignValues(String kktSigns) {
-        if (kktSigns.equals("0")) {
-            return;
-        }
         ArrayList<KktSigns> arrayKktSigns = KktSigns.parseKktSignsSum(Integer.parseInt(kktSigns));
         for (KktSigns sign : arrayKktSigns) {
             switch (sign) {
-                case LOTERY:
+                case NO_SIGNS: {
+                    checkBoxSign0.setSelected(true);
+
+                    checkBoxSign4.setSelected(false);
+                    checkBoxSign2.setSelected(false);
+                    checkBoxSign1.setSelected(false);
+                    checkBoxSign8.setSelected(false);
+
+                    checkBoxSign4.setEnabled(false);
+                    checkBoxSign2.setEnabled(false);
+                    checkBoxSign1.setEnabled(false);
+                    checkBoxSign8.setEnabled(false);
+                    break;
+                }
+                case LOTERY: {
                     checkBoxSign4.setSelected(true);
                     break;
-                case GAMBLING:
+                }
+                case GAMBLING: {
                     checkBoxSign2.setSelected(true);
                     break;
-                case EXCISABLE:
+                }
+                case EXCISABLE: {
                     checkBoxSign1.setSelected(true);
                     break;
-                case PRINTER_IN_AUTO:
+                }
+                case PRINTER_IN_AUTO: {
                     checkBoxSign8.setSelected(true);
                     break;
+                }
             }
         }
-    }
-
-    private Map<KktSigns, JCheckBox> getMapSignsAndCheckBox() {
-        mapSignsAndCheckBox.put(KktSigns.EXCISABLE, checkBoxAddSign1);
-        mapSignsAndCheckBox.put(KktSigns.GAMBLING, checkBoxAddSign2);
-        mapSignsAndCheckBox.put(KktSigns.LOTERY, checkBoxAddSign4);
-        mapSignsAndCheckBox.put(KktSigns.PRINTER_IN_AUTO, checkBoxAddSign8);
-        return mapSignsAndCheckBox;
     }
 
     private void tuneOfd(String ofd) {
@@ -688,7 +815,7 @@ public class ConfigCreator extends JFrame {
                 try {
                     headPlantNum = validatedTextField.getText().substring(0, 4);
                 } catch (StringIndexOutOfBoundsException ignored) {
-                    
+
                 }
 
                 if (!headPlantNum.equals(HEAD_PLANT_NUM_DREAMKAS_F)) {
@@ -1119,7 +1246,7 @@ public class ConfigCreator extends JFrame {
         checkBoxSign2.setText("Признак проведения азартных игр");
         panel6.add(checkBoxSign2, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel7 = new JPanel();
-        panel7.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel7.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 1, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(panel7, new com.intellij.uiDesigner.core.GridConstraints(33, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel7.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null));
         checkBoxAddSign1 = new JCheckBox();
@@ -1134,16 +1261,16 @@ public class ConfigCreator extends JFrame {
         checkBoxAddSign4 = new JCheckBox();
         checkBoxAddSign4.setText("Автоматический режим");
         panel7.add(checkBoxAddSign4, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        comboBoxAddSignBSOandCheque = new JComboBox();
-        panel7.add(comboBoxAddSignBSOandCheque, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkBoxAddSign32 = new JCheckBox();
         checkBoxAddSign32.setText("Применение в интернет");
-        panel7.add(checkBoxAddSign32, new com.intellij.uiDesigner.core.GridConstraints(7, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(checkBoxAddSign32, new com.intellij.uiDesigner.core.GridConstraints(6, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkBoxAddSign0 = new JCheckBox();
+        checkBoxAddSign0.setEnabled(true);
+        checkBoxAddSign0.setSelected(false);
         checkBoxAddSign0.setText("Нет режимов");
         panel7.add(checkBoxAddSign0, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkBoxAddSign16 = new JCheckBox();
-        checkBoxAddSign16.setText("Режим БСО иначе Режим чеков");
+        checkBoxAddSign16.setText("Режим БСО");
         panel7.add(checkBoxAddSign16, new com.intellij.uiDesigner.core.GridConstraints(5, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         comboBoxStage = new JComboBox();
         mainPanel.add(comboBoxStage, new com.intellij.uiDesigner.core.GridConstraints(34, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

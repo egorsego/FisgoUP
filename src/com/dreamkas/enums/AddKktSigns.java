@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public enum AddKktSigns {
 
-    NO_SIGNS(0, "Нет режимов"),
+    NO_ADD_SIGNS(0, "Нет режимов"),
     ENCRYPTION(1, "Шифрование"),
     AUTONOMOUS(2, "Автономный режим"),
     AUTOMATIC(4, "Автоматический режим"),
@@ -30,7 +30,7 @@ public enum AddKktSigns {
 
     public static ArrayList<AddKktSigns> parseAddKktSignsSum(int sum){
         if(sum == 0){
-            return new ArrayList<AddKktSigns>(){{add(NO_SIGNS);}};
+            return new ArrayList<AddKktSigns>(){{add(NO_ADD_SIGNS);}};
         }
         ArrayList<AddKktSigns> resultList = new ArrayList<>();
         AddKktSigns[] arrAllSigns = AddKktSigns.values();

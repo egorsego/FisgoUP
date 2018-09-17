@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public enum KktSigns {
 
+    NO_SIGNS(0, "Нет признаков"),
     EXCISABLE(1, "Продажа подакцизного товара"),
     GAMBLING (2, "Признак проведения азартных игр"),
     LOTERY(4, "Признак проведения лотерии"),
@@ -29,6 +30,10 @@ public enum KktSigns {
      * Метод принимает алгебраическую сумму значений признаков и возвращает лист с этими признаками
      */
     public static ArrayList<KktSigns> parseKktSignsSum(int sum){
+        if (sum == 0){
+            return new ArrayList<KktSigns>(){{add(NO_SIGNS);}};
+        }
+
         KktSigns[] arrAllSigns = KktSigns.values();
         ArrayList<KktSigns> resultList = new ArrayList<>();
         for (KktSigns sign : arrAllSigns){
