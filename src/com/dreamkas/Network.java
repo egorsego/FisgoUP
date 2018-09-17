@@ -19,7 +19,7 @@ import org.json.*;
 public class Network {
     private final int DOWNLOAD_BUFFER_LEN = 1024;
 
-    public int getUpdate(String url) {
+    public int getUpdate(String url, String patchName) {
         try {
             //скачка json апдейта
             URL jsonLink           = new URL(url);
@@ -33,20 +33,22 @@ public class Network {
             }
 
             JSONObject json = new JSONObject(line);
+            JSONObject data = (JSONObject) json.get("data");
+            JSONArray patches = (JSONArray) data.get("patches");
 
-            JSONArray msg = (JSONArray) json.get("updates");
             String md5         = null;
             String artifactUrl = null;
-            for(int n = 0; n < msg.length(); n++) {
-                JSONObject updates = msg.getJSONObject(n);
-                md5                = (String)updates.get("md5");
-                artifactUrl        = (String)updates.get("url");
+            for(int n = 0; n < patches.length(); n++) {
+                JSONObject patch = patches.getJSONObject(n);
+                JSONObject file = patch.getJSONObject("file");
+                md5                = (String)file.get("md5");
+                artifactUrl        = (String)file.get("url");
             }
 
             //скачка самого артефакта обновления
             URL artifactUrlObj      = new URL(artifactUrl);
             BufferedInputStream bis = new BufferedInputStream(artifactUrlObj.openStream());
-            FileOutputStream    fis = new FileOutputStream("fisGoUpdate.tar");
+            FileOutputStream    fis = new FileOutputStream(patchName);
             byte[] buffer           = new byte[DOWNLOAD_BUFFER_LEN];
             int count               = 0;
             while((count = bis.read(buffer,0,DOWNLOAD_BUFFER_LEN)) != -1) {

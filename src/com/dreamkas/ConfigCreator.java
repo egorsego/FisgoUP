@@ -6,10 +6,16 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.sql.SQLOutput;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -145,9 +151,11 @@ public class ConfigCreator extends JFrame {
     private JLabel labelMessageTaxSystem;
     private JLabel labelMessageStage;
     private JButton закрытьButton;
-    private JButton сохранитьButton;
+    private JButton saveButton;
     private JCheckBox checkBoxAddSign16;
     private JLabel messageValidateUUID;
+    private boolean saveConfigEnable;
+
 
     private Map<String, String> config;
     private int countFn;
@@ -207,7 +215,7 @@ public class ConfigCreator extends JFrame {
         tuneStage("133");
         tuneAddSign(config.get("ADD_KKT_SIGNS"));
         tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
-
+        saveButtonInit();
     }
 
     public static boolean checkUUID(String value, String prefix) {
@@ -312,7 +320,6 @@ public class ConfigCreator extends JFrame {
                 comboBoxStage.removeItem("Выберите режим...");
             }
         });
-
     }
 
     private void tuneAgents(String agentMask, String currentAgent) {
@@ -562,6 +569,8 @@ public class ConfigCreator extends JFrame {
 
     private void tuneKktPlantNum(String value) {
         textFieldKktPluntNum.setText(value);
+        validateNumber(textFieldKktPluntNum, messageValidateKktPluntNum, 10);
+        validatePlantNum(textFieldKktPluntNum, messageValidateKktPluntNum);
     }
 
     private void tuneKktRegNum(String value) {
@@ -682,11 +691,11 @@ public class ConfigCreator extends JFrame {
     private void validateNumber(JTextField validatedTextField, JLabel messageLabel, int limitChars) {
         validatedTextField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
                 try {
                     String[] arr = validatedTextField.getText().split("");
                     for (String str : arr) {
-                        int i = Integer.parseInt(str);
+                        Integer.parseInt(str);
                         messageLabel.setText("");
                     }
                 } catch (NumberFormatException ex) {
@@ -696,8 +705,35 @@ public class ConfigCreator extends JFrame {
                 if (limitChars == 0) {
 
                 }
-                if (validatedTextField.getText().length() != limitChars - 1) {
+                if (validatedTextField.getText().length() != limitChars) {
                     messageLabel.setText("Количество символов должно быть - " + limitChars);
+                }
+            }
+        });
+    }
+
+    /**
+     * Проверка заводского номера
+     *
+     * @param validatedTextField - форма ввода ЗН ККТ
+     * @param messageLabel       - label отображения ошибки
+     */
+    private void validatePlantNum(JTextField validatedTextField, JLabel messageLabel) {
+        validatedTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent keyEvent) {
+
+                String headPlantNum = "";
+
+                try {
+                    headPlantNum = validatedTextField.getText().substring(0, 4);
+                } catch (StringIndexOutOfBoundsException ignored) {
+                    
+                }
+
+                if (!headPlantNum.equals(HEAD_PLANT_NUM_DREAMKAS_F)) {
+                    messageLabel.setForeground(Color.RED);
+                    messageLabel.setText("Номер должен начинаться с " + HEAD_PLANT_NUM_DREAMKAS_F);
                 }
             }
         });
@@ -763,6 +799,49 @@ public class ConfigCreator extends JFrame {
         return fnNumbersList;
     }
 
+    private void saveButtonInit() {
+        saveButton.addActionListener(e -> {
+            saveConfig();
+        });
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(() -> saveButtonInitEx());
+        return;
+    }
+
+    private void saveButtonInitEx() {
+        while (true) {
+            saveButtonSetEnable();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void saveButtonSetEnable() {
+        boolean saveButtonEnable =
+                labelMessageTableFn.getText().isEmpty()
+                        && labelArticleValidate.getText().isEmpty()
+                        && labelMessageStage.getText().isEmpty()
+                        && labelValidateButtonTableFnNum.getText().isEmpty()
+                        && labelValidateFsNumber.getText().isEmpty()
+                        && messageValidateOrgName.getText().isEmpty()
+                        && messageValidateAddressCalc.getText().isEmpty()
+                        && messageValidatePlaceCalc.getText().isEmpty()
+                        && messageValidateInnOrg.getText().isEmpty()
+                        && messageValidateRegNum.getText().isEmpty()
+                        && messageValidateKktPluntNum.getText().isEmpty()
+                        && labelMessageTaxSystem.getText().isEmpty();
+        if (saveButtonEnable) {
+            saveButton.setEnabled(true);
+        } else {
+            saveButton.setEnabled(false);
+        }
+    }
+
+    private void saveConfig() {
+    }
 
     /**
      * Method generated by IntelliJ IDEA GUI Designer
@@ -794,6 +873,7 @@ public class ConfigCreator extends JFrame {
         labelArticle.setText("Артикул");
         mainPanel.add(labelArticle, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_EAST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         textFieldArticle = new JTextField();
+        textFieldArticle.setText("");
         mainPanel.add(textFieldArticle, new com.intellij.uiDesigner.core.GridConstraints(3, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         labelUUID = new JLabel();
         labelUUID.setText("UUID");
@@ -1150,9 +1230,9 @@ public class ConfigCreator extends JFrame {
         закрытьButton = new JButton();
         закрытьButton.setText("Закрыть");
         mainPanel.add(закрытьButton, new com.intellij.uiDesigner.core.GridConstraints(37, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        сохранитьButton = new JButton();
-        сохранитьButton.setText("Сохранить");
-        mainPanel.add(сохранитьButton, new com.intellij.uiDesigner.core.GridConstraints(37, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        saveButton = new JButton();
+        saveButton.setText("Сохранить");
+        mainPanel.add(saveButton, new com.intellij.uiDesigner.core.GridConstraints(37, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
         mainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 12, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer3 = new com.intellij.uiDesigner.core.Spacer();
