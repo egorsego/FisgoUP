@@ -267,7 +267,7 @@ public class ConfigCreator extends JFrame {
         saveButtonInit();
     }
 
-    public static boolean checkUUID(String value, String prefix) {
+    private boolean verifyUUID(String value, String prefix) {
         Pattern pattern = Pattern.compile("^[A-Fa-f0-9]{8}\\-[A-Fa-f0-9]{4}\\-4[A-Fa-f0-9]{3}\\-[A-Fa-f0-9]{4}\\-" + prefix + "[A-Fa-f0-9]{8}$");
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
@@ -290,7 +290,7 @@ public class ConfigCreator extends JFrame {
 
     private void checkUUID(JTextField textField, JLabel label) {
         /* FIXME later for Kassa-F */
-        if (!checkUUID(textField.getText(), HEAD_PLANT_NUM_DREAMKAS_F)) {
+        if (!verifyUUID(textField.getText(), HEAD_PLANT_NUM_DREAMKAS_F)) {
             label.setForeground(Color.RED);
             label.setText("Неверный формат UUID!");
         } else {
