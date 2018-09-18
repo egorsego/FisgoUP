@@ -223,7 +223,8 @@ public class ConfigCreator extends JFrame {
                 config.get("CHECK_RECEIPT_ADDRESS"),
                 config.get("OFD_SERVER_IP"));
 
-        tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
+       // tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
+        tuneAgents("1024", "1");
         tuneKktSigns("10");//(config.get("KKT_SIGNS"));
         tuneStage("133");
         tuneAddSign("10"); // tuneAddSign(config.get("ADD_KKT_SIGNS"));
@@ -680,7 +681,7 @@ public class ConfigCreator extends JFrame {
         }
     }
 
-    private void tuneOfd(String ofd) {
+    private void tuneOfdRadioButton(String ofd) {
         ButtonGroup ofdGroup = new ButtonGroup();
         ofdGroup.add(radioButtonOFDauto);
         ofdGroup.add(radioButtonOFDexpress);
@@ -697,11 +698,159 @@ public class ConfigCreator extends JFrame {
         ofdGroup.add(radioButtonOFDfirst);
         ofdGroup.add(radioButtonOFDouther);
 
+        boolean isSetOfdFromConfig = setOfdFromConfig(ofd);
+        if (!isSetOfdFromConfig) {
+            labelMessageOFD.setForeground(Color.RED);
+            labelMessageOFD.setText("<html>В конфиге на кассе<br>" +
+                    "установлено неверное <br> значение ОФД.<br>" +
+                    "Выберите необходимый ОФД <br> из списка</html>");
+        }
+        addListenerRadioButton();
+
         setOfdFromConfig(ofd);
 
     }
 
-    private void setOfdFromConfig(String ofdFromConfig) {
+    /**
+     * Метод добавляет листенер на каждый радио-баттон
+     */
+    private void addListenerRadioButton() {
+        //положить в массив
+        ArrayList<JRadioButton> arrRadioButton = new ArrayList<>();
+        arrRadioButton.add(radioButtonOFDauto);
+        arrRadioButton.add(radioButtonOFDexpress);
+        arrRadioButton.add(radioButtonDreamkas);
+        arrRadioButton.add(radioButtonOFDcontur);
+        arrRadioButton.add(radioButtonOFDevotor);
+        arrRadioButton.add(radioButtonOFDTaxcom);
+        arrRadioButton.add(radioButtonOFDya);
+        arrRadioButton.add(radioButtonOFDsbis);
+        arrRadioButton.add(radioButtonOFDastral);
+        arrRadioButton.add(radioButtonOFDkorus);
+        arrRadioButton.add(radioButtonOFDru);
+        arrRadioButton.add(radioButtonOFDyandex);
+        arrRadioButton.add(radioButtonOFDfirst);
+        arrRadioButton.add(radioButtonOFDouther);
+        //каждому элементу массива добавить листенер
+        arrRadioButton.forEach(jRadioButton -> jRadioButton.addActionListener(e -> {
+            if (radioButtonOFDouther.isSelected()) {
+                clearTextFieldsOfd();
+            }
+            labelMessageOFD.setText("");
+            fillOfdTextFields();
+        }));
+    }
+
+    private void clearTextFieldsOfd() {
+        textFieldOFDinn.setText("");
+        textFieldOFDserverAddress.setText("");
+        textFieldOFDname.setText("");
+        textFieldlOFDport.setText("");
+        textFieldOFDcheckReceiptAddress.setText("");
+        textFieldOFDipServer.setText("");
+    }
+
+    /**
+     * Метод заполняет текстовые поля ОФД в зависимости от выбранного ОФД в радио-баттонах и дизейблит их если выбран
+     * автономный режим
+     */
+    private void fillOfdTextFields() {
+        if (radioButtonOFDauto.isSelected()) {
+            setContentOfdTextField(OfdEnum.AUTONOMIC);
+            setOfdTextFieldEnable(false);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDexpress.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.ELECTRO_EXPRESS);
+            clearMessageOfdLabels();
+        } else if (radioButtonDreamkas.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.DREAMKAS);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDcontur.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.KONTUR);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDevotor.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.EVOTOR);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDTaxcom.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.TAXCOM);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDya.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.OFD_YA);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDsbis.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.SBIS_OFD);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDastral.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.KALUGA_ASTRAL);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDkorus.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.KORUS_OFD);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDru.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.OFD_RU);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDyandex.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.YANDEX);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDfirst.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.FIRST_OFD);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDouther.isSelected()) {
+            setOfdTextFieldEnable(true);
+            // setContentOfdTextField(OfdEnum.OUTHER);
+            validateOfdValuesFromCashbox();
+        }
+    }
+
+    private void clearMessageOfdLabels() {
+        labelMessageOFD.setText("");
+        labelMessageOfdInn.setText("");
+        labelMessageOfdAddressSer.setText("");
+        labelMessageOfdName.setText("");
+        labelMessageOfdPort.setText("");
+        labelMessageOfdReceiptCheque.setText("");
+        labelMessageIpServer.setText("");
+    }
+
+    /**
+     * Метод устанавливает enable/disable для текстовых полей офд
+     */
+    private void setOfdTextFieldEnable(boolean isEnable) {
+        textFieldOFDinn.setEnabled(isEnable);
+        textFieldOFDserverAddress.setEnabled(isEnable);
+        textFieldOFDname.setEnabled(isEnable);
+        textFieldlOFDport.setEnabled(isEnable);
+        textFieldOFDcheckReceiptAddress.setEnabled(isEnable);
+        textFieldOFDipServer.setEnabled(isEnable);
+    }
+
+    /**
+     * Метод заполняет текстовые поля ОФД
+     *
+     * @param ofd - enum описывающий офд
+     */
+    private void setContentOfdTextField(OfdEnum ofd) {
+        textFieldOFDinn.setText(ofd.getInn());
+        textFieldOFDserverAddress.setText(ofd.getAddress());
+        textFieldOFDname.setText(ofd.getName());
+        textFieldlOFDport.setText(ofd.getPort());
+        textFieldOFDcheckReceiptAddress.setText(ofd.getAddressCheckCheque());
+        textFieldOFDipServer.setText(ofd.getIpServer());
+    }
+
+    private boolean setOfdFromConfig(String ofdFromConfig) {
         switch (ofdFromConfig) {
             case "0":
                 radioButtonOFDauto.setSelected(true);
@@ -742,7 +891,11 @@ public class ConfigCreator extends JFrame {
             case "96":
                 radioButtonDreamkas.setSelected(true);
                 break;
+            default:
+                return false;
         }
+        return true;
+
     }
 
     /**
@@ -870,8 +1023,6 @@ public class ConfigCreator extends JFrame {
             comboBoxCurrentFnNum.addItem(fnNumber);
         }
 
-        validateNumber(textFieldFsNumberTable, labelValidateButtonTableFnNum, 16);
-
         //слушатель кнопки "добавить" в таблицу номеров ФН
         buttonFsNumberTable.addActionListener(e -> {
             //если нет сообщения об ошибке и поле ввода пустое
@@ -944,7 +1095,7 @@ public class ConfigCreator extends JFrame {
         validateNumberField(validatedTextField, messageLabel, limitChars);
         validatedTextField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
                 validateNumberField(validatedTextField, messageLabel, limitChars);
             }
         });
@@ -960,6 +1111,9 @@ public class ConfigCreator extends JFrame {
         } catch (NumberFormatException ex) {
             messageLabel.setForeground(Color.RED);
             messageLabel.setText("Недопустимое значение");
+        }
+        if (limitChars == 0) {
+            return;
         }
         if (validatedTextField.getText().length() != limitChars) {
             messageLabel.setText("Количество символов должно быть - " + limitChars);
@@ -1136,6 +1290,8 @@ public class ConfigCreator extends JFrame {
         textFieldUUID = new JTextField();
         mainPanel.add(textFieldUUID, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         labelArticleValidate = new JLabel();
+        labelArticleValidate.setBackground(new Color(-14606047));
+        labelArticleValidate.setForeground(new Color(-14606047));
         labelArticleValidate.setText("");
         mainPanel.add(labelArticleValidate, new com.intellij.uiDesigner.core.GridConstraints(3, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelFsNumberCount = new JLabel();
@@ -1493,6 +1649,8 @@ public class ConfigCreator extends JFrame {
         final JSeparator separator1 = new JSeparator();
         mainPanel.add(separator1, new com.intellij.uiDesigner.core.GridConstraints(36, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         messageValidateUUID = new JLabel();
+        messageValidateUUID.setBackground(new Color(-14606047));
+        messageValidateUUID.setForeground(new Color(-14606047));
         messageValidateUUID.setText("");
         mainPanel.add(messageValidateUUID, new com.intellij.uiDesigner.core.GridConstraints(4, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelMessageOFD = new JLabel();
