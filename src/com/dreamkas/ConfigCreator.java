@@ -1,6 +1,7 @@
 package com.dreamkas;
 
 import com.dreamkas.enums.*;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -204,7 +205,7 @@ public class ConfigCreator extends JFrame {
 
         tuneUUID(config.get("UUID"));
 
-        String test = "{\"FS NUMBER #1\":\"8710000100669525\",\"FS NUMBER #2\":\"8710000100669526\"}";
+        String test = "";
         tuneListFsNumberTable(test);
 
         tuneOrganizationName(config.get("FS_NUMBER_COUNT"));
@@ -1056,23 +1057,29 @@ public class ConfigCreator extends JFrame {
             comboBoxCurrentFnNum.addItem(fnNumber);
         }
 
+        //слушатель поля ввода для добавления нового номера в таблицу
+        textFieldFsNumberTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateNumber(textFieldFsNumberTable, labelValidateButtonTableFnNum, 16);
+            }
+        });
+
+
         //слушатель кнопки "добавить" в таблицу номеров ФН
         buttonFsNumberTable.addActionListener(e -> {
             //если нет сообщения об ошибке и поле ввода пустое
             if (labelValidateButtonTableFnNum.getText().equals("") & !textFieldFsNumberTable.getText().equals("")) {
+                modelListTableFn.addElement(textFieldFsNumberTable.getText());
+                comboBoxCurrentFnNum.addItem(textFieldFsNumberTable.getText());
                 //если размер листа больше чем количество зарегистрированных фн-ов
-                if (modelListTableFn.size() > (Integer) spinnerFsNumberCount.getValue() - 1) {
-                    labelValidateButtonTableFnNum.setForeground(Color.RED);
-                    labelValidateButtonTableFnNum.setText("<html>Количество номеров в таблице не должно превышать <br>" +
-                            "количество зарегистрированных ФН</html>");
+                if (modelListTableFn.size() != (Integer) spinnerFsNumberCount.getValue()) {
+                    labelMessageTableFn.setForeground(Color.RED);
+                    labelMessageTableFn.setText("<html>Количество номеров <br>в табл. не соответствует<br>" +
+                            "значению поля <br>\"Количество зарегистр-ых ФН\".</html>");
                     textFieldFsNumberTable.setText("");
                 } else {
-                    modelListTableFn.addElement(textFieldFsNumberTable.getText());
-                    comboBoxCurrentFnNum.addItem(textFieldFsNumberTable.getText());
-                    //если размер листа равен кол-ву зареганных фн-ов
-                    if (modelListTableFn.size() == (Integer) spinnerFsNumberCount.getValue()) {
-                        labelMessageTableFn.setText("");
-                    }
+                    labelMessageTableFn.setText("");
                     textFieldFsNumberTable.setText("");
                 }
             }
@@ -1100,6 +1107,9 @@ public class ConfigCreator extends JFrame {
      * @param value - значение из конфига
      */
     private void tuneFsNumberCount(String value) {
+        if (value.isEmpty()) {
+            value = "0";
+        }
         SpinnerModel sm = new SpinnerNumberModel(Integer.parseInt(value), 0, 100, 1);
         spinnerFsNumberCount.setModel(sm);
         spinnerFsNumberCount.addChangeListener(e -> {
@@ -1149,6 +1159,7 @@ public class ConfigCreator extends JFrame {
             return;
         }
         if (validatedTextField.getText().length() != limitChars) {
+            messageLabel.setForeground(Color.RED);
             messageLabel.setText("Количество символов должно быть - " + limitChars);
         }
     }
@@ -1230,14 +1241,21 @@ public class ConfigCreator extends JFrame {
      * @return ArrayList<String> - номера ФН-ов
      */
     private ArrayList<String> parserFnTable(String value) {
-        JSONObject fnTable = new JSONObject(value);
-        ArrayList<String> fnNumbersList = new ArrayList<>();
-        Iterator<String> keys = fnTable.keys();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            fnNumbersList.add(fnTable.getString(key));
+        try {
+            JSONObject fnTable = new JSONObject(value);
+            ArrayList<String> fnNumbersList = new ArrayList<>();
+            Iterator<String> keys = fnTable.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                fnNumbersList.add(fnTable.getString(key));
+            }
+            return fnNumbersList;
+        } catch (JSONException e) {
+            return new ArrayList<String>() {{
+                add("");
+            }};
         }
-        return fnNumbersList;
+
     }
 
     private void saveButtonInit() {
