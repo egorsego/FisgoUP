@@ -812,31 +812,33 @@ public class ConfigCreator extends JFrame {
      */
     private void tuneArticle(String value) {
         textFieldArticle.setText(value);
-        validateNumber(textFieldArticle, labelArticleValidate, 300);
+        validateNumber(textFieldArticle, labelArticleValidate, 13);
     }
 
     private void validateNumber(JTextField validatedTextField, JLabel messageLabel, int limitChars) {
+        validateNumberField(validatedTextField, messageLabel, limitChars);
         validatedTextField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(KeyEvent e) {
-                try {
-                    String[] arr = validatedTextField.getText().split("");
-                    for (String str : arr) {
-                        Integer.parseInt(str);
-                        messageLabel.setText("");
-                    }
-                } catch (NumberFormatException ex) {
-                    messageLabel.setForeground(Color.RED);
-                    messageLabel.setText("Недопустимое значение");
-                }
-                if (limitChars == 0) {
-
-                }
-                if (validatedTextField.getText().length() != limitChars) {
-                    messageLabel.setText("Количество символов должно быть - " + limitChars);
-                }
+            public void keyPressed(KeyEvent e) {
+                validateNumberField(validatedTextField, messageLabel, limitChars);
             }
         });
+    }
+
+    private void validateNumberField(JTextField validatedTextField, JLabel messageLabel, int limitChars) {
+        try {
+            String[] arr = validatedTextField.getText().split("");
+            for (String str : arr) {
+                int i = Integer.parseInt(str);
+                messageLabel.setText("");
+            }
+        } catch (NumberFormatException ex) {
+            messageLabel.setForeground(Color.RED);
+            messageLabel.setText("Недопустимое значение");
+        }
+        if (validatedTextField.getText().length() != limitChars) {
+            messageLabel.setText("Количество символов должно быть - " + limitChars);
+        }
     }
 
     /**
