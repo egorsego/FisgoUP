@@ -159,6 +159,8 @@ public class ConfigCreator extends JFrame {
     private JLabel labelMessageOfdPort;
     private JLabel labelMessageOfdReceiptCheque;
     private JLabel labelMessageIpServer;
+    private JTextField textFieldEmailCabinet;
+    private JLabel labelMessageEmailCabinet;
     private boolean saveConfigEnable;
 
 
@@ -223,7 +225,7 @@ public class ConfigCreator extends JFrame {
                 config.get("CHECK_RECEIPT_ADDRESS"),
                 config.get("OFD_SERVER_IP"));
 
-       // tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
+        // tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
         tuneAgents("1024", "1");
         tuneKktSigns("10");//(config.get("KKT_SIGNS"));
         tuneStage("133");
@@ -491,9 +493,40 @@ public class ConfigCreator extends JFrame {
         }
     }
 
+    /**
+     * Метод устанавливает значение подключения к кабинету и активирует поле для ввода email.
+     *
+     * @param isCabinetEnable - значение из конфига на кассе
+     */
     private void tuneIsCabinetEnable(String isCabinetEnable) {
+        textFieldEmailCabinet.setEnabled(false);
+
+        //листенер для чекбокса
+        checkBoxCabinetIsEnable.addActionListener(e -> {
+            if (checkBoxCabinetIsEnable.isSelected()) {
+                textFieldEmailCabinet.setEnabled(true);
+                validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+            } else {
+                textFieldEmailCabinet.setEnabled(false);
+                labelMessageEmailCabinet.setText("");
+            }
+        });
+
         if (isCabinetEnable.equals("1")) {
             checkBoxCabinetIsEnable.setSelected(true);
+            textFieldEmailCabinet.setEnabled(true);
+
+            //валидация значения из конфига
+            validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+
+            //валидация значения при изменении
+            textFieldEmailCabinet.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+                }
+            });
+
         }
     }
 
@@ -1241,7 +1274,8 @@ public class ConfigCreator extends JFrame {
                         && messageValidateRegNum.getText().isEmpty()
                         && messageValidateKktPluntNum.getText().isEmpty()
                         && labelMessageTaxSystem.getText().isEmpty()
-                        && labelMessageOFD.getText().isEmpty();
+                        && labelMessageOFD.getText().isEmpty()
+                        && labelMessageEmailCabinet.getText().isEmpty();
         if (saveButtonEnable) {
             saveButton.setEnabled(true);
         } else {
@@ -1674,6 +1708,11 @@ public class ConfigCreator extends JFrame {
         labelMessageIpServer = new JLabel();
         labelMessageIpServer.setText("");
         mainPanel.add(labelMessageIpServer, new com.intellij.uiDesigner.core.GridConstraints(29, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        textFieldEmailCabinet = new JTextField();
+        mainPanel.add(textFieldEmailCabinet, new com.intellij.uiDesigner.core.GridConstraints(35, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        labelMessageEmailCabinet = new JLabel();
+        labelMessageEmailCabinet.setText("");
+        mainPanel.add(labelMessageEmailCabinet, new com.intellij.uiDesigner.core.GridConstraints(35, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
