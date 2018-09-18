@@ -443,6 +443,23 @@ public class ConfigCreator extends JFrame {
             switch (agent) {
                 case NO_AGENTS:
                     checkBoxAgents0.setSelected(true);
+
+                    checkBoxAgents1.setSelected(false);
+                    checkBoxAgents2.setSelected(false);
+                    checkBoxAgents4.setSelected(false);
+                    checkBoxAgents8.setSelected(false);
+                    checkBoxAgents16.setSelected(false);
+                    checkBoxAgents32.setSelected(false);
+                    checkBoxAgents64.setSelected(false);
+
+                    checkBoxAgents1.setEnabled(false);
+                    checkBoxAgents2.setEnabled(false);
+                    checkBoxAgents4.setEnabled(false);
+                    checkBoxAgents8.setEnabled(false);
+                    checkBoxAgents16.setEnabled(false);
+                    checkBoxAgents32.setEnabled(false);
+                    checkBoxAgents64.setEnabled(false);
+
                     comboBoxCurentAgent.removeAllItems();
                     break;
                 case AGENT:
@@ -815,29 +832,15 @@ public class ConfigCreator extends JFrame {
      */
     private void tuneArticle(String value) {
         textFieldArticle.setText(value);
-        validateNumber(textFieldArticle, labelArticleValidate, 300);
+        validateNumber(textFieldArticle, labelArticleValidate, 13);
     }
 
     private void validateNumber(JTextField validatedTextField, JLabel messageLabel, int limitChars) {
+        validateNumberField(validatedTextField, messageLabel, limitChars);
         validatedTextField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(KeyEvent e) {
-                try {
-                    String[] arr = validatedTextField.getText().split("");
-                    for (String str : arr) {
-                        Integer.parseInt(str);
-                        messageLabel.setText("");
-                    }
-                } catch (NumberFormatException ex) {
-                    messageLabel.setForeground(Color.RED);
-                    messageLabel.setText("Недопустимое значение");
-                }
-                if (limitChars == 0) {
-
-                }
-                if (validatedTextField.getText().length() != limitChars) {
-                    messageLabel.setText("Количество символов должно быть - " + limitChars);
-                }
+            public void keyPressed(KeyEvent e) {
+                validateNumberField(validatedTextField, messageLabel, limitChars);
             }
         });
     }
@@ -915,7 +918,21 @@ public class ConfigCreator extends JFrame {
         return crc;
     }
 
-
+    private void validateNumberField(JTextField validatedTextField, JLabel messageLabel, int limitChars) {
+        try {
+            String[] arr = validatedTextField.getText().split("");
+            for (String str : arr) {
+                int i = Integer.parseInt(str);
+                messageLabel.setText("");
+            }
+        } catch (NumberFormatException ex) {
+            messageLabel.setForeground(Color.RED);
+            messageLabel.setText("Недопустимое значение");
+        }
+        if (validatedTextField.getText().length() != limitChars) {
+            messageLabel.setText("Количество символов должно быть - " + limitChars);
+        }
+    }
     /**
      * Проверка заводского номера
      *

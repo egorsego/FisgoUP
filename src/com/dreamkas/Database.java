@@ -159,6 +159,9 @@ public class Database {
                 pw.println(query);
             }
 
+            String queryAddManual = "ALTER TABLE CONFIG ADD COLUMN MANUAL_CHANGE INTEGER DEFAULT(1)";
+            pw.println(queryAddManual);
+
             pw.println("EOF");
             pw.append("\n");
 
