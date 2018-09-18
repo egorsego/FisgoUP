@@ -442,6 +442,23 @@ public class ConfigCreator extends JFrame {
             switch (agent) {
                 case NO_AGENTS:
                     checkBoxAgents0.setSelected(true);
+
+                    checkBoxAgents1.setSelected(false);
+                    checkBoxAgents2.setSelected(false);
+                    checkBoxAgents4.setSelected(false);
+                    checkBoxAgents8.setSelected(false);
+                    checkBoxAgents16.setSelected(false);
+                    checkBoxAgents32.setSelected(false);
+                    checkBoxAgents64.setSelected(false);
+
+                    checkBoxAgents1.setEnabled(false);
+                    checkBoxAgents2.setEnabled(false);
+                    checkBoxAgents4.setEnabled(false);
+                    checkBoxAgents8.setEnabled(false);
+                    checkBoxAgents16.setEnabled(false);
+                    checkBoxAgents32.setEnabled(false);
+                    checkBoxAgents64.setEnabled(false);
+
                     comboBoxCurentAgent.removeAllItems();
                     break;
                 case AGENT:
