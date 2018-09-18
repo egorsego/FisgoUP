@@ -666,10 +666,7 @@ public class ConfigCreator extends JFrame {
             messageLabel.setForeground(Color.RED);
             messageLabel.setText("Недопустимое значение");
         }
-        if (limitChars == 0) {
-
-        }
-        if (validatedTextField.getText().length() != limitChars - 1) {
+        if (validatedTextField.getText().length() != limitChars) {
             messageLabel.setText("Количество символов должно быть - " + limitChars);
         }
     }
