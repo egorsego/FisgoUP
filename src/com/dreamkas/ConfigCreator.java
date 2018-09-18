@@ -2,6 +2,7 @@ package com.dreamkas;
 
 import com.dreamkas.enums.*;
 import org.json.JSONObject;
+import org.sqlite.util.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -696,17 +697,19 @@ public class ConfigCreator extends JFrame {
 
     private void tuneKktPlantNum(String value) {
         textFieldKktPluntNum.setText(value);
+        validateRegNumField();
         validateNumber(textFieldKktPluntNum, messageValidateKktPluntNum, 10);
         validatePlantNum(textFieldKktPluntNum, messageValidateKktPluntNum);
     }
 
     private void tuneKktRegNum(String value) {
         textFieldKktRegNum.setText(value);
-        validateNumber(textFieldKktRegNum, messageValidateRegNum, 16);
+        validateRegNum();
     }
 
     private void tuneOrganizationInn(String value) {
         textFieldOrganizationINN.setText(value);
+        validateRegNumField();
         validateNumber(textFieldOrganizationINN, messageValidateInnOrg, 10);
     }
 
@@ -838,6 +841,80 @@ public class ConfigCreator extends JFrame {
             }
         });
     }
+
+    private void validateRegNum() {
+        validateRegNumField();
+        textFieldKktRegNum.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateRegNumField();
+            }
+        });
+    }
+
+    private void validateRegNumField() {
+        try {
+            String[] arr = textFieldKktRegNum.getText().split("");
+            for (String str : arr) {
+                Integer.parseInt(str);
+                messageValidateRegNum.setText("");
+            }
+        } catch (NumberFormatException ex) {
+            messageValidateRegNum.setForeground(Color.RED);
+            messageValidateRegNum.setText("Недопустимое значение");
+            return;
+        }
+        if (textFieldKktRegNum.getText().length() != 16) {
+            messageValidateRegNum.setText("Количество символов должно быть - 16");
+            return;
+        }
+        // Подсчёт контрольной суммы
+        String kktPlantNum = leftComplite(textFieldKktPluntNum.getText(), 20);
+        System.out.println("KKT PLANT NUM : " + kktPlantNum);
+        String inn = leftComplite(textFieldOrganizationINN.getText(), 12);
+        System.out.println("INN : " + inn);
+        String fnsNum = textFieldKktRegNum.getText().substring(0, 10);
+        System.out.println("FNS NUM : " + fnsNum);
+        int crcInit = Integer.parseInt(textFieldKktRegNum.getText().substring(10));
+        System.out.println("CRC INIT : " + crcInit);
+        if (crcInit != crc(fnsNum + inn + kktPlantNum)) {
+            System.out.println("INVALID KKT PLANT NUM!!!");
+            messageValidateRegNum.setText("Неверный регистрационный номер");
+            return;
+        }
+    }
+
+    /**
+     * @param num
+     * @param digits
+     * @return
+     */
+    public static String leftComplite(String text, int digits) {
+        while (text.length() < digits) text = "0" + text;
+        return text;
+    }
+
+    /**
+     * @param text
+     * @return
+     */
+    private int crc(String str) {
+        int crc = 0xFFFF; // initial value
+        int polynomial = 0x1021; // 0001 0000 0010 0001 (0, 5, 12)
+        byte[] bytes = str.getBytes();
+        for (byte b : bytes) {
+            for (int i = 0; i < 8; i++) {
+                boolean bit = ((b >> (7 - i) & 1) == 1);
+                boolean c15 = ((crc >> 15 & 1) == 1);
+                crc <<= 1;
+                if (c15 ^ bit) crc ^= polynomial;
+            }
+        }
+        crc &= 0xffff;
+        System.out.println("CRC CLC : " + crc);
+        return crc;
+    }
+
 
     /**
      * Проверка заводского номера
@@ -1008,6 +1085,8 @@ public class ConfigCreator extends JFrame {
         textFieldUUID = new JTextField();
         mainPanel.add(textFieldUUID, new com.intellij.uiDesigner.core.GridConstraints(4, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         labelArticleValidate = new JLabel();
+        labelArticleValidate.setBackground(new Color(-14606047));
+        labelArticleValidate.setForeground(new Color(-14606047));
         labelArticleValidate.setText("");
         mainPanel.add(labelArticleValidate, new com.intellij.uiDesigner.core.GridConstraints(3, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelFsNumberCount = new JLabel();
@@ -1365,6 +1444,8 @@ public class ConfigCreator extends JFrame {
         final JSeparator separator1 = new JSeparator();
         mainPanel.add(separator1, new com.intellij.uiDesigner.core.GridConstraints(36, 2, 1, 2, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         messageValidateUUID = new JLabel();
+        messageValidateUUID.setBackground(new Color(-14606047));
+        messageValidateUUID.setForeground(new Color(-14606047));
         messageValidateUUID.setText("");
         mainPanel.add(messageValidateUUID, new com.intellij.uiDesigner.core.GridConstraints(4, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
