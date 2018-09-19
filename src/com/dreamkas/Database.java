@@ -128,36 +128,65 @@ public class Database {
     /*
     Set config field list
      */
-    public void setConfigTable(Vector<Vector<String>> table) {
+//    public void setConfigTable(Vector<Vector<String>> table) {
+//        try {
+//            PrintWriter pw = new PrintWriter("updateConfigDb.sh", "cp866");
+//
+//            pw.println("#!/bin/sh");
+//            pw.append("\n");
+//            pw.println("sqlite3 <<EOF");
+//            pw.println(".open configDb.db");
+//
+//            for(int i = 1; i < table.size(); i++){
+//                String query = "";
+//                if(table.get(i).get(2).equals("12")){
+//                    String value = new String(table.get(i).get(1));
+//                    query = "UPDATE CONFIG SET " + table.get(i).get(0) + "='"
+//                            + value + "' WHERE ID=1;";
+//                } else if(table.get(i).get(2).equals("4")) {
+//                    String value = new String(table.get(i).get(1));
+//                    query = "UPDATE CONFIG SET " + table.get(i).get(0) + "="
+//                            + value + " WHERE ID=1;";
+//                } else {
+//                    query = "";
+//                }
+//
+//                if(query.equals("")) {
+//                    System.out.println("Error in creating query!");
+//                    continue;
+//                }
+//
+//                pw.println(query);
+//            }
+//
+//            String queryAddManual = "ALTER TABLE CONFIG ADD COLUMN MANUAL_CHANGE INTEGER DEFAULT(1)";
+//            pw.println(queryAddManual);
+//
+//            pw.println("EOF");
+//            pw.append("\n");
+//
+//            pw.close();
+//        } catch ( Exception e ) {
+//            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+//        }
+//        System.out.println("Operation done successfully");
+//    }
+
+    public void setConfigTable(Map<String, String> table) {
         try {
             PrintWriter pw = new PrintWriter("updateConfigDb.sh", "cp866");
 
             pw.println("#!/bin/sh");
             pw.append("\n");
-            pw.println("sqlite3 <<EOF");
+            pw.println("sqlite3 «EOF");
             pw.println(".open configDb.db");
 
-            for(int i = 1; i < table.size(); i++){
-                String query = "";
-                if(table.get(i).get(2).equals("12")){
-                    String value = new String(table.get(i).get(1));
-                    query = "UPDATE CONFIG SET " + table.get(i).get(0) + "='"
-                            + value + "' WHERE ID=1;";
-                } else if(table.get(i).get(2).equals("4")) {
-                    String value = new String(table.get(i).get(1));
-                    query = "UPDATE CONFIG SET " + table.get(i).get(0) + "="
-                            + value + " WHERE ID=1;";
-                } else {
-                    query = "";
-                }
-
-                if(query.equals("")) {
-                    System.out.println("Error in creating query!");
-                    continue;
-                }
-
+            table.forEach((field, value) -> {
+                String query = "UPDATE CONFIG SET " + field + "='"
+                        + value + "' WHERE ID=1;";
                 pw.println(query);
-            }
+
+            });
 
             String queryAddManual = "ALTER TABLE CONFIG ADD COLUMN MANUAL_CHANGE INTEGER DEFAULT(1)";
             pw.println(queryAddManual);
@@ -166,8 +195,8 @@ public class Database {
             pw.append("\n");
 
             pw.close();
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         System.out.println("Operation done successfully");
     }

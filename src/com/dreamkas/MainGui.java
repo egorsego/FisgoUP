@@ -152,33 +152,33 @@ public class MainGui extends JFrame {
     }
 
     //обработчик нажатия кнопки загрузки правленного конфига на кассу
-    public class UploadConfigListener implements ActionListener {
-
-        public void actionPerformed(ActionEvent e) {
-            LogField.setText("");
-            System.out.println("Save config to drawer!");
-            int rows = configTable.getModel().getRowCount();
-
-            Vector<Vector<String>> queryTab = new Vector<>();
-
-            for (int i = 0; i < rows; i++) {
-                Vector<String> queryLine = new Vector<>();
-                queryLine.add((String) configTable.getModel().getValueAt(i, 0));
-                queryLine.add((String) configTable.getModel().getValueAt(i, 1));
-                queryLine.add(configFieldTypes.get(i));
-                queryTab.add(queryLine);
-            }
-
-
-            m_fe.uploadConfig(ipTextField.getText(), queryTab);
-            additionalFrame.setVisible(false);
-
-            saveDataBase.setEnabled(false);
-
-            updateDrawer.setEnabled(false);
-            currentOperation = "Saving config";
-        }
-    }
+//    public class UploadConfigListener implements ActionListener {
+//
+//        public void actionPerformed(ActionEvent e) {
+//            LogField.setText("");
+//            System.out.println("Save config to drawer!");
+//            int rows = configTable.getModel().getRowCount();
+//
+//            Vector<Vector<String>> queryTab = new Vector<>();
+//
+//            for (int i = 0; i < rows; i++) {
+//                Vector<String> queryLine = new Vector<>();
+//                queryLine.add((String) configTable.getModel().getValueAt(i, 0));
+//                queryLine.add((String) configTable.getModel().getValueAt(i, 1));
+//                queryLine.add(configFieldTypes.get(i));
+//                queryTab.add(queryLine);
+//            }
+//
+//
+//            m_fe.uploadConfig(ipTextField.getText(), queryTab);
+//            additionalFrame.setVisible(false);
+//
+//            saveDataBase.setEnabled(false);
+//
+//            updateDrawer.setEnabled(false);
+//            currentOperation = "Saving config";
+//        }
+//    }
 
     //обработчик нажатия кнопки клонирования кассы
     public class CloneDrawerListener implements ActionListener {
@@ -197,7 +197,7 @@ public class MainGui extends JFrame {
 
     public void drawConfigPanel(ArrayList<ArrayList<String>> config) {
         ConfigFieldsBuilder configFieldsBuilder = new ConfigFieldsBuilder();
-        JFrame configCreator = new ConfigCreator(configFieldsBuilder.filterConfigFields(config));
+        JFrame configCreator = new ConfigCreator(configFieldsBuilder.filterConfigFields(config), m_fe, ipTextField.getText());
 
         configCreator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -272,7 +272,6 @@ public class MainGui extends JFrame {
             currentOperation = "";
         }
 
-
         updateDrawer.setEnabled(true);
 
         if (msg.equals("Success")) {
@@ -301,8 +300,8 @@ public class MainGui extends JFrame {
         DownloadConfigListener buttonDownloadConfig = new DownloadConfigListener();
         getConfigButton.addActionListener(buttonDownloadConfig);
 
-        UploadConfigListener buttonUploadConfig = new UploadConfigListener();
-        saveDataBase.addActionListener(buttonUploadConfig);
+//        UploadConfigListener buttonUploadConfig = new UploadConfigListener();
+//        saveDataBase.addActionListener(buttonUploadConfig);
 
         CloneDrawerListener buttonCloneDrawerListener = new CloneDrawerListener();
         buttonGetClone.addActionListener(buttonCloneDrawerListener);

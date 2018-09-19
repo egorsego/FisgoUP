@@ -29,155 +29,162 @@ import static com.dreamkas.enums.TaxSystem.*;
 
 public class ConfigCreator extends JFrame {
 
-    private JCheckBox checkBoxFsReplaceMode;
-    private JComboBox comBoxKktMode;
-    private JCheckBox checkBoxShiftTimer;
-    private JTextField textFieldArticle;
-    private JTextField textFieldUUID;
-    private JTextField textFieldFsNumber;
-    private JLabel labelKktMode;
-    private JPanel mainPanel;
-    private JLabel labelFsReplaceMode;
-    private JLabel labelShiftTimer;
-    private JLabel labelArticle;
-    private JLabel labelUUID;
-    private JLabel labelFsNumber;
-    private JSpinner spinnerFsNumberCount;
-    private JTextField textFieldOrganizationName;
-    private JTextField textFieldCalculationAddress;
-    private JTextField textFieldCalculationPlace;
-    private JTextField textFieldOrganizationINN;
-    private JTextField textFieldKktRegNum;
-    private JTextField textFieldKktPluntNum;
-    private JList listFsNumberTable;
-    private JTextField textFieldFsNumberTable;
-    private JButton buttonFsNumberTable;
-    private JCheckBox checkBoxTaxTotal;
-    private JCheckBox checkBoxTaxSimplified;
-    private JCheckBox checkBoxTaxSimplifiedRevMinCon;
-    private JCheckBox checkBoxTaxENVD;
-    private JCheckBox checkBoxTaxESHN;
-    private JCheckBox checkBoxTaxPatent;
-    private JCheckBox checkBoxEncryptionSign;
-    private JCheckBox checkBoxExcisableSign;
-    private JCheckBox checkBoxClcServiceSign;
-    private JCheckBox checkBoxGamblingSing;
-    private JCheckBox checkBoxLoterySign;
-    private JCheckBox checkBoxPayingAgentSign;
-    private JRadioButton radioButtonOFDauto;
-    private JRadioButton radioButtonOFDexpress;
-    private JRadioButton radioButtonDreamkas;
-    private JRadioButton radioButtonOFDcontur;
-    private JRadioButton radioButtonOFDevotor;
-    private JRadioButton radioButtonOFDTaxcom;
-    private JRadioButton radioButtonOFDya;
-    private JRadioButton radioButtonOFDsbis;
-    private JRadioButton radioButtonOFDastral;
-    private JRadioButton radioButtonOFDkorus;
-    private JRadioButton radioButtonOFDru;
-    private JRadioButton radioButtonOFDyandex;
-    private JRadioButton radioButtonOFDfirst;
-    private JRadioButton radioButtonOFDouther;
-    private JTextField textFieldOFDinn;
-    private JTextField textFieldOFDserverAddress;
-    private JTextField textFieldOFDname;
-    private JTextField textFieldlOFDport;
-    private JTextField textFieldOFDcheckReceiptAddress;
-    private JTextField textFieldOFDipServer;
-    private JCheckBox checkBoxAgents0;
-    private JCheckBox checkBoxAgents8;
-    private JCheckBox checkBoxAgents1;
-    private JCheckBox checkBoxAgents2;
-    private JCheckBox checkBoxAgents4;
-    private JCheckBox checkBoxAgents32;
-    private JCheckBox checkBoxAgents64;
-    private JCheckBox checkBoxAgents16;
-    private JComboBox comboBoxCurentAgent;
-    private JCheckBox checkBoxSign0;
-    private JCheckBox checkBoxSign4;
-    private JCheckBox checkBoxSign8;
-    private JCheckBox checkBoxSign1;
-    private JCheckBox checkBoxSign2;
-    private JCheckBox checkBoxAddSign1;
-    private JCheckBox checkBoxAddSign2;
-    private JCheckBox checkBoxAddSign8;
-    private JCheckBox checkBoxAddSign4;
-    private JCheckBox checkBoxAddSign32;
-    private JComboBox comboBoxStage;
-    private JLabel labelFsNumberCount;
-    private JLabel labelFsNumberTable;
-    private JLabel labelOrganizationName;
-    private JLabel labelCalculationAddress;
-    private JLabel labelCalculationPlace;
-    private JLabel labelOrganizationINN;
-    private JLabel labelKktRegNum;
-    private JLabel labelKktPlantNum;
-    private JLabel labelTaxSystem;
-    private JComboBox comboBoxCurentTax;
-    private JLabel labelCurentTax;
-    private JLabel labelEncryptionSign;
-    private JLabel labelExcisableSign;
-    private JLabel labelClcServiceSign;
-    private JLabel labelGamblingSign;
-    private JLabel labelLoterySign;
-    private JLabel labelPayingAgentSign;
-    private JLabel labelOfd;
-    private JLabel labelOFDinn;
-    private JLabel labelOFDserverAddress;
-    private JLabel labelOFDname;
-    private JLabel labelOFDport;
-    private JLabel labelOFDcheckReceiptAddress;
-    private JLabel labelOFDipServer;
-    private JLabel labelAgents;
-    private JLabel labelCurentAgent;
-    private JLabel labelKKTsign;
-    private JLabel labelAddSign;
-    private JCheckBox checkBoxAddSign0;
-    private JLabel labelStage;
-    private JLabel labelIsCabEnable;
-    private JCheckBox checkBoxCabinetIsEnable;
-    private JLabel labelArticleValidate;
-    private JLabel labelValidateFsNumber;
-    private JLabel labelMessageTableFn;
-    private JButton buttonDeleteNumberFsTable;
-    private JLabel labelValidateButtonTableFnNum;
-    private JComboBox comboBoxCurrentFnNum;
-    private JLabel messageValidateOrgName;
-    private JLabel messageValidateAddressCalc;
-    private JLabel messageValidatePlaceCalc;
-    private JLabel messageValidateInnOrg;
-    private JLabel messageValidateRegNum;
-    private JLabel messageValidateKktPluntNum;
-    private JLabel labelMessageTaxSystem;
-    private JLabel labelMessageStage;
-    private JButton closeButton;
-    private JButton saveButton;
-    private JCheckBox checkBoxAddSign16;
-    private JLabel messageValidateUUID;
-    private JLabel labelMessageOFD;
-    private JLabel labelMessageOfdInn;
-    private JLabel labelMessageOfdAddressSer;
-    private JLabel labelMessageOfdName;
-    private JLabel labelMessageOfdPort;
-    private JLabel labelMessageOfdReceiptCheque;
-    private JLabel labelMessageIpServer;
-    private JTextField textFieldEmailCabinet;
-    private JLabel labelMessageEmailCabinet;
-    private boolean saveConfigEnable;
+    public JCheckBox checkBoxFsReplaceMode;
+    public JComboBox comBoxKktMode;
+    public JCheckBox checkBoxShiftTimer;
+    public JTextField textFieldArticle;
+    public JTextField textFieldUUID;
+    public JTextField textFieldFsNumber;
+    public JLabel labelKktMode;
+    public JPanel mainPanel;
+    public JLabel labelFsReplaceMode;
+    public JLabel labelShiftTimer;
+    public JLabel labelArticle;
+    public JLabel labelUUID;
+    public JLabel labelFsNumber;
+    public JSpinner spinnerFsNumberCount;
+    public JTextField textFieldOrganizationName;
+    public JTextField textFieldCalculationAddress;
+    public JTextField textFieldCalculationPlace;
+    public JTextField textFieldOrganizationINN;
+    public JTextField textFieldKktRegNum;
+    public JTextField textFieldKktPluntNum;
+    public JList listFsNumberTable;
+    public JTextField textFieldFsNumberTable;
+    public JButton buttonFsNumberTable;
+    public JCheckBox checkBoxTaxTotal;
+    public JCheckBox checkBoxTaxSimplified;
+    public JCheckBox checkBoxTaxSimplifiedRevMinCon;
+    public JCheckBox checkBoxTaxENVD;
+    public JCheckBox checkBoxTaxESHN;
+    public JCheckBox checkBoxTaxPatent;
+    public JCheckBox checkBoxEncryptionSign;
+    public JCheckBox checkBoxExcisableSign;
+    public JCheckBox checkBoxClcServiceSign;
+    public JCheckBox checkBoxGamblingSing;
+    public JCheckBox checkBoxLoterySign;
+    public JCheckBox checkBoxPayingAgentSign;
+    public JRadioButton radioButtonOFDauto;
+    public JRadioButton radioButtonOFDexpress;
+    public JRadioButton radioButtonDreamkas;
+    public JRadioButton radioButtonOFDcontur;
+    public JRadioButton radioButtonOFDevotor;
+    public JRadioButton radioButtonOFDTaxcom;
+    public JRadioButton radioButtonOFDya;
+    public JRadioButton radioButtonOFDsbis;
+    public JRadioButton radioButtonOFDastral;
+    public JRadioButton radioButtonOFDkorus;
+    public JRadioButton radioButtonOFDru;
+    public JRadioButton radioButtonOFDyandex;
+    public JRadioButton radioButtonOFDfirst;
+    public JRadioButton radioButtonOFDouther;
+    public JTextField textFieldOFDinn;
+    public JTextField textFieldOFDserverAddress;
+    public JTextField textFieldOFDname;
+    public JTextField textFieldlOFDport;
+    public JTextField textFieldOFDcheckReceiptAddress;
+    public JTextField textFieldOFDipServer;
+    public JCheckBox checkBoxAgents0;
+    public JCheckBox checkBoxAgents8;
+    public JCheckBox checkBoxAgents1;
+    public JCheckBox checkBoxAgents2;
+    public JCheckBox checkBoxAgents4;
+    public JCheckBox checkBoxAgents32;
+    public JCheckBox checkBoxAgents64;
+    public JCheckBox checkBoxAgents16;
+    public JComboBox comboBoxCurentAgent;
+    public JCheckBox checkBoxSign0;
+    public JCheckBox checkBoxSign4;
+    public JCheckBox checkBoxSign8;
+    public JCheckBox checkBoxSign1;
+    public JCheckBox checkBoxSign2;
+    public JCheckBox checkBoxAddSign1;
+    public JCheckBox checkBoxAddSign2;
+    public JCheckBox checkBoxAddSign8;
+    public JCheckBox checkBoxAddSign4;
+    public JCheckBox checkBoxAddSign32;
+    public JComboBox comboBoxStage;
+    public JLabel labelFsNumberCount;
+    public JLabel labelFsNumberTable;
+    public JLabel labelOrganizationName;
+    public JLabel labelCalculationAddress;
+    public JLabel labelCalculationPlace;
+    public JLabel labelOrganizationINN;
+    public JLabel labelKktRegNum;
+    public JLabel labelKktPlantNum;
+    public JLabel labelTaxSystem;
+    public JComboBox comboBoxCurentTax;
+    public JLabel labelCurentTax;
+    public JLabel labelEncryptionSign;
+    public JLabel labelExcisableSign;
+    public JLabel labelClcServiceSign;
+    public JLabel labelGamblingSign;
+    public JLabel labelLoterySign;
+    public JLabel labelPayingAgentSign;
+    public JLabel labelOfd;
+    public JLabel labelOFDinn;
+    public JLabel labelOFDserverAddress;
+    public JLabel labelOFDname;
+    public JLabel labelOFDport;
+    public JLabel labelOFDcheckReceiptAddress;
+    public JLabel labelOFDipServer;
+    public JLabel labelAgents;
+    public JLabel labelCurentAgent;
+    public JLabel labelKKTsign;
+    public JLabel labelAddSign;
+    public JCheckBox checkBoxAddSign0;
+    public JLabel labelStage;
+    public JLabel labelIsCabEnable;
+    public JCheckBox checkBoxCabinetIsEnable;
+    public JLabel labelArticleValidate;
+    public JLabel labelValidateFsNumber;
+    public JLabel labelMessageTableFn;
+    public JButton buttonDeleteNumberFsTable;
+    public JLabel labelValidateButtonTableFnNum;
+    public JComboBox comboBoxCurrentFnNum;
+    public JLabel messageValidateOrgName;
+    public JLabel messageValidateAddressCalc;
+    public JLabel messageValidatePlaceCalc;
+    public JLabel messageValidateInnOrg;
+    public JLabel messageValidateRegNum;
+    public JLabel messageValidateKktPluntNum;
+    public JLabel labelMessageTaxSystem;
+    public JLabel labelMessageStage;
+    public JButton closeButton;
+    public JButton saveButton;
+    public JCheckBox checkBoxAddSign16;
+    public JLabel messageValidateUUID;
+    public JLabel labelMessageOFD;
+    public JLabel labelMessageOfdInn;
+    public JLabel labelMessageOfdAddressSer;
+    public JLabel labelMessageOfdName;
+    public JLabel labelMessageOfdPort;
+    public JLabel labelMessageOfdReceiptCheque;
+    public JLabel labelMessageIpServer;
+    public JTextField textFieldEmailCabinet;
+    public JLabel labelMessageEmailCabinet;
+    private JButton testButton1;
+    private JLabel labelMessageCountFN;
+    public boolean saveConfigEnable;
 
 
-    private Map<String, String> config;
-    private int countFn;
-    private DefaultListModel modelListTableFn;
-    private final String HEAD_PLANT_NUM_DREAMKAS_F = "0496";
+    public Map<String, String> config;
+    public int countFn;
+    public DefaultListModel modelListTableFn;
+    public final String HEAD_PLANT_NUM_DREAMKAS_F = "0496";
 
-    private final String REG_EXP_UUID = "^[A-Fa-f0-9]{8}\\-[A-Fa-f0-9]{4}\\-4[A-Fa-f0-9]{3}\\-[A-Fa-f0-9]{4}\\-" + HEAD_PLANT_NUM_DREAMKAS_F + "[A-Fa-f0-9]{8}$";
-    private final String REG_EXP_IP = "^(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}$";
+    public final String REG_EXP_UUID = "^[A-Fa-f0-9]{8}\\-[A-Fa-f0-9]{4}\\-4[A-Fa-f0-9]{3}\\-[A-Fa-f0-9]{4}\\-" + HEAD_PLANT_NUM_DREAMKAS_F + "[A-Fa-f0-9]{8}$";
+    public final String REG_EXP_IP = "^(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}$";
 
     Map<TaxSystem, JCheckBox> mapTaxAndCheckBox;
     Map<Agents, JCheckBox> mapAgentsAndCheckBox;
 
-    ConfigCreator(Map<String, String> config) {
+    private FrontEnd m_fe;
+    private String ipCashbox;
+
+    ConfigCreator(Map<String, String> config, FrontEnd m_fe, String ipCashbox) {
+        this.m_fe = m_fe;
+        this.ipCashbox = ipCashbox;
         mapTaxAndCheckBox = new HashMap<>();
         mapAgentsAndCheckBox = new HashMap<>();
         this.config = config;
@@ -192,6 +199,10 @@ public class ConfigCreator extends JFrame {
         setContentPane(scroll);
 
         addListenerCheckBoxes();
+
+        testButton1.addActionListener(e -> {
+            saveConfig();
+        });
     }
 
     /**
@@ -209,7 +220,7 @@ public class ConfigCreator extends JFrame {
         String test = "";
         tuneListFsNumberTable(test);
 
-        tuneOrganizationName(config.get("FS_NUMBER_COUNT"));
+        tuneOrganizationName(config.get("ORGANIZATION_NAME"));
         tuneCalculationAddress(config.get("CALCULATION_ADDRESS"));
         tuneCalculationPlace(config.get("CALCULATION_PLACE"));
         tuneOrganizationInn(config.get("ORGANIZATION_INN"));
@@ -322,6 +333,16 @@ public class ConfigCreator extends JFrame {
     }
 
     private void validateForEmpty(JTextField textField, JLabel labelMessage) {
+        validateForEmptyField(textField, labelMessage);
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateForEmptyField(textField, labelMessage);
+            }
+        });
+    }
+
+    private void validateForEmptyField(JTextField textField, JLabel labelMessage) {
         if (textField.getText().isEmpty()) {
             labelMessage.setForeground(Color.RED);
             labelMessage.setText("<html>Введите значение</html>");
@@ -598,14 +619,6 @@ public class ConfigCreator extends JFrame {
             switch (agent) {
                 case NO_AGENTS:
                     checkBoxAgents0.setSelected(true);
-
-                    checkBoxAgents1.setSelected(false);
-                    checkBoxAgents2.setSelected(false);
-                    checkBoxAgents4.setSelected(false);
-                    checkBoxAgents8.setSelected(false);
-                    checkBoxAgents16.setSelected(false);
-                    checkBoxAgents32.setSelected(false);
-                    checkBoxAgents64.setSelected(false);
 
                     checkBoxAgents1.setEnabled(false);
                     checkBoxAgents2.setEnabled(false);
@@ -1022,7 +1035,7 @@ public class ConfigCreator extends JFrame {
     private void tuneKktPlantNum(String value) {
         textFieldKktPluntNum.setText(value);
         validateNumber(textFieldKktPluntNum, messageValidateKktPluntNum, 10);
-        validatePlantNum(textFieldKktPluntNum,messageValidateKktPluntNum);
+        validatePlantNum(textFieldKktPluntNum, messageValidateKktPluntNum);
     }
 
     private void tuneKktRegNum(String value) {
@@ -1037,6 +1050,7 @@ public class ConfigCreator extends JFrame {
 
     private void tuneCalculationPlace(String value) {
         textFieldCalculationPlace.setText(value);
+        validateForEmpty(textFieldCalculationPlace, messageValidatePlaceCalc);
     }
 
     private void tuneCalculationAddress(String value) {
@@ -1120,20 +1134,30 @@ public class ConfigCreator extends JFrame {
      * @param value - значение из конфига
      */
     private void tuneFsNumberCount(String value) {
-        if (value.isEmpty()) {
+        if (value.isEmpty() | value.equals("0")) {
             value = "0";
+            labelMessageCountFN.setForeground(Color.RED);
+            labelMessageCountFN.setText("Выберете количество ФН");
+
         }
         SpinnerModel sm = new SpinnerNumberModel(Integer.parseInt(value), 0, 100, 1);
         spinnerFsNumberCount.setModel(sm);
         spinnerFsNumberCount.addChangeListener(e -> {
             countFn = (Integer) spinnerFsNumberCount.getValue();
-            if (spinnerFsNumberCount.getValue() == (Integer) modelListTableFn.size()) {
-                labelMessageTableFn.setText("");
+            if (countFn == 0) {
+                labelMessageCountFN.setForeground(Color.RED);
+                labelMessageCountFN.setText("Выберете количество ФН");
             } else {
-                labelMessageTableFn.setForeground(Color.RED);
-                labelMessageTableFn.setText("<html>Количество номеров <br>в табл. не соответствует<br>" +
-                        "значению поля <br>\"Количество зарегистр-ых ФН\".</html>");
+                labelMessageCountFN.setText("");
+                if ((Integer) spinnerFsNumberCount.getValue() == modelListTableFn.size()) {
+                    labelMessageTableFn.setText("");
+                } else {
+                    labelMessageTableFn.setForeground(Color.RED);
+                    labelMessageTableFn.setText("<html>Количество номеров <br>в табл. не соответствует<br>" +
+                            "значению поля <br>\"Количество зарегистр-ых ФН\".</html>");
+                }
             }
+
         });
     }
 
@@ -1336,9 +1360,7 @@ public class ConfigCreator extends JFrame {
             }
             return fnNumbersList;
         } catch (JSONException e) {
-            return new ArrayList<String>() {{
-                add("");
-            }};
+            return new ArrayList<String>();
         }
 
     }
@@ -1369,6 +1391,7 @@ public class ConfigCreator extends JFrame {
                         && labelArticleValidate.getText().isEmpty()
                         && labelMessageStage.getText().isEmpty()
                         && labelValidateButtonTableFnNum.getText().isEmpty()
+                        && labelMessageCountFN.getText().isEmpty()
                         && labelValidateFsNumber.getText().isEmpty()
                         && messageValidateOrgName.getText().isEmpty()
                         && messageValidateAddressCalc.getText().isEmpty()
@@ -1387,6 +1410,9 @@ public class ConfigCreator extends JFrame {
     }
 
     private void saveConfig() {
+        CollectorConfigData collectorConfigData = new CollectorConfigData(this);
+        Map<String, String> map = collectorConfigData.getMapChangedConfigData();
+        m_fe.uploadConfig(ipCashbox, map);
     }
 
     /**
@@ -1816,6 +1842,12 @@ public class ConfigCreator extends JFrame {
         labelMessageEmailCabinet = new JLabel();
         labelMessageEmailCabinet.setText("");
         mainPanel.add(labelMessageEmailCabinet, new com.intellij.uiDesigner.core.GridConstraints(35, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        testButton1 = new JButton();
+        testButton1.setText("Button");
+        mainPanel.add(testButton1, new com.intellij.uiDesigner.core.GridConstraints(38, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelMessageCountFN = new JLabel();
+        labelMessageCountFN.setText("");
+        mainPanel.add(labelMessageCountFN, new com.intellij.uiDesigner.core.GridConstraints(5, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

@@ -9,6 +9,7 @@
 package com.dreamkas;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Vector;
 
 public class FrontEnd extends Thread {
@@ -29,7 +30,7 @@ public class FrontEnd extends Thread {
         m_tb.addTaskForBackEnd(new DownloadConfig(ip, null));
     }
 
-    public void uploadConfig(String ip, Vector<Vector<String>> queryTab) {
+    public void uploadConfig(String ip, Map<String, String> queryTab) {
         m_tb.addTaskForBackEnd(new UploadConfig(ip, queryTab));
     }
 
