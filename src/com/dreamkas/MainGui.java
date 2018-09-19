@@ -5,8 +5,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
+
+import static com.dreamkas.ConfigCreator.REG_EXP_IP;
 
 public class MainGui extends JFrame {
     private static final int mWidth = 350;
@@ -24,6 +28,7 @@ public class MainGui extends JFrame {
 
     private JButton buttonGetClone;
     private JLabel labelInputIp;
+    private JLabel labelMessageIp;
     private JButton connectToCashBoxButton;
     private JFormattedTextField asdFormattedTextField;
     private JFrame additionalFrame;
@@ -55,18 +60,15 @@ public class MainGui extends JFrame {
         MainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 3, new Insets(0, 0, 0, 0), -1, -1));
         ipTextField = new JTextField();
         MainPanel.add(ipTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        saveDataBase = new JButton();
-        saveDataBase.setText("Сохранить конфиг (НУЖНО ВЫПИЛИТЬ ЕЁ)");
-        MainPanel.add(saveDataBase, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonGetClone = new JButton();
         buttonGetClone.setText("Копировать каталог FisGo на ПК");
         MainPanel.add(buttonGetClone, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         updateDrawer = new JButton();
         updateDrawer.setText("Обновить кассу");
-        MainPanel.add(updateDrawer, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        MainPanel.add(updateDrawer, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         getConfigButton = new JButton();
         getConfigButton.setText("Загрузить конфиг");
-        MainPanel.add(getConfigButton, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        MainPanel.add(getConfigButton, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         LogField = new JTextArea();
         MainPanel.add(LogField, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
         labelInputIp = new JLabel();
@@ -76,6 +78,9 @@ public class MainGui extends JFrame {
         MainPanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
         MainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        labelMessageIp = new JLabel();
+        labelMessageIp.setText("");
+        MainPanel.add(labelMessageIp, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -195,6 +200,7 @@ public class MainGui extends JFrame {
         }
     }
 
+
     public void drawConfigPanel(ArrayList<ArrayList<String>> config) {
         ConfigFieldsBuilder configFieldsBuilder = new ConfigFieldsBuilder();
         JFrame configCreator = new ConfigCreator(configFieldsBuilder.filterConfigFields(config), m_fe, ipTextField.getText());
@@ -288,8 +294,6 @@ public class MainGui extends JFrame {
         setSize(mWidth, mHeighth);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        saveDataBase.setEnabled(false);
-
         currentOperation = "";
 
         configTable = new JTable();
@@ -300,15 +304,16 @@ public class MainGui extends JFrame {
         DownloadConfigListener buttonDownloadConfig = new DownloadConfigListener();
         getConfigButton.addActionListener(buttonDownloadConfig);
 
-//        UploadConfigListener buttonUploadConfig = new UploadConfigListener();
-//        saveDataBase.addActionListener(buttonUploadConfig);
-
         CloneDrawerListener buttonCloneDrawerListener = new CloneDrawerListener();
         buttonGetClone.addActionListener(buttonCloneDrawerListener);
 
-
-//        ConfigCreatorListener configCreatorListener = new ConfigCreatorListener();
-//        changeConfigButton.addActionListener(configCreatorListener);
+        validateIp();
+        ipTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateIp();
+            }
+        });
 
         /*try {
             MaskFormatter mf = new MaskFormatter("###.###.###.###");
@@ -319,6 +324,18 @@ public class MainGui extends JFrame {
         } catch (Exception e) {
             System.out.println(e.toString());
         }*/
+    }
+
+    private void validateIp() {
+        if (!ConfigCreator.regExpCheck(ipTextField.getText(), REG_EXP_IP)) {
+            getConfigButton.setEnabled(false);
+            updateDrawer.setEnabled(false);
+            buttonGetClone.setEnabled(false);
+        } else {
+            getConfigButton.setEnabled(true);
+            updateDrawer.setEnabled(true);
+            buttonGetClone.setEnabled(true);
+        }
     }
 
     //установить ссылку на frontEnd

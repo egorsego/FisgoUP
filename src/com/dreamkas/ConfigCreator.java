@@ -162,7 +162,7 @@ public class ConfigCreator extends JFrame {
     public final String HEAD_PLANT_NUM_DREAMKAS_F = "0496";
 
     public final String REG_EXP_UUID = "^[A-Fa-f0-9]{8}\\-[A-Fa-f0-9]{4}\\-4[A-Fa-f0-9]{3}\\-[A-Fa-f0-9]{4}\\-" + HEAD_PLANT_NUM_DREAMKAS_F + "[A-Fa-f0-9]{8}$";
-    public final String REG_EXP_IP = "^(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}$";
+    public static final String REG_EXP_IP = "^(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}$";
 
     Map<TaxSystem, JCheckBox> mapTaxAndCheckBox;
     Map<Agents, JCheckBox> mapAgentsAndCheckBox;
@@ -202,36 +202,28 @@ public class ConfigCreator extends JFrame {
         tuneShiftTimer(config.get("SHIFT_TIMER"));
         tuneArticle(config.get("ARTICLE"));
         tuneFsNumberCount(config.get("FS_NUMBER_COUNT"));
-
         tuneUUID(config.get("UUID"));
-
-        String test = "";
-        tuneListFsNumberTable(test);
-
+        tuneListFsNumberTable("FS_NUMBERS_TABLE");
         tuneOrganizationName(config.get("ORGANIZATION_NAME"));
         tuneCalculationAddress(config.get("CALCULATION_ADDRESS"));
         tuneCalculationPlace(config.get("CALCULATION_PLACE"));
         tuneOrganizationInn(config.get("ORGANIZATION_INN"));
         tuneKktRegNum(config.get("KKT_REG_NUM"));
         tuneKktPlantNum(config.get("KKT_PLANT_NUM"));
-
         tuneTaxSystems(config.get("TAX_SYSTEMS"), config.get("CUR_TAX_SYSTEM"));
-
-        tuneOfdRadioButton("232323");//config.get("OFD_CHOOSE"));
-
+        tuneOfdRadioButton(config.get("OFD_CHOOSE"));
         tuneOfdTextFields(config.get("OFD_INN"),
                 config.get("OFD_NAME"),
                 config.get("OFD_SERVER_ADDRESS"),
                 config.get("OFD_SERVER_PORT"),
                 config.get("CHECK_RECEIPT_ADDRESS"),
                 config.get("OFD_SERVER_IP"));
-
-        // tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
-        tuneAgents("1024", "1");
-        tuneKktSigns("10");//(config.get("KKT_SIGNS"));
+        tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
+        tuneKktSigns(config.get("KKT_SIGNS"));
         tuneStage(config.get("STAGE"));
-        tuneAddSign("10"); // tuneAddSign(config.get("ADD_KKT_SIGNS"));
+         tuneAddSign(config.get("ADD_KKT_SIGNS"));
         tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
+
         saveButtonInit();
     }
 
@@ -389,7 +381,7 @@ public class ConfigCreator extends JFrame {
         // TODO: place custom component creation code here
     }
 
-    private boolean regExpCheck(String value, String regExp) {
+    static boolean regExpCheck(String value, String regExp) {
         Pattern pattern = Pattern.compile(regExp);
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
@@ -1386,6 +1378,7 @@ public class ConfigCreator extends JFrame {
     private void saveButtonSetEnable() {
         boolean saveButtonEnable =
                 labelMessageTableFn.getText().isEmpty()
+                        && messageValidateUUID.getText().isEmpty()
                         && labelArticleValidate.getText().isEmpty()
                         && labelMessageStage.getText().isEmpty()
                         && labelValidateButtonTableFnNum.getText().isEmpty()
@@ -1399,7 +1392,14 @@ public class ConfigCreator extends JFrame {
                         && messageValidateKktPluntNum.getText().isEmpty()
                         && labelMessageTaxSystem.getText().isEmpty()
                         && labelMessageOFD.getText().isEmpty()
-                        && labelMessageEmailCabinet.getText().isEmpty();
+                        && labelMessageEmailCabinet.getText().isEmpty()
+                        && labelMessageOfdInn.getText().isEmpty()
+                        && labelMessageOfdAddressSer.getText().isEmpty()
+                        && labelMessageOfdName.getText().isEmpty()
+                        && labelMessageOfdPort.getText().isEmpty()
+                        && labelMessageOfdReceiptCheque.getText().isEmpty()
+                        && labelMessageIpServer.getText().isEmpty();
+
         if (saveButtonEnable) {
             saveButton.setEnabled(true);
         } else {

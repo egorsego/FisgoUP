@@ -178,7 +178,7 @@ public class Database {
 
             pw.println("#!/bin/sh");
             pw.append("\n");
-            pw.println("sqlite3 «EOF");
+            pw.println("sqlite3 <<EOF");
             pw.println(".open configDb.db");
 
             table.forEach((field, value) -> {
