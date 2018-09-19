@@ -262,7 +262,7 @@ public class ConfigCreator extends JFrame {
         tuneOfd(config.get("OFD_CHOOSE"));
         tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
         tuneKktSigns("10");//(config.get("KKT_SIGNS"));
-        tuneStage("133");
+        tuneStage(config.get("STAGE"));
         tuneAddSign("10"); // tuneAddSign(config.get("ADD_KKT_SIGNS"));
         tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
         saveButtonInit();
@@ -389,20 +389,22 @@ public class ConfigCreator extends JFrame {
         }
     }
 
-    private void tuneStage(String stage) {
-        comboBoxStage.addItem(CHECKBOOK_MODE.getDescription());
-        comboBoxStage.addItem(KKT_IS_REGISTR.getDescription());
-        comboBoxStage.addItem(LEARNING_MODE.getDescription());
-
-        switch (stage) {
+    private void checkStage(String selectedStage) {
+        switch (selectedStage) {
             case "0":
+            case "Учебный режим":
                 comboBoxStage.setSelectedItem(LEARNING_MODE.getDescription());
+                messageValidateRegNum.setText("");
                 break;
             case "1":
+            case "Режим чекопечатающей машины":
                 comboBoxStage.setSelectedItem(CHECKBOOK_MODE.getDescription());
+                messageValidateRegNum.setText("");
                 break;
             case "2":
+            case "ККТ зарегистрирована":
                 comboBoxStage.setSelectedItem(KKT_IS_REGISTR.getDescription());
+                validateNumber(textFieldKktRegNum, messageValidateRegNum, 16);
                 break;
             default:
                 JLabel error = new JLabel("Выберите режим...");
@@ -412,6 +414,15 @@ public class ConfigCreator extends JFrame {
                 labelMessageStage.setForeground(Color.RED);
                 break;
         }
+    }
+
+
+    private void tuneStage(String stage) {
+        comboBoxStage.addItem(CHECKBOOK_MODE.getDescription());
+        comboBoxStage.addItem(KKT_IS_REGISTR.getDescription());
+        comboBoxStage.addItem(LEARNING_MODE.getDescription());
+
+        checkStage(stage);
 
         comboBoxStage.addActionListener(e -> {
             JComboBox comboBox = (JComboBox) e.getSource();
@@ -420,6 +431,7 @@ public class ConfigCreator extends JFrame {
                 labelMessageStage.setText("");
                 comboBoxStage.removeItem("Выберите режим...");
             }
+            checkStage(selectedItem);
         });
     }
 
@@ -714,19 +726,16 @@ public class ConfigCreator extends JFrame {
 
     private void tuneKktPlantNum(String value) {
         textFieldKktPluntNum.setText(value);
-        validateRegNumField();
         validateNumber(textFieldKktPluntNum, messageValidateKktPluntNum, 10);
-        validatePlantNum(textFieldKktPluntNum, messageValidateKktPluntNum);
     }
 
     private void tuneKktRegNum(String value) {
         textFieldKktRegNum.setText(value);
-        validateRegNum();
+        validateNumber(textFieldKktRegNum, messageValidateRegNum, 16);
     }
 
     private void tuneOrganizationInn(String value) {
         textFieldOrganizationINN.setText(value);
-        validateRegNumField();
         validateNumber(textFieldOrganizationINN, messageValidateInnOrg, 10);
     }
 
@@ -839,51 +848,44 @@ public class ConfigCreator extends JFrame {
         validateNumberField(validatedTextField, messageLabel, limitChars);
         validatedTextField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
                 validateNumberField(validatedTextField, messageLabel, limitChars);
             }
         });
     }
 
-    private void validateRegNum() {
-        validateRegNumField();
-        textFieldKktRegNum.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                validateRegNumField();
-            }
-        });
-    }
-
     private void validateRegNumField() {
+        String stage = (String) comboBoxStage.getSelectedItem();
+        boolean enable;
         try {
-            String[] arr = textFieldKktRegNum.getText().split("");
-            for (String str : arr) {
-                Integer.parseInt(str);
-                messageValidateRegNum.setText("");
-            }
-        } catch (NumberFormatException ex) {
-            messageValidateRegNum.setForeground(Color.RED);
-            messageValidateRegNum.setText("Недопустимое значение");
+            enable = stage.equals(KKT_IS_REGISTR.getDescription());
+        } catch (NullPointerException e) {
             return;
         }
-        if (textFieldKktRegNum.getText().length() != 16) {
-            messageValidateRegNum.setText("Количество символов должно быть - 16");
+        if (!enable) {
+            System.out.println("NOT FISCAL STAGE");
             return;
         }
+        System.out.println("FISCAL STAGE");
         // Подсчёт контрольной суммы
         String kktPlantNum = leftComplite(textFieldKktPluntNum.getText(), 20);
-        System.out.println("KKT PLANT NUM : " + kktPlantNum);
         String inn = leftComplite(textFieldOrganizationINN.getText(), 12);
-        System.out.println("INN : " + inn);
-        String fnsNum = textFieldKktRegNum.getText().substring(0, 10);
-        System.out.println("FNS NUM : " + fnsNum);
-        int crcInit = Integer.parseInt(textFieldKktRegNum.getText().substring(10));
-        System.out.println("CRC INIT : " + crcInit);
-        if (crcInit != crc(fnsNum + inn + kktPlantNum)) {
-            System.out.println("INVALID KKT PLANT NUM!!!");
-            messageValidateRegNum.setText("Неверный регистрационный номер");
+        String fnsNum;
+        try {
+            fnsNum = textFieldKktRegNum.getText().substring(0, 10);
+        } catch (IndexOutOfBoundsException e) {
             return;
+        }
+        int crcInit;
+        try {
+            crcInit = Integer.parseInt(textFieldKktRegNum.getText().substring(10));
+        } catch (IndexOutOfBoundsException e) {
+            return;
+        }
+        if (crcInit != crc(fnsNum + inn + kktPlantNum)) {
+            messageValidateRegNum.setText("Неверный регистрационный номер");
+        } else {
+            messageValidateRegNum.setText("");
         }
     }
 
@@ -914,7 +916,6 @@ public class ConfigCreator extends JFrame {
             }
         }
         crc &= 0xffff;
-        System.out.println("CRC CLC : " + crc);
         return crc;
     }
 
@@ -928,11 +929,19 @@ public class ConfigCreator extends JFrame {
         } catch (NumberFormatException ex) {
             messageLabel.setForeground(Color.RED);
             messageLabel.setText("Недопустимое значение");
+            return;
         }
         if (validatedTextField.getText().length() != limitChars) {
             messageLabel.setText("Количество символов должно быть - " + limitChars);
+            return;
+        }
+        if ((validatedTextField.equals(textFieldOrganizationINN))
+                || (validatedTextField.equals(textFieldKktPluntNum))
+                || (validatedTextField.equals(textFieldKktRegNum))) {
+            validateRegNumField();
         }
     }
+
     /**
      * Проверка заводского номера
      *
