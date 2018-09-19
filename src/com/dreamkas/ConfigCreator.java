@@ -3,6 +3,7 @@ package com.dreamkas;
 import com.dreamkas.enums.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.sqlite.util.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -229,7 +230,7 @@ public class ConfigCreator extends JFrame {
         // tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
         tuneAgents("1024", "1");
         tuneKktSigns("10");//(config.get("KKT_SIGNS"));
-        tuneStage("133");
+        tuneStage(config.get("STAGE"));
         tuneAddSign("10"); // tuneAddSign(config.get("ADD_KKT_SIGNS"));
         tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
         saveButtonInit();
@@ -531,20 +532,22 @@ public class ConfigCreator extends JFrame {
         }
     }
 
-    private void tuneStage(String stage) {
-        comboBoxStage.addItem(CHECKBOOK_MODE.getDescription());
-        comboBoxStage.addItem(KKT_IS_REGISTR.getDescription());
-        comboBoxStage.addItem(LEARNING_MODE.getDescription());
-
-        switch (stage) {
+    private void checkStage(String selectedStage) {
+        switch (selectedStage) {
             case "0":
+            case "Учебный режим":
                 comboBoxStage.setSelectedItem(LEARNING_MODE.getDescription());
+                messageValidateRegNum.setText("");
                 break;
             case "1":
+            case "Режим чекопечатающей машины":
                 comboBoxStage.setSelectedItem(CHECKBOOK_MODE.getDescription());
+                messageValidateRegNum.setText("");
                 break;
             case "2":
+            case "ККТ зарегистрирована":
                 comboBoxStage.setSelectedItem(KKT_IS_REGISTR.getDescription());
+                validateNumber(textFieldKktRegNum, messageValidateRegNum, 16);
                 break;
             default:
                 JLabel error = new JLabel("Выберите режим...");
@@ -554,6 +557,15 @@ public class ConfigCreator extends JFrame {
                 labelMessageStage.setForeground(Color.RED);
                 break;
         }
+    }
+
+
+    private void tuneStage(String stage) {
+        comboBoxStage.addItem(CHECKBOOK_MODE.getDescription());
+        comboBoxStage.addItem(KKT_IS_REGISTR.getDescription());
+        comboBoxStage.addItem(LEARNING_MODE.getDescription());
+
+        checkStage(stage);
 
         comboBoxStage.addActionListener(e -> {
             JComboBox comboBox = (JComboBox) e.getSource();
@@ -562,6 +574,7 @@ public class ConfigCreator extends JFrame {
                 labelMessageStage.setText("");
                 comboBoxStage.removeItem("Выберите режим...");
             }
+            checkStage(selectedItem);
         });
     }
 
@@ -1009,7 +1022,7 @@ public class ConfigCreator extends JFrame {
     private void tuneKktPlantNum(String value) {
         textFieldKktPluntNum.setText(value);
         validateNumber(textFieldKktPluntNum, messageValidateKktPluntNum, 10);
-        validatePlantNum(textFieldKktPluntNum, messageValidateKktPluntNum);
+        validatePlantNum(textFieldKktPluntNum,messageValidateKktPluntNum);
     }
 
     private void tuneKktRegNum(String value) {
@@ -1144,6 +1157,71 @@ public class ConfigCreator extends JFrame {
         });
     }
 
+    private void validateRegNumField() {
+        String stage = (String) comboBoxStage.getSelectedItem();
+        boolean enable;
+        try {
+            enable = stage.equals(KKT_IS_REGISTR.getDescription());
+        } catch (NullPointerException e) {
+            return;
+        }
+        if (!enable) {
+            System.out.println("NOT FISCAL STAGE");
+            return;
+        }
+        System.out.println("FISCAL STAGE");
+        // Подсчёт контрольной суммы
+        String kktPlantNum = leftComplite(textFieldKktPluntNum.getText(), 20);
+        String inn = leftComplite(textFieldOrganizationINN.getText(), 12);
+        String fnsNum;
+        try {
+            fnsNum = textFieldKktRegNum.getText().substring(0, 10);
+        } catch (IndexOutOfBoundsException e) {
+            return;
+        }
+        int crcInit;
+        try {
+            crcInit = Integer.parseInt(textFieldKktRegNum.getText().substring(10));
+        } catch (IndexOutOfBoundsException e) {
+            return;
+        }
+        if (crcInit != crc(fnsNum + inn + kktPlantNum)) {
+            messageValidateRegNum.setText("Неверный регистрационный номер");
+        } else {
+            messageValidateRegNum.setText("");
+        }
+    }
+
+    /**
+     * @param num
+     * @param digits
+     * @return
+     */
+    public static String leftComplite(String text, int digits) {
+        while (text.length() < digits) text = "0" + text;
+        return text;
+    }
+
+    /**
+     * @param text
+     * @return
+     */
+    private int crc(String str) {
+        int crc = 0xFFFF; // initial value
+        int polynomial = 0x1021; // 0001 0000 0010 0001 (0, 5, 12)
+        byte[] bytes = str.getBytes();
+        for (byte b : bytes) {
+            for (int i = 0; i < 8; i++) {
+                boolean bit = ((b >> (7 - i) & 1) == 1);
+                boolean c15 = ((crc >> 15 & 1) == 1);
+                crc <<= 1;
+                if (c15 ^ bit) crc ^= polynomial;
+            }
+        }
+        crc &= 0xffff;
+        return crc;
+    }
+
     private void validateNumberField(JTextField validatedTextField, JLabel messageLabel, int limitChars) {
         try {
             String[] arr = validatedTextField.getText().split("");
@@ -1154,6 +1232,7 @@ public class ConfigCreator extends JFrame {
         } catch (NumberFormatException ex) {
             messageLabel.setForeground(Color.RED);
             messageLabel.setText("Недопустимое значение");
+            return;
         }
         if (limitChars == 0) {
             return;
@@ -1161,6 +1240,12 @@ public class ConfigCreator extends JFrame {
         if (validatedTextField.getText().length() != limitChars) {
             messageLabel.setForeground(Color.RED);
             messageLabel.setText("Количество символов должно быть - " + limitChars);
+            return;
+        }
+        if (validatedTextField.equals(textFieldOrganizationINN)
+                || validatedTextField.equals(textFieldKktPluntNum)
+                || validatedTextField.equals(textFieldKktRegNum)) {
+            validateRegNumField();
         }
     }
 
