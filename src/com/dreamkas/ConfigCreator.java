@@ -727,6 +727,7 @@ public class ConfigCreator extends JFrame {
     private void tuneKktPlantNum(String value) {
         textFieldKktPluntNum.setText(value);
         validateNumber(textFieldKktPluntNum, messageValidateKktPluntNum, 10);
+        validatePlantNum(textFieldKktPluntNum,messageValidateKktPluntNum);
     }
 
     private void tuneKktRegNum(String value) {
