@@ -1039,7 +1039,7 @@
           <text value=""/>
         </properties>
       </component>
-      <component id="ceb9d" class="javax.swing.JButton" binding="закрытьButton" default-binding="true">
+      <component id="ceb9d" class="javax.swing.JButton" binding="closeButton" default-binding="true">
         <constraints>
           <grid row="37" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -1078,6 +1078,78 @@
         <properties>
           <background color="-14606047"/>
           <foreground color="-14606047"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="df7af" class="javax.swing.JLabel" binding="labelMessageOFD">
+        <constraints>
+          <grid row="23" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="180cb" class="javax.swing.JLabel" binding="labelMessageOfdInn">
+        <constraints>
+          <grid row="24" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="cc46c" class="javax.swing.JLabel" binding="labelMessageOfdAddressSer">
+        <constraints>
+          <grid row="25" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="63ff" class="javax.swing.JLabel" binding="labelMessageOfdName">
+        <constraints>
+          <grid row="26" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="3cb5c" class="javax.swing.JLabel" binding="labelMessageOfdPort">
+        <constraints>
+          <grid row="27" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="33c50" class="javax.swing.JLabel" binding="labelMessageOfdReceiptCheque">
+        <constraints>
+          <grid row="28" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="ff221" class="javax.swing.JLabel" binding="labelMessageIpServer">
+        <constraints>
+          <grid row="29" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="c403f" class="javax.swing.JTextField" binding="textFieldEmailCabinet">
+        <constraints>
+          <grid row="35" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="e902c" class="javax.swing.JLabel" binding="labelMessageEmailCabinet">
+        <constraints>
+          <grid row="35" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
           <text value=""/>
         </properties>
       </component>

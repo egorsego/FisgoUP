@@ -1,17 +1,15 @@
 package com.dreamkas;
 
 import com.dreamkas.enums.*;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.sqlite.util.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
 
-import java.awt.event.*;
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.SQLOutput;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,10 +150,19 @@ public class ConfigCreator extends JFrame {
     private JLabel messageValidateKktPluntNum;
     private JLabel labelMessageTaxSystem;
     private JLabel labelMessageStage;
-    private JButton закрытьButton;
+    private JButton closeButton;
     private JButton saveButton;
     private JCheckBox checkBoxAddSign16;
     private JLabel messageValidateUUID;
+    private JLabel labelMessageOFD;
+    private JLabel labelMessageOfdInn;
+    private JLabel labelMessageOfdAddressSer;
+    private JLabel labelMessageOfdName;
+    private JLabel labelMessageOfdPort;
+    private JLabel labelMessageOfdReceiptCheque;
+    private JLabel labelMessageIpServer;
+    private JTextField textFieldEmailCabinet;
+    private JLabel labelMessageEmailCabinet;
     private boolean saveConfigEnable;
 
 
@@ -163,6 +170,9 @@ public class ConfigCreator extends JFrame {
     private int countFn;
     private DefaultListModel modelListTableFn;
     private final String HEAD_PLANT_NUM_DREAMKAS_F = "0496";
+
+    private final String REG_EXP_UUID = "^[A-Fa-f0-9]{8}\\-[A-Fa-f0-9]{4}\\-4[A-Fa-f0-9]{3}\\-[A-Fa-f0-9]{4}\\-" + HEAD_PLANT_NUM_DREAMKAS_F + "[A-Fa-f0-9]{8}$";
+    private final String REG_EXP_IP = "^(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])(\\.(25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[0-9]{2}|[0-9])){3}$";
 
     Map<TaxSystem, JCheckBox> mapTaxAndCheckBox;
     Map<Agents, JCheckBox> mapAgentsAndCheckBox;
@@ -182,6 +192,140 @@ public class ConfigCreator extends JFrame {
         setContentPane(scroll);
 
         addListenerCheckBoxes();
+    }
+
+    /**
+     * Метод заполняет формы ConfigCreator значениями из конфига, который находится на кассе
+     */
+    private void fillConfigCreator() {
+        tuneComBoxKktMode(config.get("KKT_MODE"));
+        tuneCheckBoxFsReplaceMode(config.get("FS_REPLACE_MODE"));
+        tuneShiftTimer(config.get("SHIFT_TIMER"));
+        tuneArticle(config.get("ARTICLE"));
+        tuneFsNumberCount(config.get("FS_NUMBER_COUNT"));
+
+        tuneUUID(config.get("UUID"));
+
+        String test = "";
+        tuneListFsNumberTable(test);
+
+        tuneOrganizationName(config.get("FS_NUMBER_COUNT"));
+        tuneCalculationAddress(config.get("CALCULATION_ADDRESS"));
+        tuneCalculationPlace(config.get("CALCULATION_PLACE"));
+        tuneOrganizationInn(config.get("ORGANIZATION_INN"));
+        tuneKktRegNum(config.get("KKT_REG_NUM"));
+        tuneKktPlantNum(config.get("KKT_PLANT_NUM"));
+
+        tuneTaxSystems(config.get("TAX_SYSTEMS"), config.get("CUR_TAX_SYSTEM"));
+
+        tuneOfdRadioButton("232323");//config.get("OFD_CHOOSE"));
+
+        tuneOfdTextFields(config.get("OFD_INN"),
+                config.get("OFD_NAME"),
+                config.get("OFD_SERVER_ADDRESS"),
+                config.get("OFD_SERVER_PORT"),
+                config.get("CHECK_RECEIPT_ADDRESS"),
+                config.get("OFD_SERVER_IP"));
+
+        // tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
+        tuneAgents("1024", "1");
+        tuneKktSigns("10");//(config.get("KKT_SIGNS"));
+        tuneStage(config.get("STAGE"));
+        tuneAddSign("10"); // tuneAddSign(config.get("ADD_KKT_SIGNS"));
+        tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
+        saveButtonInit();
+    }
+
+    private void tuneOfdTextFields(String inn, String name, String address, String port, String addressCheckCheque, String ipServer) {
+        setOfdTextFieldEnable(false);
+        if (radioButtonOFDouther.isSelected()) {
+            setOfdTextFieldEnable(true);
+            textFieldOFDinn.setText(inn);
+            textFieldOFDserverAddress.setText(address);
+            textFieldOFDname.setText(name);
+            textFieldlOFDport.setText(port);
+            textFieldOFDcheckReceiptAddress.setText(addressCheckCheque);
+            textFieldOFDipServer.setText(ipServer);
+        }
+        addListenersOfdTextFields();
+    }
+
+    private void validateOfdValuesFromCashbox() {
+        validateNumber(textFieldOFDinn, labelMessageOfdInn, 10);
+
+        if (!regExpCheck(textFieldOFDipServer.getText(), REG_EXP_IP)) {
+            labelMessageIpServer.setForeground(Color.RED);
+            labelMessageIpServer.setText("<html>Неверный IP</html>");
+        } else {
+            labelMessageIpServer.setText("");
+        }
+        validateForEmpty(textFieldOFDinn, labelMessageOfdInn);
+        validateForEmpty(textFieldOFDserverAddress, labelMessageOfdAddressSer);
+        validateForEmpty(textFieldlOFDport, labelMessageOfdPort);
+        validateForEmpty(textFieldOFDname, labelMessageOfdName);
+        validateNumber(textFieldlOFDport, labelMessageOfdPort, 0);
+        validateForEmpty(textFieldOFDcheckReceiptAddress, labelMessageOfdReceiptCheque);
+    }
+
+    private void addListenersOfdTextFields() {
+        //валидация ИНН
+        textFieldOFDinn.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateNumber(textFieldOFDinn, labelMessageOfdInn, 10);
+            }
+        });
+
+        //валидация IP
+        textFieldOFDipServer.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (!regExpCheck(textFieldOFDipServer.getText(), REG_EXP_IP)) {
+                    labelMessageIpServer.setForeground(Color.RED);
+                    labelMessageIpServer.setText("<html>Неверный IP</html>");
+                } else {
+                    labelMessageIpServer.setText("");
+                }
+            }
+        });
+
+        //валидация сервера ip
+        textFieldOFDserverAddress.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateForEmpty(textFieldOFDserverAddress, labelMessageOfdAddressSer);
+            }
+        });
+
+        //валидация имени офд
+        textFieldOFDname.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateForEmpty(textFieldOFDname, labelMessageOfdName);
+            }
+        });
+
+        //валидация порта
+        textFieldlOFDport.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateNumber(textFieldlOFDport, labelMessageOfdPort, 0);
+            }
+        });
+
+        textFieldOFDcheckReceiptAddress.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateForEmpty(textFieldOFDcheckReceiptAddress, labelMessageOfdReceiptCheque);
+            }
+        });
+    }
+
+    private void validateForEmpty(JTextField textField, JLabel labelMessage) {
+        if (textField.getText().isEmpty()) {
+            labelMessage.setForeground(Color.RED);
+            labelMessage.setText("<html>Введите значение</html>");
+        }
     }
 
     private void addListenerCheckBoxes() {
@@ -236,40 +380,8 @@ public class ConfigCreator extends JFrame {
         // TODO: place custom component creation code here
     }
 
-    /**
-     * Метод заполняет формы ConfigCreator значениями из конфига, который находится на кассе
-     */
-    private void fillConfigCreator() {
-        tuneComBoxKktMode(config.get("KKT_MODE"));
-        tuneCheckBoxFsReplaceMode(config.get("FS_REPLACE_MODE"));
-        tuneShiftTimer(config.get("SHIFT_TIMER"));
-        tuneArticle(config.get("ARTICLE"));
-        tuneFsNumberCount(config.get("FS_NUMBER_COUNT"));
-
-        tuneUUID(config.get("UUID"));
-
-        String test = "{\"FS NUMBER #1\":\"8710000100669525\",\"FS NUMBER #2\":\"8710000100669526\"}";
-        tuneListFsNumberTable(test);
-
-        tuneOrganizationName(config.get("FS_NUMBER_COUNT"));
-        tuneCalculationAddress(config.get("CALCULATION_ADDRESS"));
-        tuneCalculationPlace(config.get("CALCULATION_PLACE"));
-        tuneOrganizationInn(config.get("ORGANIZATION_INN"));
-        tuneKktRegNum(config.get("KKT_REG_NUM"));
-        tuneKktPlantNum(config.get("KKT_PLANT_NUM"));
-
-        tuneTaxSystems(config.get("TAX_SYSTEMS"), config.get("CUR_TAX_SYSTEM"));
-        tuneOfd(config.get("OFD_CHOOSE"));
-        tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
-        tuneKktSigns("10");//(config.get("KKT_SIGNS"));
-        tuneStage(config.get("STAGE"));
-        tuneAddSign("10"); // tuneAddSign(config.get("ADD_KKT_SIGNS"));
-        tuneIsCabinetEnable(config.get("IS_CABINET_ENABLE"));
-        saveButtonInit();
-    }
-
-    private boolean verifyUUID(String value, String prefix) {
-        Pattern pattern = Pattern.compile("^[A-Fa-f0-9]{8}\\-[A-Fa-f0-9]{4}\\-4[A-Fa-f0-9]{3}\\-[A-Fa-f0-9]{4}\\-" + prefix + "[A-Fa-f0-9]{8}$");
+    private boolean regExpCheck(String value, String regExp) {
+        Pattern pattern = Pattern.compile(regExp);
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
     }
@@ -291,7 +403,7 @@ public class ConfigCreator extends JFrame {
 
     private void checkUUID(JTextField textField, JLabel label) {
         /* FIXME later for Kassa-F */
-        if (!verifyUUID(textField.getText(), HEAD_PLANT_NUM_DREAMKAS_F)) {
+        if (!regExpCheck(textField.getText(), REG_EXP_UUID)) {
             label.setForeground(Color.RED);
             label.setText("Неверный формат UUID!");
         } else {
@@ -383,9 +495,40 @@ public class ConfigCreator extends JFrame {
         }
     }
 
+    /**
+     * Метод устанавливает значение подключения к кабинету и активирует поле для ввода email.
+     *
+     * @param isCabinetEnable - значение из конфига на кассе
+     */
     private void tuneIsCabinetEnable(String isCabinetEnable) {
+        textFieldEmailCabinet.setEnabled(false);
+
+        //листенер для чекбокса
+        checkBoxCabinetIsEnable.addActionListener(e -> {
+            if (checkBoxCabinetIsEnable.isSelected()) {
+                textFieldEmailCabinet.setEnabled(true);
+                validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+            } else {
+                textFieldEmailCabinet.setEnabled(false);
+                labelMessageEmailCabinet.setText("");
+            }
+        });
+
         if (isCabinetEnable.equals("1")) {
             checkBoxCabinetIsEnable.setSelected(true);
+            textFieldEmailCabinet.setEnabled(true);
+
+            //валидация значения из конфига
+            validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+
+            //валидация значения при изменении
+            textFieldEmailCabinet.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+                }
+            });
+
         }
     }
 
@@ -585,7 +728,7 @@ public class ConfigCreator extends JFrame {
         }
     }
 
-    private void tuneOfd(String ofd) {
+    private void tuneOfdRadioButton(String ofd) {
         ButtonGroup ofdGroup = new ButtonGroup();
         ofdGroup.add(radioButtonOFDauto);
         ofdGroup.add(radioButtonOFDexpress);
@@ -602,11 +745,159 @@ public class ConfigCreator extends JFrame {
         ofdGroup.add(radioButtonOFDfirst);
         ofdGroup.add(radioButtonOFDouther);
 
+        boolean isSetOfdFromConfig = setOfdFromConfig(ofd);
+        if (!isSetOfdFromConfig) {
+            labelMessageOFD.setForeground(Color.RED);
+            labelMessageOFD.setText("<html>В конфиге на кассе<br>" +
+                    "установлено неверное <br> значение ОФД.<br>" +
+                    "Выберите необходимый ОФД <br> из списка</html>");
+        }
+        addListenerRadioButton();
+
         setOfdFromConfig(ofd);
 
     }
 
-    private void setOfdFromConfig(String ofdFromConfig) {
+    /**
+     * Метод добавляет листенер на каждый радио-баттон
+     */
+    private void addListenerRadioButton() {
+        //положить в массив
+        ArrayList<JRadioButton> arrRadioButton = new ArrayList<>();
+        arrRadioButton.add(radioButtonOFDauto);
+        arrRadioButton.add(radioButtonOFDexpress);
+        arrRadioButton.add(radioButtonDreamkas);
+        arrRadioButton.add(radioButtonOFDcontur);
+        arrRadioButton.add(radioButtonOFDevotor);
+        arrRadioButton.add(radioButtonOFDTaxcom);
+        arrRadioButton.add(radioButtonOFDya);
+        arrRadioButton.add(radioButtonOFDsbis);
+        arrRadioButton.add(radioButtonOFDastral);
+        arrRadioButton.add(radioButtonOFDkorus);
+        arrRadioButton.add(radioButtonOFDru);
+        arrRadioButton.add(radioButtonOFDyandex);
+        arrRadioButton.add(radioButtonOFDfirst);
+        arrRadioButton.add(radioButtonOFDouther);
+        //каждому элементу массива добавить листенер
+        arrRadioButton.forEach(jRadioButton -> jRadioButton.addActionListener(e -> {
+            if (radioButtonOFDouther.isSelected()) {
+                clearTextFieldsOfd();
+            }
+            labelMessageOFD.setText("");
+            fillOfdTextFields();
+        }));
+    }
+
+    private void clearTextFieldsOfd() {
+        textFieldOFDinn.setText("");
+        textFieldOFDserverAddress.setText("");
+        textFieldOFDname.setText("");
+        textFieldlOFDport.setText("");
+        textFieldOFDcheckReceiptAddress.setText("");
+        textFieldOFDipServer.setText("");
+    }
+
+    /**
+     * Метод заполняет текстовые поля ОФД в зависимости от выбранного ОФД в радио-баттонах и дизейблит их если выбран
+     * автономный режим
+     */
+    private void fillOfdTextFields() {
+        if (radioButtonOFDauto.isSelected()) {
+            setContentOfdTextField(OfdEnum.AUTONOMIC);
+            setOfdTextFieldEnable(false);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDexpress.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.ELECTRO_EXPRESS);
+            clearMessageOfdLabels();
+        } else if (radioButtonDreamkas.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.DREAMKAS);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDcontur.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.KONTUR);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDevotor.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.EVOTOR);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDTaxcom.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.TAXCOM);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDya.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.OFD_YA);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDsbis.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.SBIS_OFD);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDastral.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.KALUGA_ASTRAL);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDkorus.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.KORUS_OFD);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDru.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.OFD_RU);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDyandex.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.YANDEX);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDfirst.isSelected()) {
+            setOfdTextFieldEnable(false);
+            setContentOfdTextField(OfdEnum.FIRST_OFD);
+            clearMessageOfdLabels();
+        } else if (radioButtonOFDouther.isSelected()) {
+            setOfdTextFieldEnable(true);
+            // setContentOfdTextField(OfdEnum.OUTHER);
+            validateOfdValuesFromCashbox();
+        }
+    }
+
+    private void clearMessageOfdLabels() {
+        labelMessageOFD.setText("");
+        labelMessageOfdInn.setText("");
+        labelMessageOfdAddressSer.setText("");
+        labelMessageOfdName.setText("");
+        labelMessageOfdPort.setText("");
+        labelMessageOfdReceiptCheque.setText("");
+        labelMessageIpServer.setText("");
+    }
+
+    /**
+     * Метод устанавливает enable/disable для текстовых полей офд
+     */
+    private void setOfdTextFieldEnable(boolean isEnable) {
+        textFieldOFDinn.setEnabled(isEnable);
+        textFieldOFDserverAddress.setEnabled(isEnable);
+        textFieldOFDname.setEnabled(isEnable);
+        textFieldlOFDport.setEnabled(isEnable);
+        textFieldOFDcheckReceiptAddress.setEnabled(isEnable);
+        textFieldOFDipServer.setEnabled(isEnable);
+    }
+
+    /**
+     * Метод заполняет текстовые поля ОФД
+     *
+     * @param ofd - enum описывающий офд
+     */
+    private void setContentOfdTextField(OfdEnum ofd) {
+        textFieldOFDinn.setText(ofd.getInn());
+        textFieldOFDserverAddress.setText(ofd.getAddress());
+        textFieldOFDname.setText(ofd.getName());
+        textFieldlOFDport.setText(ofd.getPort());
+        textFieldOFDcheckReceiptAddress.setText(ofd.getAddressCheckCheque());
+        textFieldOFDipServer.setText(ofd.getIpServer());
+    }
+
+    private boolean setOfdFromConfig(String ofdFromConfig) {
         switch (ofdFromConfig) {
             case "0":
                 radioButtonOFDauto.setSelected(true);
@@ -647,7 +938,11 @@ public class ConfigCreator extends JFrame {
             case "96":
                 radioButtonDreamkas.setSelected(true);
                 break;
+            default:
+                return false;
         }
+        return true;
+
     }
 
     /**
@@ -775,25 +1070,29 @@ public class ConfigCreator extends JFrame {
             comboBoxCurrentFnNum.addItem(fnNumber);
         }
 
-        validateNumber(textFieldFsNumberTable, labelValidateButtonTableFnNum, 16);
+        //слушатель поля ввода для добавления нового номера в таблицу
+        textFieldFsNumberTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateNumber(textFieldFsNumberTable, labelValidateButtonTableFnNum, 16);
+            }
+        });
+
 
         //слушатель кнопки "добавить" в таблицу номеров ФН
         buttonFsNumberTable.addActionListener(e -> {
             //если нет сообщения об ошибке и поле ввода пустое
             if (labelValidateButtonTableFnNum.getText().equals("") & !textFieldFsNumberTable.getText().equals("")) {
+                modelListTableFn.addElement(textFieldFsNumberTable.getText());
+                comboBoxCurrentFnNum.addItem(textFieldFsNumberTable.getText());
                 //если размер листа больше чем количество зарегистрированных фн-ов
-                if (modelListTableFn.size() > (Integer) spinnerFsNumberCount.getValue() - 1) {
-                    labelValidateButtonTableFnNum.setForeground(Color.RED);
-                    labelValidateButtonTableFnNum.setText("<html>Количество номеров в таблице не должно превышать <br>" +
-                            "количество зарегистрированных ФН</html>");
+                if (modelListTableFn.size() != (Integer) spinnerFsNumberCount.getValue()) {
+                    labelMessageTableFn.setForeground(Color.RED);
+                    labelMessageTableFn.setText("<html>Количество номеров <br>в табл. не соответствует<br>" +
+                            "значению поля <br>\"Количество зарегистр-ых ФН\".</html>");
                     textFieldFsNumberTable.setText("");
                 } else {
-                    modelListTableFn.addElement(textFieldFsNumberTable.getText());
-                    comboBoxCurrentFnNum.addItem(textFieldFsNumberTable.getText());
-                    //если размер листа равен кол-ву зареганных фн-ов
-                    if (modelListTableFn.size() == (Integer) spinnerFsNumberCount.getValue()) {
-                        labelMessageTableFn.setText("");
-                    }
+                    labelMessageTableFn.setText("");
                     textFieldFsNumberTable.setText("");
                 }
             }
@@ -821,6 +1120,9 @@ public class ConfigCreator extends JFrame {
      * @param value - значение из конфига
      */
     private void tuneFsNumberCount(String value) {
+        if (value.isEmpty()) {
+            value = "0";
+        }
         SpinnerModel sm = new SpinnerNumberModel(Integer.parseInt(value), 0, 100, 1);
         spinnerFsNumberCount.setModel(sm);
         spinnerFsNumberCount.addChangeListener(e -> {
@@ -932,7 +1234,11 @@ public class ConfigCreator extends JFrame {
             messageLabel.setText("Недопустимое значение");
             return;
         }
+        if (limitChars == 0) {
+            return;
+        }
         if (validatedTextField.getText().length() != limitChars) {
+            messageLabel.setForeground(Color.RED);
             messageLabel.setText("Количество символов должно быть - " + limitChars);
             return;
         }
@@ -1020,14 +1326,21 @@ public class ConfigCreator extends JFrame {
      * @return ArrayList<String> - номера ФН-ов
      */
     private ArrayList<String> parserFnTable(String value) {
-        JSONObject fnTable = new JSONObject(value);
-        ArrayList<String> fnNumbersList = new ArrayList<>();
-        Iterator<String> keys = fnTable.keys();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            fnNumbersList.add(fnTable.getString(key));
+        try {
+            JSONObject fnTable = new JSONObject(value);
+            ArrayList<String> fnNumbersList = new ArrayList<>();
+            Iterator<String> keys = fnTable.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                fnNumbersList.add(fnTable.getString(key));
+            }
+            return fnNumbersList;
+        } catch (JSONException e) {
+            return new ArrayList<String>() {{
+                add("");
+            }};
         }
-        return fnNumbersList;
+
     }
 
     private void saveButtonInit() {
@@ -1063,7 +1376,9 @@ public class ConfigCreator extends JFrame {
                         && messageValidateInnOrg.getText().isEmpty()
                         && messageValidateRegNum.getText().isEmpty()
                         && messageValidateKktPluntNum.getText().isEmpty()
-                        && labelMessageTaxSystem.getText().isEmpty();
+                        && labelMessageTaxSystem.getText().isEmpty()
+                        && labelMessageOFD.getText().isEmpty()
+                        && labelMessageEmailCabinet.getText().isEmpty();
         if (saveButtonEnable) {
             saveButton.setEnabled(true);
         } else {
@@ -1458,9 +1773,9 @@ public class ConfigCreator extends JFrame {
         labelMessageStage = new JLabel();
         labelMessageStage.setText("");
         mainPanel.add(labelMessageStage, new com.intellij.uiDesigner.core.GridConstraints(34, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        закрытьButton = new JButton();
-        закрытьButton.setText("Закрыть");
-        mainPanel.add(закрытьButton, new com.intellij.uiDesigner.core.GridConstraints(37, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        closeButton = new JButton();
+        closeButton.setText("Закрыть");
+        mainPanel.add(closeButton, new com.intellij.uiDesigner.core.GridConstraints(37, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         saveButton = new JButton();
         saveButton.setText("Сохранить");
         mainPanel.add(saveButton, new com.intellij.uiDesigner.core.GridConstraints(37, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -1475,6 +1790,32 @@ public class ConfigCreator extends JFrame {
         messageValidateUUID.setForeground(new Color(-14606047));
         messageValidateUUID.setText("");
         mainPanel.add(messageValidateUUID, new com.intellij.uiDesigner.core.GridConstraints(4, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelMessageOFD = new JLabel();
+        labelMessageOFD.setText("");
+        mainPanel.add(labelMessageOFD, new com.intellij.uiDesigner.core.GridConstraints(23, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelMessageOfdInn = new JLabel();
+        labelMessageOfdInn.setText("");
+        mainPanel.add(labelMessageOfdInn, new com.intellij.uiDesigner.core.GridConstraints(24, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelMessageOfdAddressSer = new JLabel();
+        labelMessageOfdAddressSer.setText("");
+        mainPanel.add(labelMessageOfdAddressSer, new com.intellij.uiDesigner.core.GridConstraints(25, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelMessageOfdName = new JLabel();
+        labelMessageOfdName.setText("");
+        mainPanel.add(labelMessageOfdName, new com.intellij.uiDesigner.core.GridConstraints(26, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelMessageOfdPort = new JLabel();
+        labelMessageOfdPort.setText("");
+        mainPanel.add(labelMessageOfdPort, new com.intellij.uiDesigner.core.GridConstraints(27, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelMessageOfdReceiptCheque = new JLabel();
+        labelMessageOfdReceiptCheque.setText("");
+        mainPanel.add(labelMessageOfdReceiptCheque, new com.intellij.uiDesigner.core.GridConstraints(28, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        labelMessageIpServer = new JLabel();
+        labelMessageIpServer.setText("");
+        mainPanel.add(labelMessageIpServer, new com.intellij.uiDesigner.core.GridConstraints(29, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        textFieldEmailCabinet = new JTextField();
+        mainPanel.add(textFieldEmailCabinet, new com.intellij.uiDesigner.core.GridConstraints(35, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        labelMessageEmailCabinet = new JLabel();
+        labelMessageEmailCabinet.setText("");
+        mainPanel.add(labelMessageEmailCabinet, new com.intellij.uiDesigner.core.GridConstraints(35, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
