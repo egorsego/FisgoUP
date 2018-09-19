@@ -1,6 +1,7 @@
 package com.dreamkas;
 
 import com.dreamkas.enums.*;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -159,6 +160,8 @@ public class ConfigCreator extends JFrame {
     private JLabel labelMessageOfdPort;
     private JLabel labelMessageOfdReceiptCheque;
     private JLabel labelMessageIpServer;
+    private JTextField textFieldEmailCabinet;
+    private JLabel labelMessageEmailCabinet;
     private boolean saveConfigEnable;
 
 
@@ -202,7 +205,7 @@ public class ConfigCreator extends JFrame {
 
         tuneUUID(config.get("UUID"));
 
-        String test = "{\"FS NUMBER #1\":\"8710000100669525\",\"FS NUMBER #2\":\"8710000100669526\"}";
+        String test = "";
         tuneListFsNumberTable(test);
 
         tuneOrganizationName(config.get("FS_NUMBER_COUNT"));
@@ -223,7 +226,7 @@ public class ConfigCreator extends JFrame {
                 config.get("CHECK_RECEIPT_ADDRESS"),
                 config.get("OFD_SERVER_IP"));
 
-       // tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
+        // tuneAgents(config.get("AGENT_MASK"), config.get("CURRENT_AGENT"));
         tuneAgents("1024", "1");
         tuneKktSigns("10");//(config.get("KKT_SIGNS"));
         tuneStage("133");
@@ -491,9 +494,40 @@ public class ConfigCreator extends JFrame {
         }
     }
 
+    /**
+     * Метод устанавливает значение подключения к кабинету и активирует поле для ввода email.
+     *
+     * @param isCabinetEnable - значение из конфига на кассе
+     */
     private void tuneIsCabinetEnable(String isCabinetEnable) {
+        textFieldEmailCabinet.setEnabled(false);
+
+        //листенер для чекбокса
+        checkBoxCabinetIsEnable.addActionListener(e -> {
+            if (checkBoxCabinetIsEnable.isSelected()) {
+                textFieldEmailCabinet.setEnabled(true);
+                validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+            } else {
+                textFieldEmailCabinet.setEnabled(false);
+                labelMessageEmailCabinet.setText("");
+            }
+        });
+
         if (isCabinetEnable.equals("1")) {
             checkBoxCabinetIsEnable.setSelected(true);
+            textFieldEmailCabinet.setEnabled(true);
+
+            //валидация значения из конфига
+            validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+
+            //валидация значения при изменении
+            textFieldEmailCabinet.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    validateForEmpty(textFieldEmailCabinet, labelMessageEmailCabinet);
+                }
+            });
+
         }
     }
 
@@ -1023,23 +1057,29 @@ public class ConfigCreator extends JFrame {
             comboBoxCurrentFnNum.addItem(fnNumber);
         }
 
+        //слушатель поля ввода для добавления нового номера в таблицу
+        textFieldFsNumberTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateNumber(textFieldFsNumberTable, labelValidateButtonTableFnNum, 16);
+            }
+        });
+
+
         //слушатель кнопки "добавить" в таблицу номеров ФН
         buttonFsNumberTable.addActionListener(e -> {
             //если нет сообщения об ошибке и поле ввода пустое
             if (labelValidateButtonTableFnNum.getText().equals("") & !textFieldFsNumberTable.getText().equals("")) {
+                modelListTableFn.addElement(textFieldFsNumberTable.getText());
+                comboBoxCurrentFnNum.addItem(textFieldFsNumberTable.getText());
                 //если размер листа больше чем количество зарегистрированных фн-ов
-                if (modelListTableFn.size() > (Integer) spinnerFsNumberCount.getValue() - 1) {
-                    labelValidateButtonTableFnNum.setForeground(Color.RED);
-                    labelValidateButtonTableFnNum.setText("<html>Количество номеров в таблице не должно превышать <br>" +
-                            "количество зарегистрированных ФН</html>");
+                if (modelListTableFn.size() != (Integer) spinnerFsNumberCount.getValue()) {
+                    labelMessageTableFn.setForeground(Color.RED);
+                    labelMessageTableFn.setText("<html>Количество номеров <br>в табл. не соответствует<br>" +
+                            "значению поля <br>\"Количество зарегистр-ых ФН\".</html>");
                     textFieldFsNumberTable.setText("");
                 } else {
-                    modelListTableFn.addElement(textFieldFsNumberTable.getText());
-                    comboBoxCurrentFnNum.addItem(textFieldFsNumberTable.getText());
-                    //если размер листа равен кол-ву зареганных фн-ов
-                    if (modelListTableFn.size() == (Integer) spinnerFsNumberCount.getValue()) {
-                        labelMessageTableFn.setText("");
-                    }
+                    labelMessageTableFn.setText("");
                     textFieldFsNumberTable.setText("");
                 }
             }
@@ -1067,6 +1107,9 @@ public class ConfigCreator extends JFrame {
      * @param value - значение из конфига
      */
     private void tuneFsNumberCount(String value) {
+        if (value.isEmpty()) {
+            value = "0";
+        }
         SpinnerModel sm = new SpinnerNumberModel(Integer.parseInt(value), 0, 100, 1);
         spinnerFsNumberCount.setModel(sm);
         spinnerFsNumberCount.addChangeListener(e -> {
@@ -1116,6 +1159,7 @@ public class ConfigCreator extends JFrame {
             return;
         }
         if (validatedTextField.getText().length() != limitChars) {
+            messageLabel.setForeground(Color.RED);
             messageLabel.setText("Количество символов должно быть - " + limitChars);
         }
     }
@@ -1197,14 +1241,21 @@ public class ConfigCreator extends JFrame {
      * @return ArrayList<String> - номера ФН-ов
      */
     private ArrayList<String> parserFnTable(String value) {
-        JSONObject fnTable = new JSONObject(value);
-        ArrayList<String> fnNumbersList = new ArrayList<>();
-        Iterator<String> keys = fnTable.keys();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            fnNumbersList.add(fnTable.getString(key));
+        try {
+            JSONObject fnTable = new JSONObject(value);
+            ArrayList<String> fnNumbersList = new ArrayList<>();
+            Iterator<String> keys = fnTable.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                fnNumbersList.add(fnTable.getString(key));
+            }
+            return fnNumbersList;
+        } catch (JSONException e) {
+            return new ArrayList<String>() {{
+                add("");
+            }};
         }
-        return fnNumbersList;
+
     }
 
     private void saveButtonInit() {
@@ -1241,7 +1292,8 @@ public class ConfigCreator extends JFrame {
                         && messageValidateRegNum.getText().isEmpty()
                         && messageValidateKktPluntNum.getText().isEmpty()
                         && labelMessageTaxSystem.getText().isEmpty()
-                        && labelMessageOFD.getText().isEmpty();
+                        && labelMessageOFD.getText().isEmpty()
+                        && labelMessageEmailCabinet.getText().isEmpty();
         if (saveButtonEnable) {
             saveButton.setEnabled(true);
         } else {
@@ -1674,6 +1726,11 @@ public class ConfigCreator extends JFrame {
         labelMessageIpServer = new JLabel();
         labelMessageIpServer.setText("");
         mainPanel.add(labelMessageIpServer, new com.intellij.uiDesigner.core.GridConstraints(29, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        textFieldEmailCabinet = new JTextField();
+        mainPanel.add(textFieldEmailCabinet, new com.intellij.uiDesigner.core.GridConstraints(35, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        labelMessageEmailCabinet = new JLabel();
+        labelMessageEmailCabinet.setText("");
+        mainPanel.add(labelMessageEmailCabinet, new com.intellij.uiDesigner.core.GridConstraints(35, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
