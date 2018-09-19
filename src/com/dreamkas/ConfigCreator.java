@@ -936,9 +936,9 @@ public class ConfigCreator extends JFrame {
             messageLabel.setText("Количество символов должно быть - " + limitChars);
             return;
         }
-        if ((validatedTextField.equals(textFieldOrganizationINN))
-                || (validatedTextField.equals(textFieldKktPluntNum))
-                || (validatedTextField.equals(textFieldKktRegNum))) {
+        if (validatedTextField.equals(textFieldOrganizationINN)
+                || validatedTextField.equals(textFieldKktPluntNum)
+                || validatedTextField.equals(textFieldKktRegNum)) {
             validateRegNumField();
         }
     }
