@@ -27,6 +27,9 @@ public class CollectorConfigData {
     }
 
     private void fillMap() {
+
+        putStage();
+
         putKktMode();
         putReplaceMode();
         putShiftTimer();
@@ -48,8 +51,8 @@ public class CollectorConfigData {
         putCurrentAgent();
         putSigns();
         putAddSigns();
-        putStage();
         putCabinet();
+        putFsNumber();
 
         putFfdKktVer();
     }
@@ -93,20 +96,26 @@ public class CollectorConfigData {
      */
     private void putAddSigns() {
         int val = 0;
-        if (configCreator.checkBoxAddSign4.isSelected()) {
-            val = val + 4;
+        if (configCreator.checkBoxAddSign1.isSelected()) {
+            val = val + 1;
+            mapChangedConfigData.put("ENCRYPTION_SIGN", "1");
+        } else {
+            mapChangedConfigData.put("ENCRYPTION_SIGN", "0");
         }
         if (configCreator.checkBoxAddSign2.isSelected()) {
             val = val + 2;
         }
-        if (configCreator.checkBoxAddSign1.isSelected()) {
-            val = val + 1;
-        }
-        if (configCreator.checkBoxAddSign16.isSelected()) {
-            val = val + 16;
+        if (configCreator.checkBoxAddSign4.isSelected()) {
+            val = val + 4;
         }
         if (configCreator.checkBoxAddSign8.isSelected()) {
             val = val + 8;
+            mapChangedConfigData.put("CLC_SERVICE_SIGN", "1");
+        } else {
+            mapChangedConfigData.put("CLC_SERVICE_SIGN", "0");
+        }
+        if (configCreator.checkBoxAddSign16.isSelected()) {
+            val = val + 16;
         }
         if (configCreator.checkBoxAddSign32.isSelected()) {
             val = val + 32;
@@ -120,19 +129,27 @@ public class CollectorConfigData {
      */
     private void putSigns() {
         int val = 0;
-        if (configCreator.checkBoxSign4.isSelected()) {
-            val = val + 4;
+        if (configCreator.checkBoxSign1.isSelected()) {
+            val = val + 1;
+            mapChangedConfigData.put("EXCISABLE_SIGN", "1");
+        } else {
+            mapChangedConfigData.put("EXCISABLE_SIGN", "0");
         }
         if (configCreator.checkBoxSign2.isSelected()) {
             val = val + 2;
+            mapChangedConfigData.put("GAMBLING_SIGN", "1");
+        } else {
+            mapChangedConfigData.put("GAMBLING_SIGN", "0");
         }
-        if (configCreator.checkBoxSign1.isSelected()) {
-            val = val + 1;
+        if (configCreator.checkBoxSign4.isSelected()) {
+            val = val + 4;
+            mapChangedConfigData.put("LOTTERY_SIGN", "1");
+        } else {
+            mapChangedConfigData.put("LOTTERY_SIGN", "0");
         }
         if (configCreator.checkBoxSign8.isSelected()) {
             val = val + 8;
         }
-
         mapChangedConfigData.put("KKT_SIGNS", String.valueOf(val));
     }
 
@@ -201,6 +218,12 @@ public class CollectorConfigData {
             value = value + 64;
         }
 
+        if(value == 0){
+            mapChangedConfigData.put("PAYING_AGENT_SIGN", String.valueOf(value));
+        } else {
+            mapChangedConfigData.put("PAYING_AGENT_SIGN", "1");
+        }
+
         mapChangedConfigData.put("AGENT_MASK", String.valueOf(value));
     }
 
@@ -209,6 +232,15 @@ public class CollectorConfigData {
      * OFD_INN *** OFD_SERVER_ADDRESS *** OFD_NAME  ** OFD_SERVER_PORT  ** CHECK_RECEIPT_ADDRESS  *** OFD_SERVER_IP
      */
     private void putOfdContent() {
+        if (mapChangedConfigData.get("KKT_MODE").equals("1")) {
+            mapChangedConfigData.put("OFD_INN", "");
+            mapChangedConfigData.put("OFD_SERVER_ADDRESS", "");
+            mapChangedConfigData.put("OFD_NAME", "");
+            mapChangedConfigData.put("OFD_SERVER_PORT", "");
+            mapChangedConfigData.put("CHECK_RECEIPT_ADDRESS", "");
+            mapChangedConfigData.put("OFD_SERVER_IP", "");
+            return;
+        }
         mapChangedConfigData.put("OFD_INN", configCreator.textFieldOFDinn.getText());
         mapChangedConfigData.put("OFD_SERVER_ADDRESS", configCreator.textFieldOFDserverAddress.getText());
         mapChangedConfigData.put("OFD_NAME", configCreator.textFieldOFDname.getText());
@@ -263,6 +295,12 @@ public class CollectorConfigData {
         }
         if (configCreator.radioButtonDreamkas.isSelected()) {
             value = "96";
+        }
+
+        //если автономный режим то записываем 0
+        if (mapChangedConfigData.get("KKT_MODE").equals("1")) {
+            mapChangedConfigData.put("OFD_CHOOSE", "0");
+            return;
         }
 
         mapChangedConfigData.put("OFD_CHOOSE", String.valueOf(value));
@@ -369,6 +407,12 @@ public class CollectorConfigData {
      * FS_NUMBERS_TABLE
      */
     private void putFsNumberTable() {
+
+        if(mapChangedConfigData.get("STAGE").equals("0") || mapChangedConfigData.get("STAGE").equals("1")){
+            mapChangedConfigData.put("FS_NUMBERS_TABLE", "");
+            return;
+        }
+
         int size = configCreator.modelListTableFn.getSize();
         JSONObject jsonObject = new JSONObject();
 
@@ -383,6 +427,18 @@ public class CollectorConfigData {
     }
 
     /**
+     * FS_NUMBER
+     */
+    private void putFsNumber(){
+        if(mapChangedConfigData.get("STAGE").equals("0") || mapChangedConfigData.get("STAGE").equals("1")){
+            mapChangedConfigData.put("FS_NUMBER", "");
+            return;
+        }
+        String value = (String) configCreator.comboBoxCurrentFnNum.getSelectedItem();
+        mapChangedConfigData.put("FS_NUMBER", value);
+    }
+
+    /**
      * UUID
      */
     private void putUUID() {
@@ -393,6 +449,10 @@ public class CollectorConfigData {
      * FS_NUMBER_COUNT
      */
     private void putFsNumberCount() {
+        if(mapChangedConfigData.get("STAGE").equals("0") || mapChangedConfigData.get("STAGE").equals("1")){
+            mapChangedConfigData.put("FS_NUMBER_COUNT", "");
+            return;
+        }
         mapChangedConfigData.put("FS_NUMBER_COUNT", String.valueOf(configCreator.spinnerFsNumberCount.getValue()));
     }
 

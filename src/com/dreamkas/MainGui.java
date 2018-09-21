@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.*;
-import java.util.List;
 
 import static com.dreamkas.ConfigCreator.REG_EXP_IP;
 
@@ -19,7 +18,7 @@ public class MainGui extends JFrame {
     private JPanel MainPanel;
     private FrontEnd m_fe;
     private JTextField ipTextField;
-    private JTextArea LogField;
+    private JTextArea logField;
     private JTable configTable;
     private JButton getConfigButton;
     private JButton saveDataBase;
@@ -69,8 +68,8 @@ public class MainGui extends JFrame {
         getConfigButton = new JButton();
         getConfigButton.setText("Загрузить конфиг");
         MainPanel.add(getConfigButton, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        LogField = new JTextArea();
-        MainPanel.add(LogField, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
+        logField = new JTextArea();
+        MainPanel.add(logField, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
         labelInputIp = new JLabel();
         labelInputIp.setText("Введите IP ");
         MainPanel.add(labelInputIp, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -103,7 +102,7 @@ public class MainGui extends JFrame {
     //обработчик нажатия кнопки левой
     public class LeftButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            LogField.setText("");
+            logField.setText("");
             System.out.println(ipTextField.getText());
             m_fe.updateDrawer(ipTextField.getText());
 
@@ -119,7 +118,7 @@ public class MainGui extends JFrame {
     public class DownloadConfigListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            LogField.setText("");
+            logField.setText("");
             System.out.println(ipTextField.getText());
             m_fe.downloadConfig(ipTextField.getText());
 
@@ -160,7 +159,7 @@ public class MainGui extends JFrame {
 //    public class UploadConfigListener implements ActionListener {
 //
 //        public void actionPerformed(ActionEvent e) {
-//            LogField.setText("");
+//            logField.setText("");
 //            System.out.println("Save config to drawer!");
 //            int rows = configTable.getModel().getRowCount();
 //
@@ -189,7 +188,7 @@ public class MainGui extends JFrame {
     public class CloneDrawerListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            LogField.setText("");
+            logField.setText("");
             System.out.println(ipTextField.getText());
             m_fe.cloneDrawer(ipTextField.getText());
 
@@ -278,7 +277,7 @@ public class MainGui extends JFrame {
             currentOperation = "";
         }
 
-        updateDrawer.setEnabled(true);
+       // updateDrawer.setEnabled(true);
 
         if (msg.equals("Success")) {
             System.out.println("GUI: ОПЕРАЦИЯ УСПЕШНО ЗАВЕРШЕНА!!!");
@@ -307,6 +306,9 @@ public class MainGui extends JFrame {
         CloneDrawerListener buttonCloneDrawerListener = new CloneDrawerListener();
         buttonGetClone.addActionListener(buttonCloneDrawerListener);
 
+        updateDrawer.setEnabled(false);
+        logField.setEditable(false);
+
         validateIp();
         ipTextField.addKeyListener(new KeyAdapter() {
             @Override
@@ -333,8 +335,8 @@ public class MainGui extends JFrame {
             buttonGetClone.setEnabled(false);
         } else {
             getConfigButton.setEnabled(true);
-            updateDrawer.setEnabled(true);
-            buttonGetClone.setEnabled(true);
+            //updateDrawer.setEnabled(true);
+            //buttonGetClone.setEnabled(true);
         }
     }
 
@@ -345,6 +347,6 @@ public class MainGui extends JFrame {
 
     //напечатать строку лога
     public void printLogString(String logString) {
-        LogField.append(logString);
+        logField.append(logString);
     }
 }
