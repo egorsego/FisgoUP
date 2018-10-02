@@ -20,6 +20,8 @@ public class BackEnd extends Thread {
     private Database   m_db;
     private final static int THREAD_TIMEOUT_MS = 1000;
     private final static String FISGO_UPDATE_TAR = "FisGoUpdate.tar";
+    private LoaderFrame loaderFrame;
+    private Thread progressBarThread;
 
     //рекурсивная удалялка файлов
     public static void recursiveDelete(File file) {
@@ -140,8 +142,8 @@ public class BackEnd extends Thread {
                     break;
 
                 case "UploadConfig":
-                    LoaderFrame loaderFrame = new LoaderFrame();
-                    Thread progressBarThread = new Thread(loaderFrame);
+                    loaderFrame = new LoaderFrame();
+                    progressBarThread = new Thread(loaderFrame);
                     progressBarThread.start();
 
                     m_db.setConfigTable(((UploadConfig) task).getUploadConfig());
@@ -149,20 +151,14 @@ public class BackEnd extends Thread {
                     loaderFrame.setProgressBar(10);
 
                     if(m_ssh.executeSshCommand("killall fiscat") < 0) {
-                        loaderFrame.setProgressBar(100);
-                        loaderFrame.setMessageLabel("ERRORx01! Failed to copy updated config!");
-                        loaderFrame.setEnableButton(true);
-                        loaderFrame.setColorProgressBar(Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx01! Failed to copy updated config!", Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
 
                     loaderFrame.setProgressBar(20);
 
                     if(m_ssh.executeSshCommand("cd /FisGo/; rm updateConfigDb.sh") < 0) {
-                        loaderFrame.setProgressBar(100);
-                        loaderFrame.setMessageLabel("ERRORx02! Failed to copy updated config!");
-                        loaderFrame.setEnableButton(true);
-                        loaderFrame.setColorProgressBar(Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx02! Failed to copy updated config!", Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
 
@@ -171,81 +167,78 @@ public class BackEnd extends Thread {
                     String[] confFileName = {"updateConfigDb.sh"};
 
                     if(m_ssh.executeScpPut("/FisGo/", confFileName) < 0) {
-                        loaderFrame.setProgressBar(100);
-                        loaderFrame.setMessageLabel("ERRORx03! Failed to copy updated config!");
-                        loaderFrame.setEnableButton(true);
-                        loaderFrame.setColorProgressBar(Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx03! Failed to copy updated config!", Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
 
                     loaderFrame.setProgressBar(40);
 
                     if(m_ssh.executeSshCommand("dos2unix -u /FisGo/updateConfigDb.sh /FisGo/updateConfigDb.sh;") < 0) {
-                        loaderFrame.setProgressBar(100);
-                        loaderFrame.setMessageLabel("ERRORx04! Failed to copy updated config!");
-                        loaderFrame.setEnableButton(true);
-                        loaderFrame.setColorProgressBar(Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx04! Failed to copy updated config!", Color.RED);
                         throw new Exception("Failed dos2unix!");
                     }
 
                     loaderFrame.setProgressBar(50);
 
                     if(m_ssh.executeSshCommand("chmod 755 /FisGo/updateConfigDb.sh") < 0) {
-                        loaderFrame.setProgressBar(100);
-                        loaderFrame.setMessageLabel("ERRORx05! Failed to copy updated config!");
-                        loaderFrame.setEnableButton(true);
-                        loaderFrame.setColorProgressBar(Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx05! Failed to copy updated config!", Color.RED);
                         throw new Exception("Failed chmod 755!");
                     }
 
                     loaderFrame.setProgressBar(65);
 
                     if(m_ssh.executeSshCommand("sync") < 0) {
-                        loaderFrame.setProgressBar(100);
-                        loaderFrame.setMessageLabel("ERRORx06! Failed to copy updated config!");
-                        loaderFrame.setEnableButton(true);
-                        loaderFrame.setColorProgressBar(Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx06! Failed to copy updated config!", Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
 
                     loaderFrame.setProgressBar(80);
 
                     if(m_ssh.executeSshCommand("cd /FisGo/; ./updateConfigDb.sh") < 0) {
-                        loaderFrame.setProgressBar(100);
-                        loaderFrame.setMessageLabel("ERRORx07! Failed to copy updated config!");
-                        loaderFrame.setEnableButton(true);
-                        loaderFrame.setColorProgressBar(Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx07! Failed to copy updated config!", Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
 
-                    loaderFrame.setProgressBar(100);
-                    loaderFrame.setMessageLabel("Операция успешно выполнена!");
-                    loaderFrame.setEnableButton(true);
-                    loaderFrame.setColorProgressBar(Color.GREEN);
+                    loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);
                     break;
 
                 case "CloneDrawer":
+                    loaderFrame = new LoaderFrame();
+                    progressBarThread = new Thread(loaderFrame);
+                    progressBarThread.start();
+
+                    loaderFrame.setProgressBar(5);
                     File fisGoArchive = new File("./FisGo.tar");
 
+                    loaderFrame.setProgressBar(10);
                     //удаляю файл если есть
                     recursiveDelete(fisGoArchive);
 
+                    loaderFrame.setProgressBar(15);
                     //скачать базу с кассы и вынуть из нее текущую версию fiscat
                     ip = ((CloneDrawer) task).getDrawerIp();
                     m_ssh.setIp(ip);
                     m_tb.addTaskForFrontEnd(new Feedback("Cloning device..."));
 
+                    loaderFrame.setProgressBar(20);
                     if(m_ssh.executeSshCommand("cd /; rm FisGo.tar") < 0) {
+                        loaderFrame.setOverProgressBar("ERRORx01! Failed to compress clone!", Color.RED);
                         throw new Exception("Failed to compress clone!");
                     }
 
+                    loaderFrame.setProgressBar(55);
                     if(m_ssh.executeSshCommand("cd /; tar -cvf FisGo.tar /FisGo/") < 0) {
+                        loaderFrame.setOverProgressBar("ERRORx02! Failed to compress clone!", Color.RED);
                         throw new Exception("Failed to compress clone!");
                     }
 
+                    loaderFrame.setProgressBar(80);
                     if (m_ssh.executeScpGet("./", "/FisGo.tar") < 0) {
+                        loaderFrame.setOverProgressBar("ERRORx03! Failed to compress clone!", Color.RED);
                         throw new Exception("Failed to get drawer clone!");
                     }
+
+                    loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);
                     break;
 
                 default:
