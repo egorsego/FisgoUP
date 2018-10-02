@@ -21,13 +21,13 @@ public class MainGui extends JFrame {
     private JTextArea logField;
     private JTable configTable;
     private JButton getConfigButton;
-    private JButton saveDataBase;
     private JTextField textFieldUuid;
     private JButton buttonGenUuid;
 
     private JButton buttonGetClone;
     private JLabel labelInputIp;
     private JLabel labelMessageIp;
+    private JProgressBar progressBar;
     private JButton connectToCashBoxButton;
     private JFormattedTextField asdFormattedTextField;
     private JFrame additionalFrame;
@@ -56,7 +56,7 @@ public class MainGui extends JFrame {
      */
     private void $$$setupUI$$$() {
         MainPanel = new JPanel();
-        MainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(7, 3, new Insets(0, 0, 0, 0), -1, -1));
+        MainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(8, 3, new Insets(0, 0, 0, 0), -1, -1));
         ipTextField = new JTextField();
         MainPanel.add(ipTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         buttonGetClone = new JButton();
@@ -69,7 +69,7 @@ public class MainGui extends JFrame {
         getConfigButton.setText("Загрузить конфиг");
         MainPanel.add(getConfigButton, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logField = new JTextArea();
-        MainPanel.add(logField, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
+        MainPanel.add(logField, new com.intellij.uiDesigner.core.GridConstraints(7, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
         labelInputIp = new JLabel();
         labelInputIp.setText("Введите IP ");
         MainPanel.add(labelInputIp, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -80,6 +80,8 @@ public class MainGui extends JFrame {
         labelMessageIp = new JLabel();
         labelMessageIp.setText("");
         MainPanel.add(labelMessageIp, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        progressBar = new JProgressBar();
+        MainPanel.add(progressBar, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -108,7 +110,6 @@ public class MainGui extends JFrame {
 
 
             updateDrawer.setEnabled(false);
-            saveDataBase.setEnabled(false);
             getConfigButton.setEnabled(false);
         }
 
@@ -122,6 +123,8 @@ public class MainGui extends JFrame {
             System.out.println(ipTextField.getText());
             m_fe.downloadConfig(ipTextField.getText());
 
+            progressBar.setIndeterminate(true);
+            progressBar.setVisible(true);
 
             getConfigButton.setEnabled(false);
             updateDrawer.setEnabled(false);
@@ -194,7 +197,6 @@ public class MainGui extends JFrame {
 
 
             updateDrawer.setEnabled(false);
-            saveDataBase.setEnabled(false);
             getConfigButton.setEnabled(false);
         }
     }
@@ -207,6 +209,7 @@ public class MainGui extends JFrame {
         configCreator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         configCreator.setBounds(30, 50, 850, 600);
+        configCreator.setLocationRelativeTo(null);
         configCreator.setVisible(true);
     }
 
@@ -253,7 +256,6 @@ public class MainGui extends JFrame {
         additionalFrame.setBounds(30, 50, 1300, 600);
         additionalFrame.setVisible(true);
 
-        saveDataBase.setEnabled(true);
         getConfigButton.setEnabled(false);
 
     }
@@ -262,36 +264,46 @@ public class MainGui extends JFrame {
     public void resetGui(String msg) {
         if (msg.equals("Success")) {
             if (currentOperation.equals("Saving config")) {
-                saveDataBase.setEnabled(false);
                 getConfigButton.setEnabled(true);
                 currentOperation = "";
 
                 updateDrawer.setEnabled(true);
                 System.out.println("GUI: ОПЕРАЦИЯ УСПЕШНО ЗАВЕРШЕНА!!!");
                 printLogString("GUI: ОПЕРАЦИЯ УСПЕШНО ЗАВЕРШЕНА!!!\n");
+                progressBar.setIndeterminate(false);
+                progressBar.setVisible(false);
                 return;
             }
         } else {
-            saveDataBase.setEnabled(false);
             getConfigButton.setEnabled(true);
+            progressBar.setIndeterminate(false);
+            progressBar.setVisible(false);
             currentOperation = "";
         }
 
-       // updateDrawer.setEnabled(true);
+        // updateDrawer.setEnabled(true);
 
         if (msg.equals("Success")) {
             System.out.println("GUI: ОПЕРАЦИЯ УСПЕШНО ЗАВЕРШЕНА!!!");
             printLogString("GUI: ОПЕРАЦИЯ УСПЕШНО ЗАВЕРШЕНА!!!\n");
+            progressBar.setIndeterminate(false);
         } else if (msg.equals("Failed")) {
             System.out.println("GUI: ОПЕРАЦИЯ ПРОВАЛЕНА!!!");
             printLogString("GUI: ОПЕРАЦИЯ ПРОВАЛЕНА!!!\n");
+            progressBar.setIndeterminate(false);
         }
     }
 
+    public void enableProgressBar(boolean isEnable) {
+        progressBar.setIndeterminate(isEnable);
+    }
+
     public MainGui() {
+        setTitle("FisGoUP-1.2-BETA");
         setContentPane(MainPanel);
         setSize(mWidth, mHeighth);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         currentOperation = "";
 
@@ -305,6 +317,8 @@ public class MainGui extends JFrame {
 
         CloneDrawerListener buttonCloneDrawerListener = new CloneDrawerListener();
         buttonGetClone.addActionListener(buttonCloneDrawerListener);
+
+        progressBar.setVisible(false);
 
         updateDrawer.setEnabled(false);
         logField.setEditable(false);

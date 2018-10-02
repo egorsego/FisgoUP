@@ -176,6 +176,7 @@ public class ConfigCreator extends JFrame {
         mapTaxAndCheckBox = new HashMap<>();
         mapAgentsAndCheckBox = new HashMap<>();
         this.config = config;
+        setTitle("Изменение конфига");
         $$$setupUI$$$();
         modelListTableFn = new DefaultListModel();
         listFsNumberTable.setModel(modelListTableFn);

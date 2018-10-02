@@ -57,7 +57,6 @@ public class FrontEnd extends Thread {
                     if (fb.getMessage().contains("Request success!")) {
                         m_gui.resetGui("Success");
                     }
-
                     break;
 
                 case "DownloadConfig":

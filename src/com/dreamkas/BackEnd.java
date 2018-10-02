@@ -9,6 +9,8 @@
 
 package com.dreamkas;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 
 public class BackEnd extends Thread {
@@ -138,39 +140,88 @@ public class BackEnd extends Thread {
                     break;
 
                 case "UploadConfig":
+                    LoaderFrame loaderFrame = new LoaderFrame();
+                    Thread progressBarThread = new Thread(loaderFrame);
+                    progressBarThread.start();
+
                     m_db.setConfigTable(((UploadConfig) task).getUploadConfig());
 
+                    loaderFrame.setProgressBar(10);
+
                     if(m_ssh.executeSshCommand("killall fiscat") < 0) {
+                        loaderFrame.setProgressBar(100);
+                        loaderFrame.setMessageLabel("ERRORx01! Failed to copy updated config!");
+                        loaderFrame.setEnableButton(true);
+                        loaderFrame.setColorProgressBar(Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
 
+                    loaderFrame.setProgressBar(20);
+
                     if(m_ssh.executeSshCommand("cd /FisGo/; rm updateConfigDb.sh") < 0) {
+                        loaderFrame.setProgressBar(100);
+                        loaderFrame.setMessageLabel("ERRORx02! Failed to copy updated config!");
+                        loaderFrame.setEnableButton(true);
+                        loaderFrame.setColorProgressBar(Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
+
+                    loaderFrame.setProgressBar(30);
 
                     String[] confFileName = {"updateConfigDb.sh"};
 
                     if(m_ssh.executeScpPut("/FisGo/", confFileName) < 0) {
+                        loaderFrame.setProgressBar(100);
+                        loaderFrame.setMessageLabel("ERRORx03! Failed to copy updated config!");
+                        loaderFrame.setEnableButton(true);
+                        loaderFrame.setColorProgressBar(Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
 
+                    loaderFrame.setProgressBar(40);
+
                     if(m_ssh.executeSshCommand("dos2unix -u /FisGo/updateConfigDb.sh /FisGo/updateConfigDb.sh;") < 0) {
+                        loaderFrame.setProgressBar(100);
+                        loaderFrame.setMessageLabel("ERRORx04! Failed to copy updated config!");
+                        loaderFrame.setEnableButton(true);
+                        loaderFrame.setColorProgressBar(Color.RED);
                         throw new Exception("Failed dos2unix!");
                     }
 
+                    loaderFrame.setProgressBar(50);
 
                     if(m_ssh.executeSshCommand("chmod 755 /FisGo/updateConfigDb.sh") < 0) {
+                        loaderFrame.setProgressBar(100);
+                        loaderFrame.setMessageLabel("ERRORx05! Failed to copy updated config!");
+                        loaderFrame.setEnableButton(true);
+                        loaderFrame.setColorProgressBar(Color.RED);
                         throw new Exception("Failed chmod 755!");
                     }
 
+                    loaderFrame.setProgressBar(65);
+
                     if(m_ssh.executeSshCommand("sync") < 0) {
+                        loaderFrame.setProgressBar(100);
+                        loaderFrame.setMessageLabel("ERRORx06! Failed to copy updated config!");
+                        loaderFrame.setEnableButton(true);
+                        loaderFrame.setColorProgressBar(Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
+
+                    loaderFrame.setProgressBar(80);
 
                     if(m_ssh.executeSshCommand("cd /FisGo/; ./updateConfigDb.sh") < 0) {
+                        loaderFrame.setProgressBar(100);
+                        loaderFrame.setMessageLabel("ERRORx07! Failed to copy updated config!");
+                        loaderFrame.setEnableButton(true);
+                        loaderFrame.setColorProgressBar(Color.RED);
                         throw new Exception("Failed to copy updated config!");
                     }
 
+                    loaderFrame.setProgressBar(100);
+                    loaderFrame.setMessageLabel("Операция успешно выполнена!");
+                    loaderFrame.setEnableButton(true);
+                    loaderFrame.setColorProgressBar(Color.GREEN);
                     break;
 
                 case "CloneDrawer":
