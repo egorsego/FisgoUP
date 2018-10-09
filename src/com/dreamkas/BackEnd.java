@@ -13,7 +13,7 @@ import java.awt.*;
 import java.io.File;
 
 public class BackEnd extends Thread {
-    private final static String FISGO_UPDATE_TAR = "FisGoUpdate.tar";
+    private final static String FISGO_UPDATE_TAR = "fisGoUpdate.tar";
     private final static int THREAD_TIMEOUT_MS = 1000;
     private TaskBuffer m_tb;
     private Ssh m_ssh;
@@ -78,17 +78,17 @@ public class BackEnd extends Thread {
                     //сформировать url для запроса обновления
                     String url
                             = "https://update.dreamkas.ru/v1/projects/fisgo/" +
-                            "products/dreamkasf/updates/" + version;
+                            "products/dreamkasFRedirect/updates/" + version;
 
                     loaderFrame.setProgressBar(30);
                     //скачать обновление
                     m_tb.addTaskForFrontEnd(new Feedback("Downloading update..."));
                     int res = m_net.getUpdate(url, FISGO_UPDATE_TAR);
                     if (res < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx02!Failed to download update artifact!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx02 !Failed to download update artifact!", Color.RED);
                         throw new Exception("Failed to download update artifact!");
                     } else if (res > 0) {
-                        loaderFrame.setOverProgressBar("ERRORx03!Update is not available!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx03 !Update is not available!", Color.RED);
                         throw new UpdateNotAvailableException("Update is not available!");
                     }
 
@@ -96,7 +96,7 @@ public class BackEnd extends Thread {
                     //положить его на кассу
                     m_tb.addTaskForFrontEnd(new Feedback("Updating device..."));
                     if (m_ssh.executeSshCommand("mkdir -p /download") < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx04!Failed to create /download directory!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx04 !Failed to create /download directory!", Color.RED);
                         throw new Exception("Failed to create /download directory!");
                     }
 
@@ -104,11 +104,12 @@ public class BackEnd extends Thread {
 
                     loaderFrame.setProgressBar(70);
                     if (m_ssh.executeScpPut("/download/", fileNames) < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx05!Failed to copy update artifact!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx05 !Failed to copy update artifact!", Color.RED);
                         throw new Exception("Failed to copy update artifact!");
                     }
 
                     loaderFrame.setProgressBar(85);
+
                     if (m_ssh.executeSshCommand("sync") < 0) {
                         loaderFrame.setOverProgressBar("ERRORx06!Failed to create /download directory!", Color.RED);
                         throw new Exception("Failed to create /download directory!");
@@ -123,7 +124,7 @@ public class BackEnd extends Thread {
                     //сформировать url для запроса обновления
                     String urlUpdFactory
                             = "https://update.dreamkas.ru/v1/projects/fisgo/" +
-                            "products/dreamkasf/updates/";
+                            "products/dreamkasFRedirect/updates/";
 
                     //скачать обновление
                     m_tb.addTaskForFrontEnd(new Feedback("Downloading update..."));

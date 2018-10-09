@@ -28,21 +28,21 @@ public class Network {
                             jsonLink.openStream()));
 
             String line     = reader.readLine();
+
             if(line.compareTo("{}") == 0){
                 return 1;
             }
 
             JSONObject json = new JSONObject(line);
-            JSONObject data = (JSONObject) json.get("data");
-            JSONArray patches = (JSONArray) data.get("patches");
+            JSONArray updates = (JSONArray) json.get("updates");
 
             String md5         = null;
             String artifactUrl = null;
-            for(int n = 0; n < patches.length(); n++) {
-                JSONObject patch = patches.getJSONObject(n);
-                JSONObject file = patch.getJSONObject("file");
-                md5                = (String)file.get("md5");
-                artifactUrl        = (String)file.get("url");
+
+            for(int n = 0; n < updates.length(); n++) {
+                JSONObject update = updates.getJSONObject(n);
+                md5                = (String)update.get("md5");
+                artifactUrl        = (String)update.get("url");
             }
 
             //скачка самого артефакта обновления
