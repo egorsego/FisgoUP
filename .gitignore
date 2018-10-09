@@ -1,6 +1,8 @@
 #gitignore file
 #ignoring  all files in /out directory
-/out/*
+out/*
 configDb.db
 updateConfigDb.sh
 .idea/*
+fisGoUpdate.tar
+cs
