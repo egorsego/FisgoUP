@@ -4,7 +4,7 @@ public enum Stage {
 
     LEARNING_MODE (0, "Учебный режим"),
     CHECKBOOK_MODE (1, "Режим чекопечатающей машины"),
-    KKT_IS_REGISTR (3, "ККТ зарегистрирована");
+    KKT_IS_REGISTR (2, "ККТ зарегистрирована");
 
     private int value;
     private String descriptions;

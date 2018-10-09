@@ -9,11 +9,12 @@
 package com.dreamkas;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Vector;
 
 public class FrontEnd extends Thread {
-    private TaskBuffer m_tb;
     private final static int THREAD_TIMEOUT_MS = 1000;
+    private TaskBuffer m_tb;
     private MainGui m_gui;
 
     //установить буфер таск
@@ -29,7 +30,7 @@ public class FrontEnd extends Thread {
         m_tb.addTaskForBackEnd(new DownloadConfig(ip, null));
     }
 
-    public void uploadConfig(String ip, Vector<Vector<String>> queryTab) {
+    public void uploadConfig(String ip, Map<String, String> queryTab) {
         m_tb.addTaskForBackEnd(new UploadConfig(ip, queryTab));
     }
 
@@ -56,11 +57,9 @@ public class FrontEnd extends Thread {
                     if (fb.getMessage().contains("Request success!")) {
                         m_gui.resetGui("Success");
                     }
-
                     break;
 
                 case "DownloadConfig":
-                    //m_gui.drawConfigTable(((DownloadConfig)task).getDownloadedConfig());
                     m_gui.drawConfigPanel(((DownloadConfig) task).getDownloadedConfig());
                     break;
 
@@ -101,5 +100,9 @@ public class FrontEnd extends Thread {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    public void resetGui() {
+        m_gui.resetGui("Success");
     }
 }

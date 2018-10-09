@@ -20,7 +20,6 @@ public class Ssh {
     private final String PASSWORD = "root";
     //конструктор по-умолчанию
     public Ssh() {
-
     }
 
     //Утановить ip адрес кассы
@@ -122,32 +121,6 @@ public class Ssh {
                 sess.close();
             }
             return -1;
-        }
-        return 0;
-    }
-
-    //Выполнить scp put
-    public int executeScpPut(String path, String filename) {
-        Connection conn = null;
-        SCPClient scpc = null;
-        try {
-            conn = new Connection(m_ip);
-            conn.connect();
-            boolean isAuth = conn.authenticateWithPassword("root", PASSWORD);
-            if (isAuth == false) {
-                throw new IOException("Authentication failed.");
-            }
-
-            scpc = conn.createSCPClient();
-            scpc.put(filename, path);
-
-            conn.close();
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-            if (conn != null) {
-                conn.close();
-                return -1;
-            }
         }
         return 0;
     }

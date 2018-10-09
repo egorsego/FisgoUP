@@ -10,14 +10,15 @@
 package com.dreamkas;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class DownloadConfig extends Task {
     //ip кассы, c которой хотим скачать конфиг
     private String m_ip;
-    private ArrayList<ArrayList<String>> m_config;
+    private Map<String, String> m_config;
 
     //конструктор по-умолчанию
-    public DownloadConfig(String ip, ArrayList<ArrayList<String>> config){
+    public DownloadConfig(String ip, Map<String, String> config){
         super("DownloadConfig");
         this.m_ip = ip;
         this.m_config = config;
@@ -27,7 +28,7 @@ public class DownloadConfig extends Task {
     public String                       getDrawerIp(){
         return m_ip;
     }
-    public ArrayList<ArrayList<String>> getDownloadedConfig(){
+    public Map<String, String> getDownloadedConfig(){
         return m_config;
     }
 }

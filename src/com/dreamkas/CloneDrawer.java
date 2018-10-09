@@ -14,7 +14,7 @@ public class CloneDrawer  extends Task  {
     private String m_ip;
 
     //конструктор по-умолчанию
-    public CloneDrawer(String ip){
+    CloneDrawer(String ip){
         super("CloneDrawer");
         this.m_ip = ip;
     }
