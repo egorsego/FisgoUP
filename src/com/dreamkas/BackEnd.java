@@ -69,7 +69,7 @@ public class BackEnd extends Thread {
                     m_ssh.setIp(ip);
                     m_tb.addTaskForFrontEnd(new Feedback("Getting device version..."));
                     if (m_ssh.executeScpGet("./", "/FisGo/configDb.db") < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx01!Failed to get config base!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx01! Failed to get config base!", Color.RED);
                         throw new Exception("Failed to get config base!");
                     }
 
@@ -85,10 +85,10 @@ public class BackEnd extends Thread {
                     m_tb.addTaskForFrontEnd(new Feedback("Downloading update..."));
                     int res = m_net.getUpdate(url, FISGO_UPDATE_TAR);
                     if (res < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx02 !Failed to download update artifact!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx02! Failed to download update artifact!", Color.RED);
                         throw new Exception("Failed to download update artifact!");
                     } else if (res > 0) {
-                        loaderFrame.setOverProgressBar("ERRORx03 !Update is not available!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx03! Update is not available!", Color.RED);
                         throw new UpdateNotAvailableException("Update is not available!");
                     }
 
@@ -96,7 +96,7 @@ public class BackEnd extends Thread {
                     //положить его на кассу
                     m_tb.addTaskForFrontEnd(new Feedback("Updating device..."));
                     if (m_ssh.executeSshCommand("mkdir -p /download") < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx04 !Failed to create /download directory!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx04! Failed to create /download directory!", Color.RED);
                         throw new Exception("Failed to create /download directory!");
                     }
 
@@ -104,14 +104,14 @@ public class BackEnd extends Thread {
 
                     loaderFrame.setProgressBar(70);
                     if (m_ssh.executeScpPut("/download/", fileNames) < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx05 !Failed to copy update artifact!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx05! Failed to copy update artifact!", Color.RED);
                         throw new Exception("Failed to copy update artifact!");
                     }
 
                     loaderFrame.setProgressBar(85);
 
                     if (m_ssh.executeSshCommand("sync") < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx06!Failed to create /download directory!", Color.RED);
+                        loaderFrame.setOverProgressBar("ERRORx06! Failed to create /download directory!", Color.RED);
                         throw new Exception("Failed to create /download directory!");
                     }
 
