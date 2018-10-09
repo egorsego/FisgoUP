@@ -16,7 +16,7 @@ public class CollectorConfigData {
     private ConfigCreator configCreator;
     private Map<String, String> mapChangedConfigData;
 
-    public CollectorConfigData(ConfigCreator configCreator) {
+    CollectorConfigData(ConfigCreator configCreator) {
         this.configCreator = configCreator;
         mapChangedConfigData = new HashMap<>();
         fillMap();
@@ -27,7 +27,6 @@ public class CollectorConfigData {
     }
 
     private void fillMap() {
-
         putStage();
 
         putKktMode();

@@ -8,10 +8,7 @@ import org.sqlite.util.StringUtils;
 import javax.swing.*;
 import java.awt.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -173,9 +170,9 @@ public class ConfigCreator extends JFrame {
     ConfigCreator(Map<String, String> config, FrontEnd m_fe, String ipCashbox) {
         this.m_fe = m_fe;
         this.ipCashbox = ipCashbox;
+        this.config = config;
         mapTaxAndCheckBox = new HashMap<>();
         mapAgentsAndCheckBox = new HashMap<>();
-        this.config = config;
         setTitle("Изменение конфига");
         $$$setupUI$$$();
         modelListTableFn = new DefaultListModel();
@@ -186,9 +183,18 @@ public class ConfigCreator extends JFrame {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         setContentPane(scroll);
-
+        setBounds(30, 50, 850, 600);
+        setLocationRelativeTo(null);
+        setVisible(true);
         addListenerCheckBoxes();
 
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                m_fe.resetGui();
+                dispose();
+            }
+        });
     }
 
     /**

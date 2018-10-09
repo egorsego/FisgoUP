@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Vector;
 
 public class FrontEnd extends Thread {
-    private TaskBuffer m_tb;
     private final static int THREAD_TIMEOUT_MS = 1000;
+    private TaskBuffer m_tb;
     private MainGui m_gui;
 
     //установить буфер таск
@@ -60,7 +60,6 @@ public class FrontEnd extends Thread {
                     break;
 
                 case "DownloadConfig":
-                    //m_gui.drawConfigTable(((DownloadConfig)task).getDownloadedConfig());
                     m_gui.drawConfigPanel(((DownloadConfig) task).getDownloadedConfig());
                     break;
 
@@ -101,5 +100,9 @@ public class FrontEnd extends Thread {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    public void resetGui() {
+        m_gui.resetGui("Success");
     }
 }
