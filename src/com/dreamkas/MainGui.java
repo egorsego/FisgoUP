@@ -27,7 +27,7 @@ public class MainGui extends JFrame {
     private JLabel labelMessageIp;
 
     private static final String COMMAND_RM_BACKUP = "rm -r /updateBackup/";
-    private static final String TITLE = "FisGoUP-1.2-BETA";
+    private static final String TITLE = "FisGoUP-1.3 (for Dreamkas-F)";
 
     MainGui() {
         setTitle(TITLE);
