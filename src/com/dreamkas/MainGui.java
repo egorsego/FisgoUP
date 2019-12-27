@@ -1,7 +1,6 @@
 package com.dreamkas;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,8 +12,8 @@ import static com.dreamkas.ConfigCreator.REG_EXP_IP;
 
 public class MainGui extends JFrame {
 
-    private static final int mWidth = 350;
-    private static final int mHeighth = 400;
+    private static final int mWidth = 300;
+    private static final int mHeighth = 300;
     private FrontEnd m_fe;
     private JPanel MainPanel;
     private JTextField ipTextField;
@@ -24,7 +23,7 @@ public class MainGui extends JFrame {
     private JLabel labelInputIp;
 
     private static final String COMMAND_RM_BACKUP = "rm -r /updateBackup/";
-    private static final String TITLE = "FisGo Restore";
+    private static final String TITLE = "FisGo Update";
 
     MainGui() {
         setTitle(TITLE);
@@ -37,14 +36,10 @@ public class MainGui extends JFrame {
         LeftButtonListener buttonLeft = new LeftButtonListener();
         updateDrawer.addActionListener(buttonLeft);
 
-        DownloadConfigListener buttonDownloadConfig = new DownloadConfigListener();
-        //getConfigButton.addActionListener(buttonDownloadConfig);
-
-        CloneDrawerListener buttonCloneDrawerListener = new CloneDrawerListener();
-        //buttonGetClone.addActionListener(buttonCloneDrawerListener);
-
         progressBar.setVisible(false);
         logField.setEditable(false);
+
+        //setIconImage(new ImageIcon(getClass().getClassLoader().getResource("dreamkas.png")).getImage());
 
         validateIp();
         ipTextField.addKeyListener(new KeyAdapter() {
@@ -75,12 +70,12 @@ public class MainGui extends JFrame {
         ipTextField = new JTextField();
         MainPanel.add(ipTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         updateDrawer = new JButton();
-        updateDrawer.setText("Restart Fiscat");
+        updateDrawer.setText("Обновить версию Fiscat");
         MainPanel.add(updateDrawer, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logField = new JTextArea();
-        MainPanel.add(logField, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
+        MainPanel.add(logField, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 100), null, 0, false));
         labelInputIp = new JLabel();
-        labelInputIp.setText("Введите IP адрес кассы ");
+        labelInputIp.setText("Введите IP адрес кассы:");
         MainPanel.add(labelInputIp, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         MainPanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -104,35 +99,7 @@ public class MainGui extends JFrame {
         public void actionPerformed(ActionEvent e) {
             logField.setText("");
             System.out.println(ipTextField.getText());
-            m_fe.killFiscat(ipTextField.getText());
-            setEnabledButtons(false);
-        }
-    }
-
-    /**
-     * Обработчик кнопки загрузки конфига с кассы
-     */
-    public class DownloadConfigListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            logField.setText("");
-            System.out.println(ipTextField.getText());
-            m_fe.downloadConfig(ipTextField.getText());
-
-            progressBar.setIndeterminate(true);
-            progressBar.setVisible(true);
-
-            setEnabledButtons(false);
-        }
-    }
-
-    /**
-     * Обработчик нажатия кнопки клонирования кассы
-     */
-    public class CloneDrawerListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            logField.setText("");
-            System.out.println(ipTextField.getText());
-            m_fe.cloneDrawer(ipTextField.getText());
+            m_fe.updateFiscat(ipTextField.getText());
             setEnabledButtons(false);
         }
     }

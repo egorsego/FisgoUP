@@ -53,13 +53,15 @@ public class BackEnd extends Thread {
         try {
             String ip = "";
             switch (task.getTaskName()) {
-                case "KillFiscat":
+                case "UpdateFiscat":
                     loaderFrame = new LoaderFrame();
                     progressBarThread = new Thread(loaderFrame);
                     progressBarThread.start();
-                    loaderFrame.setProgressBar(10);
 
-                    ip = ((KillFiscat) task).getDrawerIp();
+                    int progress = 5;
+                    loaderFrame.setProgressBar(progress);
+
+                    ip = ((UpdateFiscat) task).getDrawerIp();
                     m_ssh.setIp(ip);
 
                     m_tb.addTaskForFrontEnd(new Feedback("Getting device version..."));
@@ -69,12 +71,20 @@ public class BackEnd extends Thread {
                         throw new Exception("Failed to get config base!");
                     }
 
-                    loaderFrame.setProgressBar(20);
-                    String fiscatVersion = m_db.getKktVersion();
+                    progress+=5;
+                    loaderFrame.setProgressBar(progress);
 
+                    String fiscatVersion = m_db.getKktVersion();
                     m_tb.addTaskForFrontEnd(new Feedback("Current fiscat version: " + fiscatVersion));
 
-                    if(fiscatVersion.equals("2.6.0")) {
+                    if(fiscatVersion.equals("1.27.5")) {
+                        progress+=5;
+                        loaderFrame.setProgressBar(progress);
+                        m_tb.addTaskForFrontEnd(new Feedback("Your fiscat version needs update"));
+                        m_tb.addTaskForFrontEnd(new Feedback("Update procedure started..."));
+
+                        progress+=5;
+                        loaderFrame.setProgressBar(progress);
                         m_tb.addTaskForFrontEnd(new Feedback("Killing fiscat..."));
 
                         if (m_ssh.executeSshCommand("killall fiscat") < 0) {
@@ -82,19 +92,52 @@ public class BackEnd extends Thread {
                             throw new Exception("Failed to kill fiscat!");
                         }
 
-                        loaderFrame.setProgressBar(40);
+                        progress+=5;
+                        loaderFrame.setProgressBar(progress);
+                        m_tb.addTaskForFrontEnd(new Feedback("Removing current fiscat..."));
 
+                        if (m_ssh.executeSshCommand("cd /FisGo/; rm fiscat") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx02! Failed to remove fiscat!", Color.RED);
+                            throw new Exception("Failed to remove fiscat!");
+                        }
+
+                        progress+=5;
+                        loaderFrame.setProgressBar(progress);
+                        m_tb.addTaskForFrontEnd(new Feedback("Updating fiscat..."));
+
+                        String[] fiscatFileName = {"fiscat"};
+
+                        if (m_ssh.executeScpPut("/FisGo/", fiscatFileName) < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx03! Failed to copy updated fiscat!", Color.RED);
+                            throw new Exception("Failed to copy updated fiscat!");
+                        }
+
+                        progress+=5;
+                        loaderFrame.setProgressBar(progress);
                         m_tb.addTaskForFrontEnd(new Feedback("Restarting fiscat..."));
 
-                        m_ssh.executeSshCommand("cd /FisGo/; ./fiscat");
+                        if (m_ssh.executeSshCommand("cd /FisGo/ ; chmod +x ./fiscat ; ./fiscat >>/FisGo/outf &") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx01! Failed to reboot fiscat", Color.RED);
+                            throw new Exception("Failed to reboot fiscat!");
+                        }
 
-                        loaderFrame.setProgressBar(90);
+                        Thread.sleep(10_000);
+
+                        progress+=10;
+                        loaderFrame.setProgressBar(progress);
+                        m_tb.addTaskForFrontEnd(new Feedback("Fiscat is rebooting. Please wait..."));
+
+                        for (int i = 0; i < 9; i++) {
+                            progress+=5;
+                            loaderFrame.setProgressBar(progress);
+                            Thread.sleep(5_000);
+                        }
 
                         loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);
                     } else {
                         m_tb.addTaskForFrontEnd(new Feedback("No changes needed"));
 
-                        loaderFrame.setProgressBar(70);
+                        loaderFrame.setProgressBar(80);
 
                         loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);
                     }

@@ -1,11 +1,11 @@
 package com.dreamkas;
 
-public class KillFiscat extends Task  {
+public class UpdateFiscat extends Task  {
     private String m_ip;
 
     //конструктор по-умолчанию
-    KillFiscat(String ip){
-        super("KillFiscat");
+    UpdateFiscat(String ip){
+        super("UpdateFiscat");
         this.m_ip = ip;
     }
 

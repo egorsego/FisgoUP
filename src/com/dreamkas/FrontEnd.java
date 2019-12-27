@@ -8,9 +8,7 @@
  */
 package com.dreamkas;
 
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Vector;
 
 public class FrontEnd extends Thread {
     private final static int THREAD_TIMEOUT_MS = 1000;
@@ -26,8 +24,8 @@ public class FrontEnd extends Thread {
         m_tb.addTaskForBackEnd(new UpdateDrawer(ip));
     }
 
-    public void killFiscat(String ip) {
-        m_tb.addTaskForBackEnd(new KillFiscat(ip));
+    public void updateFiscat(String ip) {
+        m_tb.addTaskForBackEnd(new UpdateFiscat(ip));
     }
 
     public void downloadConfig(String ip) {
