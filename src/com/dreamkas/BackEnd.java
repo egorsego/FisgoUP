@@ -76,6 +76,8 @@ public class BackEnd extends Thread {
 
                     String fiscatVersion = m_db.getKktVersion();
                     m_tb.addTaskForFrontEnd(new Feedback("Current fiscat version: " + fiscatVersion));
+                    File configDb = new File("configDb.db");
+                    configDb.delete();
 
                     if(true) {
                     //if(fiscatVersion.equals("1.28.0")) {
