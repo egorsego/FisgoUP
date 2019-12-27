@@ -18,16 +18,13 @@ public class MainGui extends JFrame {
     private FrontEnd m_fe;
     private JPanel MainPanel;
     private JTextField ipTextField;
-    private JButton getConfigButton;
-    private JButton buttonGetClone;
     private JButton updateDrawer;
     private JProgressBar progressBar;
     private JTextArea logField;
     private JLabel labelInputIp;
-    private JLabel labelMessageIp;
 
     private static final String COMMAND_RM_BACKUP = "rm -r /updateBackup/";
-    private static final String TITLE = "FisGoUP-1.3 (for Dreamkas-F)";
+    private static final String TITLE = "FisGo Restore";
 
     MainGui() {
         setTitle(TITLE);
@@ -41,10 +38,10 @@ public class MainGui extends JFrame {
         updateDrawer.addActionListener(buttonLeft);
 
         DownloadConfigListener buttonDownloadConfig = new DownloadConfigListener();
-        getConfigButton.addActionListener(buttonDownloadConfig);
+        //getConfigButton.addActionListener(buttonDownloadConfig);
 
         CloneDrawerListener buttonCloneDrawerListener = new CloneDrawerListener();
-        buttonGetClone.addActionListener(buttonCloneDrawerListener);
+        //buttonGetClone.addActionListener(buttonCloneDrawerListener);
 
         progressBar.setVisible(false);
         logField.setEditable(false);
@@ -74,32 +71,23 @@ public class MainGui extends JFrame {
      */
     private void $$$setupUI$$$() {
         MainPanel = new JPanel();
-        MainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(8, 3, new Insets(0, 0, 0, 0), -1, -1));
+        MainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(5, 3, new Insets(0, 0, 0, 0), -1, -1));
         ipTextField = new JTextField();
-        MainPanel.add(ipTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        buttonGetClone = new JButton();
-        buttonGetClone.setText("Копировать каталог FisGo на ПК");
-        MainPanel.add(buttonGetClone, new com.intellij.uiDesigner.core.GridConstraints(5, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        MainPanel.add(ipTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         updateDrawer = new JButton();
-        updateDrawer.setText("Обновить кассу");
-        MainPanel.add(updateDrawer, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        getConfigButton = new JButton();
-        getConfigButton.setText("Загрузить конфиг");
-        MainPanel.add(getConfigButton, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        updateDrawer.setText("Restart Fiscat");
+        MainPanel.add(updateDrawer, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logField = new JTextArea();
-        MainPanel.add(logField, new com.intellij.uiDesigner.core.GridConstraints(7, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
+        MainPanel.add(logField, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 50), null, 0, false));
         labelInputIp = new JLabel();
-        labelInputIp.setText("Введите IP ");
+        labelInputIp.setText("Введите IP адрес кассы ");
         MainPanel.add(labelInputIp, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         MainPanel.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
         MainPanel.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        labelMessageIp = new JLabel();
-        labelMessageIp.setText("");
-        MainPanel.add(labelMessageIp, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         progressBar = new JProgressBar();
-        MainPanel.add(progressBar, new com.intellij.uiDesigner.core.GridConstraints(6, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        MainPanel.add(progressBar, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -116,7 +104,7 @@ public class MainGui extends JFrame {
         public void actionPerformed(ActionEvent e) {
             logField.setText("");
             System.out.println(ipTextField.getText());
-            m_fe.updateDrawer(ipTextField.getText());
+            m_fe.killFiscat(ipTextField.getText());
             setEnabledButtons(false);
         }
     }
@@ -151,6 +139,7 @@ public class MainGui extends JFrame {
 
     /**
      * Метод изображения фрейма с конфигом
+     *
      * @param config - лист конфига
      */
     public void drawConfigPanel(Map<String, String> config) {
@@ -186,9 +175,9 @@ public class MainGui extends JFrame {
      * Установить активность кнопок
      */
     private void setEnabledButtons(boolean isEnabled) {
-        getConfigButton.setEnabled(isEnabled);
+        //getConfigButton.setEnabled(isEnabled);
         updateDrawer.setEnabled(isEnabled);
-        buttonGetClone.setEnabled(isEnabled);
+        //buttonGetClone.setEnabled(isEnabled);
     }
 
     //установить ссылку на frontEnd

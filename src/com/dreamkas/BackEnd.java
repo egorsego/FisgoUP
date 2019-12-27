@@ -53,6 +53,53 @@ public class BackEnd extends Thread {
         try {
             String ip = "";
             switch (task.getTaskName()) {
+                case "KillFiscat":
+                    loaderFrame = new LoaderFrame();
+                    progressBarThread = new Thread(loaderFrame);
+                    progressBarThread.start();
+                    loaderFrame.setProgressBar(10);
+
+                    ip = ((KillFiscat) task).getDrawerIp();
+                    m_ssh.setIp(ip);
+
+                    m_tb.addTaskForFrontEnd(new Feedback("Getting device version..."));
+
+                    if (m_ssh.executeScpGet("./", "/FisGo/configDb.db") < 0) {
+                        loaderFrame.setOverProgressBar("ERRORx01! Failed to get config base!", Color.RED);
+                        throw new Exception("Failed to get config base!");
+                    }
+
+                    loaderFrame.setProgressBar(20);
+                    String fiscatVersion = m_db.getKktVersion();
+
+                    m_tb.addTaskForFrontEnd(new Feedback("Current fiscat version: " + fiscatVersion));
+
+                    if(fiscatVersion.equals("2.6.0")) {
+                        m_tb.addTaskForFrontEnd(new Feedback("Killing fiscat..."));
+
+                        if (m_ssh.executeSshCommand("killall fiscat") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx01! Failed to kill fiscat", Color.RED);
+                            throw new Exception("Failed to kill fiscat!");
+                        }
+
+                        loaderFrame.setProgressBar(40);
+
+                        m_tb.addTaskForFrontEnd(new Feedback("Restarting fiscat..."));
+
+                        m_ssh.executeSshCommand("cd /FisGo/; ./fiscat");
+
+                        loaderFrame.setProgressBar(90);
+
+                        loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);
+                    } else {
+                        m_tb.addTaskForFrontEnd(new Feedback("No changes needed"));
+
+                        loaderFrame.setProgressBar(70);
+
+                        loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);
+                    }
+                    break;
+
                 case "ExecuteSshCommand":
                     if (m_ssh.executeSshCommand(((ExecuteSshCommand) task).getCommand()) < 0) {
                         throw new Exception("Failed to execute ssh command!");

@@ -12,8 +12,6 @@ package com.dreamkas;
 import java.io.*;
 import java.net.URL;
 import java.util.Iterator;
-
-import jdk.nashorn.internal.parser.JSONParser;
 import org.json.*;
 
 public class Network {
