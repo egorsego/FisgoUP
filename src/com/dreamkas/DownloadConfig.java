@@ -25,7 +25,7 @@ public class DownloadConfig extends Task {
     }
 
     //получить текст команды
-    public String                       getDrawerIp(){
+    public String getDrawerIp(){
         return m_ip;
     }
     public Map<String, String> getDownloadedConfig(){
