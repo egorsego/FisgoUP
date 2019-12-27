@@ -77,7 +77,8 @@ public class BackEnd extends Thread {
                     String fiscatVersion = m_db.getKktVersion();
                     m_tb.addTaskForFrontEnd(new Feedback("Current fiscat version: " + fiscatVersion));
 
-                    if(fiscatVersion.equals("1.27.5")) {
+                    if(true) {
+                    //if(fiscatVersion.equals("1.28.0")) {
                         progress+=5;
                         loaderFrame.setProgressBar(progress);
                         m_tb.addTaskForFrontEnd(new Feedback("Your fiscat version needs update"));
@@ -121,14 +122,14 @@ public class BackEnd extends Thread {
                             throw new Exception("Failed to reboot fiscat!");
                         }
 
-                        Thread.sleep(10_000);
+                        Thread.sleep(5_000);
 
                         progress+=10;
                         loaderFrame.setProgressBar(progress);
                         m_tb.addTaskForFrontEnd(new Feedback("Fiscat is rebooting. Please wait..."));
 
-                        for (int i = 0; i < 9; i++) {
-                            progress+=5;
+                        for (int i = 0; i < 3; i++) {
+                            progress+=10;
                             loaderFrame.setProgressBar(progress);
                             Thread.sleep(5_000);
                         }

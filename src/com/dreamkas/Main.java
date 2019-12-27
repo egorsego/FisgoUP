@@ -8,9 +8,9 @@ public class Main {
     public static void main(String[] args) {
         try {
             System.setProperty("file.encoding", "UTF-8");
-            Field charset = Charset.class.getDeclaredField("defaultCharset");
-            charset.setAccessible(true);
-            charset.set(null, null);
+            //Field charset = Charset.class.getDeclaredField("defaultCharset");
+            //charset.setAccessible(true);
+            //charset.set(null, null);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
