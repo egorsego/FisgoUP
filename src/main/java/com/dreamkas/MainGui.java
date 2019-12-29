@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -20,10 +19,9 @@ public class MainGui extends JFrame {
     private FrontEnd m_fe;
     private JPanel MainPanel;
     private JTextField ipTextField;
-    private JButton updateDrawer;
+    private JButton fisgoUpdateBtn;
     private JProgressBar progressBar;
     private JTextArea logField;
-    private JScrollPane logScroll;
     private JLabel labelInputIp;
 
     private static final String COMMAND_RM_BACKUP = "rm -r /updateBackup/";
@@ -43,8 +41,8 @@ public class MainGui extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        LeftButtonListener buttonLeft = new LeftButtonListener();
-        updateDrawer.addActionListener(buttonLeft);
+        LeftMouseButtonClickListener mouseButtonClick = new LeftMouseButtonClickListener();
+        fisgoUpdateBtn.addActionListener(mouseButtonClick);
 
         progressBar.setVisible(false);
         logField.setEditable(false);
@@ -77,9 +75,9 @@ public class MainGui extends JFrame {
         MainPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(5, 3, new Insets(0, 0, 0, 0), -1, -1));
         ipTextField = new JTextField();
         MainPanel.add(ipTextField, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTHWEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        updateDrawer = new JButton();
-        updateDrawer.setText("Обновить версию Fiscat");
-        MainPanel.add(updateDrawer, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        fisgoUpdateBtn = new JButton();
+        fisgoUpdateBtn.setText("Обновить версию Fiscat");
+        MainPanel.add(fisgoUpdateBtn, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logField = new JTextArea();
         MainPanel.add(logField, new com.intellij.uiDesigner.core.GridConstraints(4, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, 100), null, 0, false));
         labelInputIp = new JLabel();
@@ -103,7 +101,7 @@ public class MainGui extends JFrame {
     /**
      * Обработчик нажатия кнопки "Обновить кассу"
      */
-    public class LeftButtonListener implements ActionListener {
+    public class LeftMouseButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             logField.setText("");
             System.out.println(ipTextField.getText());
@@ -126,14 +124,16 @@ public class MainGui extends JFrame {
      */
     public void resetGui(String msg) {
         if (msg.equals("Success")) {
-            System.out.println("GUI: ОПЕРАЦИЯ УСПЕШНО ЗАВЕРШЕНА!!!");
-            printLogString("GUI: ОПЕРАЦИЯ УСПЕШНО ЗАВЕРШЕНА!!!\n");
+            String messageOnSuccess = "GUI: Операция успешно выполнена!";
+            System.out.println(messageOnSuccess);
+            printLogString(messageOnSuccess + "\n");
             progressBar.setIndeterminate(false);
             progressBar.setVisible(false);
             setEnabledButtons(true);
         } else if (msg.equals("Failed")) {
-            System.out.println("GUI: ОПЕРАЦИЯ ПРОВАЛЕНА!!!");
-            printLogString("GUI: ОПЕРАЦИЯ ПРОВАЛЕНА!!!\n");
+            String messageOnFailure = "GUI: Ошибка. Операция не выполнена!";
+            System.out.println(messageOnFailure);
+            printLogString(messageOnFailure + "\n");
             progressBar.setIndeterminate(false);
             setEnabledButtons(true);
         }
@@ -150,9 +150,7 @@ public class MainGui extends JFrame {
      * Установить активность кнопок
      */
     private void setEnabledButtons(boolean isEnabled) {
-        //getConfigButton.setEnabled(isEnabled);
-        updateDrawer.setEnabled(isEnabled);
-        //buttonGetClone.setEnabled(isEnabled);
+        fisgoUpdateBtn.setEnabled(isEnabled);
     }
 
     //установить ссылку на frontEnd
