@@ -13,8 +13,6 @@ import com.google.common.io.ByteStreams;
 
 import java.awt.*;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class BackEnd extends Thread {
     private final static String FISGO_UPDATE_TAR = "fisGoUpdate.tar";
@@ -57,7 +55,7 @@ public class BackEnd extends Thread {
         try {
             String ip = "";
             switch (task.getTaskName()) {
-                case "UpdateFiscat":
+                case "UpdateLib":
                     loaderFrame = new LoaderFrame();
                     progressBarThread = new Thread(loaderFrame);
                     progressBarThread.start();
@@ -65,13 +63,20 @@ public class BackEnd extends Thread {
                     int progress = 5;
                     loaderFrame.setProgressBar(progress);
 
-                    ip = ((UpdateFiscat) task).getDrawerIp();
+                    ip = ((UpdateLib) task).getDrawerIp();
                     m_ssh.setIp(ip);
+
+                    m_tb.addTaskForFrontEnd(new Feedback("Establishing connection..."));
 
                     if (!m_ssh.checkConnection()) {
                         loaderFrame.setOverProgressBar("ERRORx01! Failed to establish connection!", Color.RED);
                         throw new Exception("Failed to establish connection. Check IP address.");
                     }
+
+                    m_tb.addTaskForFrontEnd(new Feedback("Connection established!"));
+
+                    progress+=5;
+                    loaderFrame.setProgressBar(progress);
 
                     m_tb.addTaskForFrontEnd(new Feedback("Getting device version..."));
 
@@ -80,69 +85,89 @@ public class BackEnd extends Thread {
                         throw new Exception("Failed to get config base!");
                     }
 
-                    progress+=5;
-                    loaderFrame.setProgressBar(progress);
-
                     String fiscatVersion = m_db.getKktVersion();
                     m_tb.addTaskForFrontEnd(new Feedback("Current fiscat version: " + fiscatVersion));
                     File configDb = new File("configDb.db");
                     configDb.delete();
 
-                    if(true) {
-                    //if(fiscatVersion.equals("1.28.0")) {
+                    //if(true) {
+                    if(fiscatVersion.equals("2.6.0")) {
                         progress+=5;
                         loaderFrame.setProgressBar(progress);
-                        m_tb.addTaskForFrontEnd(new Feedback("Your fiscat version needs update"));
+                        m_tb.addTaskForFrontEnd(new Feedback("Some libraries need update"));
                         m_tb.addTaskForFrontEnd(new Feedback("Update procedure started..."));
 
-                        progress+=5;
                         loaderFrame.setProgressBar(progress);
-                        m_tb.addTaskForFrontEnd(new Feedback("Killing fiscat..."));
+                        //m_tb.addTaskForFrontEnd(new Feedback("Stopping fiscat..."));
 
                         if (m_ssh.executeSshCommand("killall fiscat") < 0) {
                             loaderFrame.setOverProgressBar("ERRORx03! Failed to kill fiscat!", Color.RED);
                             throw new Exception("Failed to kill fiscat!");
                         }
 
-                        progress+=5;
                         loaderFrame.setProgressBar(progress);
-                        m_tb.addTaskForFrontEnd(new Feedback("Removing current fiscat..."));
+                        //m_tb.addTaskForFrontEnd(new Feedback("Stopping punix..."));
 
-                        if (m_ssh.executeSshCommand("cd /FisGo/; rm fiscat") < 0) {
-                            loaderFrame.setOverProgressBar("ERRORx04! Failed to remove fiscat!", Color.RED);
-                            throw new Exception("Failed to remove fiscat!");
+                        if (m_ssh.executeSshCommand("killall punix") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx04! Failed to kill punix!", Color.RED);
+                            throw new Exception("Failed to kill punix!");
                         }
 
                         progress+=5;
                         loaderFrame.setProgressBar(progress);
-                        m_tb.addTaskForFrontEnd(new Feedback("Updating fiscat..."));
+                        m_tb.addTaskForFrontEnd(new Feedback("Updating libraries..."));
 
-                        byte[] data = ByteStreams.toByteArray(getClass().getResourceAsStream("/fiscat"));
+                        if (m_ssh.executeSshCommand("cd /lib/; rm libugfxApi.so") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx05! Failed to remove lib!", Color.RED);
+                            throw new Exception("Failed to remove lib!");
+                        }
 
-                        if (m_ssh.executeScpPut(data, "fiscat", "/FisGo/") < 0) {
-                            loaderFrame.setOverProgressBar("ERRORx05! Failed to copy updated fiscat!", Color.RED);
-                            throw new Exception("Failed to copy updated fiscat!");
+                        byte[] data = ByteStreams.toByteArray(getClass().getResourceAsStream("/libugfxApi.so"));
+
+                        if (m_ssh.executeScpPut(data, "libugfxApi.so", "/lib/") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx06! Failed to copy lib!", Color.RED);
+                            throw new Exception("Failed to copy updated lib!");
+                        }
+
+                        if (m_ssh.executeSshCommand("cd /lib/ ; chmod +x libugfxApi.so") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx07! Failed to apply permissions!", Color.RED);
+                            throw new Exception("Failed to apply permissions!");
                         }
 
                         progress+=5;
                         loaderFrame.setProgressBar(progress);
-                        m_tb.addTaskForFrontEnd(new Feedback("Restarting fiscat..."));
+                        m_tb.addTaskForFrontEnd(new Feedback("Restarting software..."));
 
-                        if (m_ssh.executeSshCommand("cd /FisGo/ ; chmod +x ./fiscat ; ./fiscat >>/FisGo/outf &") < 0) {
-                            loaderFrame.setOverProgressBar("ERRORx06! Failed to reboot fiscat!", Color.RED);
-                            throw new Exception("Failed to reboot fiscat!");
+                        if (m_ssh.executeSshCommand("sync") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx08! Failed to sync!", Color.RED);
+                            throw new Exception("Failed to sync!");
+                        }
+
+                        if (m_ssh.executeSshCommand("sync") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx09! Failed to sync!", Color.RED);
+                            throw new Exception("Failed to sync!");
+                        }
+
+                        if (m_ssh.executeSshCommand("cd /FisGo/ ; ./punix >>/FisGo/outfp &") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx10! Failed to restart punix!", Color.RED);
+                            throw new Exception("Failed to restart punix!");
+                        }
+
+                        if (m_ssh.executeSshCommand("cd /FisGo/ ; ./fiscat >>/FisGo/outf &") < 0) {
+                            loaderFrame.setOverProgressBar("ERRORx11! Failed to restart fiscat!", Color.RED);
+                            throw new Exception("Failed to restart fiscat!");
                         }
 
                         Thread.sleep(5_000);
 
-                        progress+=10;
+                        progress+=5;
                         loaderFrame.setProgressBar(progress);
-                        m_tb.addTaskForFrontEnd(new Feedback("Fiscat is rebooting. Please wait..."));
+                        m_tb.addTaskForFrontEnd(new Feedback("Rebooting. Please wait..."));
 
-                        for (int i = 0; i < 3; i++) {
-                            progress+=10;
+                        for (int i = 0; i < 15; i++) {
+                            progress+=5;
                             loaderFrame.setProgressBar(progress);
-                            Thread.sleep(5_000);
+                            Thread.sleep(2_500);
                         }
 
                         loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);

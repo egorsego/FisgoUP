@@ -23,7 +23,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="Обновить версию Fiscat"/>
+          <text value="Обновление библиотек FisGo"/>
         </properties>
       </component>
       <component id="cadd5" class="javax.swing.JTextArea" binding="logField">

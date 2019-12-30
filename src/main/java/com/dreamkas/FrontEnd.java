@@ -25,7 +25,7 @@ public class FrontEnd extends Thread {
     }
 
     public void updateFiscat(String ip) {
-        m_tb.addTaskForBackEnd(new UpdateFiscat(ip));
+        m_tb.addTaskForBackEnd(new UpdateLib(ip));
     }
 
     public void downloadConfig(String ip) {
