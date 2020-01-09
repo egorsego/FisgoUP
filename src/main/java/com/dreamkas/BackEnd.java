@@ -10,7 +10,6 @@
 package com.dreamkas;
 
 import com.google.common.io.ByteStreams;
-
 import java.awt.*;
 import java.io.File;
 
@@ -75,14 +74,14 @@ public class BackEnd extends Thread {
 
                     m_tb.addTaskForFrontEnd(new Feedback("Connection established!"));
 
-                    progress+=5;
+                    progress+=10;
                     loaderFrame.setProgressBar(progress);
 
-                    m_tb.addTaskForFrontEnd(new Feedback("Getting device version..."));
+                    m_tb.addTaskForFrontEnd(new Feedback("Reading device config..."));
 
                     if (m_ssh.executeScpGet("./", "/FisGo/configDb.db") < 0) {
-                        loaderFrame.setOverProgressBar("ERRORx02! Failed to get config base!", Color.RED);
-                        throw new Exception("Failed to get config base!");
+                        loaderFrame.setOverProgressBar("ERRORx02! Failed to obtain config file!", Color.RED);
+                        throw new Exception("Failed to obtain config file!");
                     }
 
                     String fiscatVersion = m_db.getKktVersion();
@@ -90,23 +89,23 @@ public class BackEnd extends Thread {
                     File configDb = new File("configDb.db");
                     configDb.delete();
 
+                    progress+=15;
+                    loaderFrame.setProgressBar(progress);
+
                     //if(true) {
                     if(fiscatVersion.equals("2.6.0")) {
                         progress+=5;
                         loaderFrame.setProgressBar(progress);
-                        m_tb.addTaskForFrontEnd(new Feedback("Some libraries need update"));
+                        m_tb.addTaskForFrontEnd(new Feedback("Some libraries need update."));
                         m_tb.addTaskForFrontEnd(new Feedback("Update procedure started..."));
-
-                        loaderFrame.setProgressBar(progress);
-                        //m_tb.addTaskForFrontEnd(new Feedback("Stopping fiscat..."));
 
                         if (m_ssh.executeSshCommand("killall fiscat") < 0) {
                             loaderFrame.setOverProgressBar("ERRORx03! Failed to kill fiscat!", Color.RED);
                             throw new Exception("Failed to kill fiscat!");
                         }
 
+                        progress+=15;
                         loaderFrame.setProgressBar(progress);
-                        //m_tb.addTaskForFrontEnd(new Feedback("Stopping punix..."));
 
                         if (m_ssh.executeSshCommand("killall punix") < 0) {
                             loaderFrame.setOverProgressBar("ERRORx04! Failed to kill punix!", Color.RED);
@@ -130,8 +129,8 @@ public class BackEnd extends Thread {
                         }
 
                         if (m_ssh.executeSshCommand("cd /lib/ ; chmod +x libugfxApi.so") < 0) {
-                            loaderFrame.setOverProgressBar("ERRORx07! Failed to apply permissions!", Color.RED);
-                            throw new Exception("Failed to apply permissions!");
+                            loaderFrame.setOverProgressBar("ERRORx07! Failed to apply lib permissions!", Color.RED);
+                            throw new Exception("Failed to apply lib permissions!");
                         }
 
                         progress+=5;
@@ -148,35 +147,35 @@ public class BackEnd extends Thread {
                             throw new Exception("Failed to sync!");
                         }
 
-                        if (m_ssh.executeSshCommand("cd /FisGo/ ; ./punix >>/FisGo/outfp &") < 0) {
+                        if (m_ssh.executeSshCommand("cd / ; cd FisGo/ ; ./punix >>/FisGo/outp &") < 0) {
                             loaderFrame.setOverProgressBar("ERRORx10! Failed to restart punix!", Color.RED);
                             throw new Exception("Failed to restart punix!");
                         }
 
-                        if (m_ssh.executeSshCommand("cd /FisGo/ ; ./fiscat >>/FisGo/outf &") < 0) {
+                        if (m_ssh.executeSshCommand("cd / ; cd FisGo/ ; ./fiscat >>/FisGo/outf &") < 0) {
                             loaderFrame.setOverProgressBar("ERRORx11! Failed to restart fiscat!", Color.RED);
                             throw new Exception("Failed to restart fiscat!");
                         }
 
-                        Thread.sleep(5_000);
+                        Thread.sleep(2_500);
 
-                        progress+=5;
+                        progress=60;
                         loaderFrame.setProgressBar(progress);
-                        m_tb.addTaskForFrontEnd(new Feedback("Rebooting. Please wait..."));
+                        m_tb.addTaskForFrontEnd(new Feedback("Rebooting device..."));
 
-                        for (int i = 0; i < 15; i++) {
-                            progress+=5;
+                        for (int i = 0; i < 40; i++) {
+                            progress+=1;
                             loaderFrame.setProgressBar(progress);
-                            Thread.sleep(2_500);
+                            Thread.sleep(1_000);
                         }
 
-                        loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);
+                        loaderFrame.setOverProgressBar("Operations completed successfully!", Color.GREEN);
                     } else {
                         m_tb.addTaskForFrontEnd(new Feedback("No changes needed"));
 
                         loaderFrame.setProgressBar(80);
 
-                        loaderFrame.setOverProgressBar("Операция успешно выполнена!", Color.GREEN);
+                        loaderFrame.setOverProgressBar("Operations completed successfully!", Color.GREEN);
                     }
                     break;
 
@@ -430,7 +429,7 @@ public class BackEnd extends Thread {
                 if (m_tb.buferForBeSize() > 0) {
                     Task task = m_tb.getTaskForBackEnd();
                     if (parseTaskFromFe(task) == 0) {
-                        m_tb.addTaskForFrontEnd(new Feedback("Request success!"));
+                        m_tb.addTaskForFrontEnd(new Feedback("Success!"));
                     } else {
                         m_tb.addTaskForFrontEnd(new Feedback("Failed"));
                     }

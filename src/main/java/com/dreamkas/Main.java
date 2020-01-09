@@ -1,8 +1,5 @@
 package com.dreamkas;
 
-import java.lang.reflect.Field;
-import java.nio.charset.Charset;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -14,8 +11,8 @@ public class Main {
 
 	    // write your code here
         TaskBuffer tb = new TaskBuffer();
-        BackEnd   beT = new BackEnd();
-        FrontEnd  feT = new FrontEnd();
+        BackEnd beT = new BackEnd();
+        FrontEnd feT = new FrontEnd();
 
         beT.setBuffer(tb);
         feT.setBuffer(tb);

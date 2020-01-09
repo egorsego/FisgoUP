@@ -15,7 +15,7 @@ import static com.dreamkas.ConfigCreator.REG_EXP_IP;
 public class MainGui extends JFrame {
 
     private static final int mWidth = 350;
-    private static final int mHeighth = 300;
+    private static final int mHeighth = 260;
     private FrontEnd m_fe;
     private JPanel MainPanel;
     private JTextField ipTextField;
@@ -124,14 +124,14 @@ public class MainGui extends JFrame {
      */
     public void resetGui(String msg) {
         if (msg.equals("Success")) {
-            String messageOnSuccess = "GUI: Операция успешно выполнена!";
+            String messageOnSuccess = "Operation completed successfully!";
             System.out.println(messageOnSuccess);
             printLogString(messageOnSuccess + "\n");
             progressBar.setIndeterminate(false);
             progressBar.setVisible(false);
             setEnabledButtons(true);
         } else if (msg.equals("Failed")) {
-            String messageOnFailure = "GUI: Ошибка. Операция не выполнена!";
+            String messageOnFailure = "Error. Operation can not be completed!";
             System.out.println(messageOnFailure);
             printLogString(messageOnFailure + "\n");
             progressBar.setIndeterminate(false);

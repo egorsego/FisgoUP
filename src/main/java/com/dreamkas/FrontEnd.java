@@ -48,7 +48,7 @@ public class FrontEnd extends Thread {
                 case "Feedback":
                     Feedback fb = (Feedback) task;
                     System.out.println("FRONT_END LOG: " + fb.getMessage());
-                    m_gui.printLogString("=LOG=: " + fb.getMessage() + "\n");
+                    m_gui.printLogString("Log: " + fb.getMessage() + "\n");
 
                     //при ошибке сбрасываем поля гуя в дефолтное состояние
                     if (fb.getMessage().contains("Failed")) {
